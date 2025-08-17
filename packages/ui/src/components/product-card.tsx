@@ -87,7 +87,7 @@ export function ProductCard({
             >
               <ClockIcon size={16} />
               <span>
-                남은 시간 <span className="text-[#B5F5EB]">{timeLeft}</span>
+                남은 시간 <span className="text-brand-mint">{timeLeft}</span>
               </span>
             </Typography>
           </div>

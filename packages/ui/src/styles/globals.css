@@ -50,6 +50,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  
+  /* Custom brand colors */
+  --brand-mint: #B5F5EB;
+  --brand-mint-light: #D6FAF4;
+  --brand-mint-dark: #8FE8DB;
 }
 
 @theme inline {
@@ -90,6 +95,11 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* Custom brand colors */
+  --color-brand-mint: var(--brand-mint);
+  --color-brand-mint-light: var(--brand-mint-light);
+  --color-brand-mint-dark: var(--brand-mint-dark);
 
   /* Custom max-width utilities */
   --max-width-container: 976px;

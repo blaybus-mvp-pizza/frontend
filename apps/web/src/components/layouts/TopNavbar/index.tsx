@@ -19,13 +19,13 @@ export function TopNavBar() {
           align="center"
           className="text-white p-1 px-2 text-xs md:text-sm"
         >
-          신규 오픈, 지금 <span className="text-[#B5F5EB]">NafaL</span>에서{" "}
+          신규 오픈, 지금 <span className="text-brand-mint">NafaL</span>에서{" "}
           <span className="hidden sm:inline">
-            <span className="text-[#B5F5EB]">나만의 한정판 굿즈</span>를
+            <span className="text-brand-mint">나만의 한정판 굿즈</span>를
             입찰하세요
           </span>
           <span className="sm:hidden">
-            <span className="text-[#B5F5EB]">한정판</span> 입찰!
+            <span className="text-brand-mint">한정판</span> 입찰!
           </span>
         </Typography>
       </div>
@@ -77,7 +77,7 @@ export function TopNavBar() {
               </button>
 
               {/* 인증 버튼 */}
-              <div className="hidden sm:block">
+              <div className="hidden sm:block space-x-2">
                 <AuthBtns />
               </div>
             </div>
