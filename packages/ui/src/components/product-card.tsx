@@ -57,27 +57,6 @@ export function ProductCard({
           className="h-full w-full object-cover transition-transform group-hover:scale-105"
         />
 
-        {/* 경매 상태 배지 */}
-        {/* {auction && (
-          <div className="absolute left-2 top-2">
-            {auction.status === "scheduled" && (
-              <span className="rounded-full bg-blue-500 px-2 py-1 text-xs text-white">
-                예정
-              </span>
-            )}
-            {auction.status === "running" && (
-              <span className="rounded-full bg-red-500 px-2 py-1 text-xs text-white">
-                진행중
-              </span>
-            )}
-            {auction.status === "ended" && (
-              <span className="rounded-full bg-gray-500 px-2 py-1 text-xs text-white">
-                종료
-              </span>
-            )}
-          </div>
-        )} */}
-
         {/* 남은 시간 표시 */}
         {showTimeLeft && timeLeft && auction?.status === "running" && (
           <div className="absolute bottom-0 bg-black/80 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1">
