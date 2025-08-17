@@ -218,35 +218,41 @@ export default function HomePage() {
   };
 
   return (
-    <div className="space-y-8 pt-2">
-      <div className="w-full h-[380px] rounded-2xl bg-gradient-to-b from-gray-200 to-gray-600"></div>
+    <div className="min-h-screen">
+      {/* 히어로 배너 */}
+      <div className="w-full px-4 md:px-6 lg:px-8 max-w-container mx-auto">
+        <div className="w-full h-[200px] sm:h-[280px] md:h-[380px] lg:h-[480px] rounded-lg md:rounded-xl lg:rounded-2xl bg-gradient-to-b from-gray-200 to-gray-600 mt-4 md:mt-6"></div>
+      </div>
 
       {/* 카테고리 태그 */}
-      <div className="w-full grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-2 h-auto lg:h-[110px]">
-        {PRODUCT_TAGS.map((v) => (
-          <div
-            className="bg-[#f6f6f6] rounded-lg p-4 flex flex-col items-center gap-3 hover:bg-[#ececec] transition-colors cursor-pointer"
-            key={v.name}
-          >
-            <img
-              src={v.imgSrc}
-              alt={v.name}
-              className="w-12 h-12 object-contain"
-            />
-            <Typography
-              variant="body3"
-              align="center"
-              weight="medium"
-              color="muted"
+      <div className="px-4 md:px-6 lg:px-8 max-w-container mx-auto mt-6 md:mt-8">
+        <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2 md:gap-3">
+          {PRODUCT_TAGS.map((v) => (
+            <div
+              className="bg-[#f6f6f6] rounded-lg p-2 sm:p-3 md:p-4 flex flex-col items-center gap-1 sm:gap-2 md:gap-3 hover:bg-[#ececec] transition-colors cursor-pointer"
+              key={v.name}
             >
-              {v.name}
-            </Typography>
-          </div>
-        ))}
+              <img
+                src={v.imgSrc}
+                alt={v.name}
+                className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-contain"
+              />
+              <Typography
+                variant="caption"
+                align="center"
+                weight="medium"
+                color="muted"
+                className="text-[10px] sm:text-xs md:text-sm"
+              >
+                {v.name}
+              </Typography>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* 상품 리스트 섹션 */}
-      <div className="space-y-20 mt-20">
+      <div className="px-4 md:px-6 lg:px-8 max-w-container mx-auto space-y-12 md:space-y-16 lg:space-y-20 mt-8 md:mt-12 lg:mt-16 pb-8 md:pb-12 lg:pb-16">
         <ProductSampleList
           products={mockProducts}
           auctions={mockAuctions}

@@ -13,16 +13,16 @@ export function TopNavBar() {
 
   return (
     <header className="fixed z-50 bg-white top-0 left-0 right-0 border-b border-[#E5E5EC]">
-      {/* 프로모션 배너 */}
       <div className="bg-black text-center">
-        <Typography 
-          variant="caption" 
-          align="center" 
+        <Typography
+          variant="caption"
+          align="center"
           className="text-white p-1 px-2 text-xs md:text-sm"
         >
           신규 오픈, 지금 <span className="text-[#B5F5EB]">NafaL</span>에서{" "}
           <span className="hidden sm:inline">
-            <span className="text-[#B5F5EB]">나만의 한정판 굿즈</span>를 입찰하세요
+            <span className="text-[#B5F5EB]">나만의 한정판 굿즈</span>를
+            입찰하세요
           </span>
           <span className="sm:hidden">
             <span className="text-[#B5F5EB]">한정판</span> 입찰!
@@ -31,12 +31,9 @@ export function TopNavBar() {
       </div>
 
       <nav className="bg-white">
-        {/* 메인 네비게이션 */}
-        <div className="max-w-container mx-auto px-4 md:px-6">
+        <div className="max-w-container mx-auto px-2">
           <div className="flex justify-between items-center h-16 md:h-18">
-            {/* 왼쪽: 로고 + 검색 */}
             <div className="flex items-center gap-x-2 md:gap-x-4 flex-1">
-              {/* 모바일 메뉴 버튼 */}
               <button
                 className="md:hidden p-2"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -44,7 +41,6 @@ export function TopNavBar() {
                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
 
-              {/* 로고 */}
               <Link href="/home" className="flex-shrink-0">
                 <Image
                   src="/images/LOGO_HEADER.svg"
@@ -101,12 +97,12 @@ export function TopNavBar() {
           )}
 
           {/* 데스크톱 메뉴 */}
-          <div className="hidden md:flex w-full h-12 items-center border-t border-[#E5E5EC]">
+          <div className="hidden md:flex w-full h-12 items-center">
             <ul className="flex gap-x-2 lg:gap-x-4">
               {TOP_NAVBAR_MENU.map((v) => (
                 <li key={v.href}>
-                  <Link 
-                    href={v.href} 
+                  <Link
+                    href={v.href}
                     className="px-3 py-2 hover:bg-[#f5f5f5] rounded-md transition-colors"
                   >
                     <Typography variant="body2" weight="medium">

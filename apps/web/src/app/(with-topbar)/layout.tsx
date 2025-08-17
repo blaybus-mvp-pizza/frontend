@@ -9,7 +9,9 @@ export default function RootLayout({
   return (
     <>
       <TopNavBar />
-      <main className="pt-40 max-w-container mx-auto w-full">{children}</main>
+      <main className="pt-40 max-w-container px-2 md:px-4 mx-auto w-full">
+        {children}
+      </main>
     </>
   );
 }
