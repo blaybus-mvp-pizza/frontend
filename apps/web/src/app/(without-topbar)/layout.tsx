@@ -1,5 +1,4 @@
 import "@workspace/ui/globals.css";
-import { TopNavBar } from "@/components/layouts/top-nav-bar";
 
 export default function RootLayout({
   children,
