@@ -95,7 +95,7 @@ export function ProductCard({
       </div>
 
       {/* 상품 정보 */}
-      <div className="p-4 space-y-2">
+      <div className="p-4 space-y-1">
         {/* 팝업스토어 이름 */}
         {product.popupStore && (
           <Typography variant="caption" color="muted">
@@ -109,7 +109,7 @@ export function ProductCard({
         </Typography>
 
         {/* 가격 정보 */}
-        <div className="space-y-1">
+        <div className="">
           {auction ? (
             <>
               {/* 현재 입찰가 */}

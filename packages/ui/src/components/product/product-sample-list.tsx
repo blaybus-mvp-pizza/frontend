@@ -35,7 +35,7 @@ export function ProductSampleList({
       <div className="w-full flex items-center justify-between">
         <Typography variant="h5">
           {title}
-          {subtitle && <span className="font-bold ml-3">{subtitle}</span>}
+          {subtitle && <span className="font-bold ml-2">{subtitle}</span>}
         </Typography>
         {showViewAll && (
           <Typography

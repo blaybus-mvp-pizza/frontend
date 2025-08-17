@@ -105,9 +105,7 @@ export function TopNavBar() {
                     href={v.href}
                     className="px-3 py-2 hover:bg-[#f5f5f5] rounded-md transition-colors"
                   >
-                    <Typography variant="body2" weight="medium">
-                      {v.name}
-                    </Typography>
+                    {v.name}
                   </Link>
                 </li>
               ))}

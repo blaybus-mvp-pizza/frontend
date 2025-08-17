@@ -2,6 +2,9 @@
 import { Typography } from "@workspace/ui/components/typography";
 import { ProductSampleList } from "@workspace/ui/components/product/product-sample-list";
 import { Product, Auction } from "@workspace/ui/types";
+import { MapIcon } from "lucide-react";
+import { ProductCard } from "@workspace/ui/components/product-card";
+import Image from "next/image";
 
 const PRODUCT_TAGS = [
   { name: "가구/리빙", imgSrc: "/icons/가구리빙.png" },
@@ -230,10 +233,13 @@ export default function HomePage() {
               className="bg-[#f6f6f6] rounded-lg p-2 sm:p-3 md:p-4 flex flex-col items-center gap-1 sm:gap-2 md:gap-3 hover:bg-[#ececec] transition-colors cursor-pointer"
               key={v.name}
             >
-              <img
+              <Image
                 src={v.imgSrc}
                 alt={v.name}
+                width={48}
+                height={48}
                 className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-contain"
+                loading="lazy"
               />
               <Typography
                 variant="caption"
@@ -283,11 +289,271 @@ export default function HomePage() {
         />
       </div>
 
-      <div
-        onClick={() => {}}
-        className="absolute -mx-2 md:-mx-4 left-0 right-0"
-      >
-        <img alt="배너1" src={"/images/BANNER_OPEN.png"} />
+      <div onClick={() => {}} className="relative h-40">
+        <Image
+          alt="배너1"
+          src="/images/BANNER_OPEN.png"
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority={false}
+          loading="lazy"
+        />
+      </div>
+      <div className="w-full space-y-2 mt-20">
+        <div className="mt-8 flex gap-x-2 items-center">
+          <span className="bg-black text-brand-mint items-center p-1 w-fit flex gap-x-2">
+            <MapIcon />
+            <Typography className="text-brand-mint font-semibold md:text-xl">
+              카누 온더 테이블
+            </Typography>
+          </span>
+          <Typography variant={"h6"} className="md:text-xl font-semibold">
+            팝업스토어에서 판매중인 아이템
+          </Typography>
+        </div>
+        <div className=" flex h-[400px] gap-x-8">
+          <div className="relative w-[600px] h-[400px]">
+            <Image
+              src="/images/KANU_POPUP_THUMBNAIL.png"
+              alt="카누 팝업 썸네일"
+              fill
+              className="object-cover"
+              sizes="600px"
+              loading="lazy"
+            />
+          </div>
+          <div className="flex gap-4">
+            <ProductCard
+              product={{
+                id: 101,
+                popupStoreId: 10,
+                category: "키친/테이블웨어",
+                name: "카누 시그니처 블렌드",
+                summary: "프리미엄 원두 선물세트",
+                description: "엄선된 원두로 만든 카누 시그니처 블렌드",
+                price: 89000,
+                stock: 5,
+                shippingBaseFee: 3000,
+                shippingFreeThreshold: 50000,
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                images: [
+                  {
+                    id: 101,
+                    productId: 101,
+                    imageUrl: "https://picsum.photos/400/400?random=10",
+                    sortOrder: 0,
+                  },
+                ],
+                tags: [
+                  { id: 101, name: "한정판" },
+                  { id: 102, name: "프리미엄" },
+                ],
+                popupStore: {
+                  id: 10,
+                  name: "카누 온더 테이블",
+                  createdAt: new Date(),
+                },
+              }}
+              auction={{
+                id: 101,
+                productId: 101,
+                startPrice: 70000,
+                minBidPrice: 5000,
+                buyNowPrice: 120000,
+                depositAmount: 10000,
+                startsAt: new Date(Date.now() - 12 * 60 * 60 * 1000),
+                endsAt: new Date(Date.now() + 12 * 60 * 60 * 1000),
+                status: "running",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                currentBid: {
+                  id: 101,
+                  auctionId: 101,
+                  userId: 1,
+                  bidOrder: 1,
+                  amount: 85000,
+                  createdAt: new Date(),
+                },
+                bidCount: 8,
+              }}
+              showTimeLeft={true}
+              onClick={() => console.log("카누 시그니처 블렌드 클릭")}
+            />
+
+            <ProductCard
+              product={{
+                id: 102,
+                popupStoreId: 10,
+                category: "키친/테이블웨어",
+                name: "카누 텀블러 세트",
+                summary: "보온보냉 스테인리스 텀블러",
+                description: "카누 로고가 새겨진 프리미엄 텀블러 세트",
+                price: 45000,
+                stock: 12,
+                shippingBaseFee: 3000,
+                shippingFreeThreshold: 50000,
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                images: [
+                  {
+                    id: 102,
+                    productId: 102,
+                    imageUrl: "https://picsum.photos/400/400?random=11",
+                    sortOrder: 0,
+                  },
+                ],
+                tags: [
+                  { id: 103, name: "텀블러" },
+                  { id: 104, name: "선물세트" },
+                ],
+                popupStore: {
+                  id: 10,
+                  name: "카누 온더 테이블",
+                  createdAt: new Date(),
+                },
+              }}
+              showTimeLeft={false}
+              onClick={() => console.log("카누 텀블러 세트 클릭")}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="w-full space-y-2 mt-20">
+        <div className="mt-8 flex gap-x-2 items-center">
+          <span className="bg-black text-brand-mint items-center p-1 w-fit flex gap-x-2">
+            <MapIcon />
+            <Typography className="text-brand-mint font-semibold md:text-xl">
+              카누 온더 테이블
+            </Typography>
+          </span>
+          <Typography variant={"h6"} className="md:text-xl font-semibold">
+            팝업스토어에서 판매중인 아이템
+          </Typography>
+        </div>
+        <div className=" flex h-[400px] gap-x-8">
+          <div className="relative w-[600px] h-[400px]">
+            <Image
+              src="/images/KANU_POPUP_THUMBNAIL.png"
+              alt="카누 팝업 썸네일"
+              fill
+              className="object-cover"
+              sizes="600px"
+              loading="lazy"
+            />
+          </div>
+          <div className="flex gap-4">
+            <ProductCard
+              product={{
+                id: 101,
+                popupStoreId: 10,
+                category: "키친/테이블웨어",
+                name: "카누 시그니처 블렌드",
+                summary: "프리미엄 원두 선물세트",
+                description: "엄선된 원두로 만든 카누 시그니처 블렌드",
+                price: 89000,
+                stock: 5,
+                shippingBaseFee: 3000,
+                shippingFreeThreshold: 50000,
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                images: [
+                  {
+                    id: 101,
+                    productId: 101,
+                    imageUrl: "https://picsum.photos/400/400?random=10",
+                    sortOrder: 0,
+                  },
+                ],
+                tags: [
+                  { id: 101, name: "한정판" },
+                  { id: 102, name: "프리미엄" },
+                ],
+                popupStore: {
+                  id: 10,
+                  name: "카누 온더 테이블",
+                  createdAt: new Date(),
+                },
+              }}
+              auction={{
+                id: 101,
+                productId: 101,
+                startPrice: 70000,
+                minBidPrice: 5000,
+                buyNowPrice: 120000,
+                depositAmount: 10000,
+                startsAt: new Date(Date.now() - 12 * 60 * 60 * 1000),
+                endsAt: new Date(Date.now() + 12 * 60 * 60 * 1000),
+                status: "running",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                currentBid: {
+                  id: 101,
+                  auctionId: 101,
+                  userId: 1,
+                  bidOrder: 1,
+                  amount: 85000,
+                  createdAt: new Date(),
+                },
+                bidCount: 8,
+              }}
+              showTimeLeft={true}
+              onClick={() => console.log("카누 시그니처 블렌드 클릭")}
+            />
+
+            <ProductCard
+              product={{
+                id: 102,
+                popupStoreId: 10,
+                category: "키친/테이블웨어",
+                name: "카누 텀블러 세트",
+                summary: "보온보냉 스테인리스 텀블러",
+                description: "카누 로고가 새겨진 프리미엄 텀블러 세트",
+                price: 45000,
+                stock: 12,
+                shippingBaseFee: 3000,
+                shippingFreeThreshold: 50000,
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                images: [
+                  {
+                    id: 102,
+                    productId: 102,
+                    imageUrl: "https://picsum.photos/400/400?random=11",
+                    sortOrder: 0,
+                  },
+                ],
+                tags: [
+                  { id: 103, name: "텀블러" },
+                  { id: 104, name: "선물세트" },
+                ],
+                popupStore: {
+                  id: 10,
+                  name: "카누 온더 테이블",
+                  createdAt: new Date(),
+                },
+              }}
+              showTimeLeft={false}
+              onClick={() => console.log("카누 텀블러 세트 클릭")}
+            />
+          </div>
+        </div>
+      </div>
+      <div onClick={() => {}} className="relative h-60 mt-20">
+        <Image
+          alt="배너2"
+          src="/images/BANNER_2.png"
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority={false}
+          loading="lazy"
+        />
       </div>
     </div>
   );
