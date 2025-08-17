@@ -31,7 +31,7 @@ export function TopNavBar() {
       </div>
 
       <nav className="bg-white">
-        <div className="max-w-container mx-auto px-2">
+        <div className="max-w-container mx-auto px-2 md:px-4">
           <div className="flex justify-between items-center h-16 md:h-18">
             <div className="flex items-center gap-x-2 md:gap-x-4 flex-1">
               <button

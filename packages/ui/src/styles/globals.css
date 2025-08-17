@@ -9,10 +9,10 @@
 
 /* Pretendard Variable Font */
 @font-face {
-  font-family: 'Pretendard Variable';
+  font-family: "Pretendard Variable";
   font-weight: 100 900;
   font-display: swap;
-  src: url('/fonts/PretendardVariable.woff2') format('woff2-variations');
+  src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
 }
 
 :root {
@@ -51,7 +51,6 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 }
-
 
 @theme inline {
   --color-bgsecondary: var(--bg-secondary);
@@ -93,7 +92,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   /* Custom max-width utilities */
-  --max-width-container: 960px;
+  --max-width-container: 976px;
 }
 
 @layer base {

@@ -209,23 +209,21 @@ const mockAuctions: Auction[] = [
 export default function HomePage() {
   const handleProductClick = (productId: number) => {
     console.log(`Clicked product ${productId}`);
-    // TODO: Navigate to product detail page
   };
 
   const handleViewAllClick = () => {
     console.log("View all clicked");
-    // TODO: Navigate to products list page
   };
 
   return (
     <div className="min-h-screen">
       {/* 히어로 배너 */}
-      <div className="w-full px-4 md:px-6 lg:px-8 max-w-container mx-auto">
-        <div className="w-full h-[200px] sm:h-[280px] md:h-[380px] lg:h-[480px] rounded-lg md:rounded-xl lg:rounded-2xl bg-gradient-to-b from-gray-200 to-gray-600 mt-4 md:mt-6"></div>
+      <div className="w-full">
+        <div className="w-full h-[200px] sm:h-[280px] md::h-[380px] rounded-md md:rounded-lg bg-gradient-to-b from-gray-200 to-gray-600 mt-4 md:mt-6"></div>
       </div>
 
       {/* 카테고리 태그 */}
-      <div className="px-4 md:px-6 lg:px-8 max-w-container mx-auto mt-6 md:mt-8">
+      <div className="mt-6 md:mt-8">
         <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2 md:gap-3">
           {PRODUCT_TAGS.map((v) => (
             <div
@@ -252,7 +250,7 @@ export default function HomePage() {
       </div>
 
       {/* 상품 리스트 섹션 */}
-      <div className="px-4 md:px-6 lg:px-8 max-w-container mx-auto space-y-12 md:space-y-16 lg:space-y-20 mt-8 md:mt-12 lg:mt-16 pb-8 md:pb-12 lg:pb-16">
+      <div className="space-y-12 md:space-y-16 lg:space-y-20 mt-8 md:mt-12 lg:mt-16 pb-8 md:pb-12 lg:pb-16">
         <ProductSampleList
           products={mockProducts}
           auctions={mockAuctions}
@@ -283,6 +281,13 @@ export default function HomePage() {
           onProductClick={handleProductClick}
           onViewAllClick={handleViewAllClick}
         />
+      </div>
+
+      <div
+        onClick={() => {}}
+        className="absolute -mx-2 md:-mx-4 left-0 right-0"
+      >
+        <img alt="배너1" src={"/images/BANNER_OPEN.png"} />
       </div>
     </div>
   );
