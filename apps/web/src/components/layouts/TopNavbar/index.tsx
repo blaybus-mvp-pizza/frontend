@@ -35,8 +35,8 @@ export function TopNavBar() {
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             </div>
           </div>
-          <div className="space-x-2">
-            <Bell className="w-6 h-6 inline-block mr-4" />
+          <div className="space-x-2 flex items-center">
+            <Bell size="16" className="w-6 h-6 inline-block mr-4" />
             <AuthBtns />
           </div>
         </div>
@@ -44,10 +44,8 @@ export function TopNavBar() {
           <ul className="flex gap-x-2 font-semibold">
             {TOP_NAVBAR_MENU.map((v) => (
               <li key={v.href}>
-                <Link href={v.href} className="p-2 hover:bg-[#f5f5f5]">
-                  <Typography variant="body2" weight="semibold">
-                    {v.name}
-                  </Typography>
+                <Link href={v.href} className="p-2 w-full hover:bg-[#f5f5f5]">
+                  {v.name}
                 </Link>
               </li>
             ))}
