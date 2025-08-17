@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useProducts, useAuctions } from "@/hooks/queries/useProducts";
+import { useProductsWithPagination, useAuctionsForProducts } from "@/hooks/queries/useProducts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dropdown } from "@/components/ui/dropdown";
 import { SearchableDropdown } from "@/components/ui/searchable-dropdown";
@@ -19,6 +19,8 @@ import {
   ITEMS_PER_PAGE,
   DEFAULT_FILTERS,
 } from "@/constants/product.constant";
+import { useMemo } from "react";
+
 function ProductContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -30,13 +32,40 @@ function ProductContent() {
   const sort = searchParams.get("sort") || DEFAULT_FILTERS.sort;
   const search = searchParams.get("search");
   const page = parseInt(searchParams.get("page") || String(DEFAULT_FILTERS.page), 10);
+  const status = searchParams.get("status") || DEFAULT_FILTERS.status;
+  const bidders = searchParams.get("bidders") || DEFAULT_FILTERS.bidders;
+  const price = searchParams.get("price") || DEFAULT_FILTERS.price;
 
-  // Fetch products and auctions using React Query
-  const { data: products, isLoading: productsLoading } = useProducts({
-    category: category || undefined,
-  });
+  // Prepare filters for API call
+  const filters = useMemo(() => ({
+    content,
+    category: filter !== "전체" ? filter : category || undefined,
+    sort,
+    search: search || undefined,
+    page,
+    pageSize: ITEMS_PER_PAGE,
+    status,
+    bidders,
+    price,
+  }), [content, filter, category, sort, search, page, status, bidders, price]);
 
-  const { data: auctions, isLoading: auctionsLoading } = useAuctions();
+  // Fetch paginated products using React Query
+  const { 
+    data: paginatedResponse, 
+    isLoading: productsLoading,
+    isPlaceholderData 
+  } = useProductsWithPagination(filters);
+
+  // Get product IDs for fetching auctions
+  const productIds = useMemo(() => 
+    paginatedResponse?.data.map(p => p.id) || [],
+    [paginatedResponse]
+  );
+
+  // Fetch auctions for current page products
+  const { 
+    data: auctions 
+  } = useAuctionsForProducts(productIds);
 
   const handleFilterClick = (tag: any) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -62,53 +91,8 @@ function ProductContent() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Filter and sort products
-  const getFilteredProducts = () => {
-    if (!products) return [];
-
-    let filtered = [...products];
-
-    // Apply category filter
-    if (filter !== "전체") {
-      filtered = filtered.filter((p) => p.category === filter);
-    }
-
-    // Apply search filter
-    if (search) {
-      const searchLower = search.toLowerCase();
-      filtered = filtered.filter(
-        (p) =>
-          p.name.toLowerCase().includes(searchLower) ||
-          p.summary?.toLowerCase().includes(searchLower)
-      );
-    }
-
-    // Apply content type filter
-
-    // Apply sorting
-    switch (sort) {
-      case "recommended":
-        // Sort by recommendation logic (mock: by stock)
-        filtered.sort((a, b) => (b.stock || 0) - (a.stock || 0));
-        break;
-      case "latest":
-        // Sort by creation date
-        filtered.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        break;
-      case "popular":
-        // Sort by popularity (mock: by price as popularity indicator)
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-    }
-
-    return filtered;
-  };
-
   // Loading state
-  if (productsLoading || auctionsLoading) {
+  if (productsLoading && !isPlaceholderData) {
     return (
       <div className="min-h-screen">
         <Skeleton className="h-20 w-full mb-4" />
@@ -121,15 +105,10 @@ function ProductContent() {
     );
   }
 
-  // Get filtered products
-  const filteredProducts = getFilteredProducts();
-  const totalItems = filteredProducts.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-  // Paginate products
-  const startIndex = (page - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+  const products = paginatedResponse?.data || [];
+  const pagination = paginatedResponse?.pagination;
+  const totalItems = pagination?.total || 0;
+  const totalPages = pagination?.totalPages || 1;
 
   return (
     <div>
@@ -160,14 +139,13 @@ function ProductContent() {
       </div>
 
       {/* 필터 드롭다운 섹션 */}
-      {/* 필터 섹션 */}
       <div className="flex flex-col gap-y-4 py-4">
         {/* 상단 필터 버튼과 정렬 */}
         <div className="flex justify-between items-center">
           <div className="flex gap-x-3">
             {/* 상태 드롭다운 */}
             <Dropdown
-              value={searchParams.get("status") || "all"}
+              value={status}
               onChange={(value) => handleDropdownChange("status", value)}
               options={STATUS_OPTIONS}
               placeholder="상태 선택"
@@ -176,7 +154,7 @@ function ProductContent() {
 
             {/* 입찰인원 드롭다운 */}
             <Dropdown
-              value={searchParams.get("bidders") || "all"}
+              value={bidders}
               onChange={(value) => handleDropdownChange("bidders", value)}
               options={BIDDER_OPTIONS}
               placeholder="입찰인원 선택"
@@ -185,7 +163,7 @@ function ProductContent() {
 
             {/* 가격 드롭다운 */}
             <Dropdown
-              value={searchParams.get("price") || "all"}
+              value={price}
               onChange={(value) => handleDropdownChange("price", value)}
               options={PRICE_OPTIONS}
               placeholder="가격 선택"
@@ -213,10 +191,10 @@ function ProductContent() {
       </div>
 
       {/* Product Grid - 4x4 레이아웃 */}
-      {paginatedProducts.length > 0 ? (
+      {products.length > 0 ? (
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-6">
-            {paginatedProducts.map((product) => {
+            {products.map((product) => {
               // 각 상품에 대한 경매 정보 찾기
               const auction = auctions?.find((a) => a.productId === product.id);
 
