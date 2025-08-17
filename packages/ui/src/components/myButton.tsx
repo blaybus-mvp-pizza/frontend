@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes } from "react";
+import { Typography } from "@workspace/ui/components/typography";
 
 interface MyButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
@@ -12,11 +13,13 @@ export function MyButton({
 }: MyButtonProps) {
   return (
     <button
-      className={`p-2 text-sm cursor-pointer rounded-sm border-[#E5E5EC] border font-bold ${className || ""}`}
+      className={`p-2 cursor-pointer rounded-sm border-[#E5E5EC] border ${className || ""}`}
       onClick={onClick}
       {...props}
     >
-      {text}
+      <Typography variant="button" weight="bold">
+        {text}
+      </Typography>
     </button>
   );
 }
