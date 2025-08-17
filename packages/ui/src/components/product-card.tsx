@@ -44,7 +44,7 @@ export function ProductCard({
   return (
     <div
       className={cn(
-        "group cursor-pointer overflow-hidden rounded-sm border border-border bg-card transition-all hover:shadow-lg",
+        "group cursor-pointer overflow-hidden rounded-sm border border-border bg-card transition-all",
         className
       )}
       onClick={onClick}
