@@ -94,6 +94,9 @@ importers:
       react-dom:
         specifier: ^19.1.1
         version: 19.1.1(react@19.1.1)
+      timeago.js:
+        specifier: ^4.0.2
+        version: 4.0.2
       zustand:
         specifier: ^5.0.7
         version: 5.0.7(@types/react@19.1.9)(react@19.1.1)
@@ -2293,6 +2296,9 @@ packages:
 
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
+
+  timeago.js@4.0.2:
+    resolution: {integrity: sha512-a7wPxPdVlQL7lqvitHGGRsofhdwtkoSXPGATFuSOA2i1ZNQEPLrGnj68vOp2sOJTCFAQVXPeNMX/GctBaO9L2w==}
 
   tinycolor2@1.6.0:
     resolution: {integrity: sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==}
@@ -4859,6 +4865,8 @@ snapshots:
       yallist: 5.0.0
 
   through@2.3.8: {}
+
+  timeago.js@4.0.2: {}
 
   tinycolor2@1.6.0: {}
 
