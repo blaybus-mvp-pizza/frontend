@@ -93,7 +93,7 @@ export interface Product {
   updatedAt: Date;
   images?: ProductImage[];
   tags?: Tag[];
-  popupStore?: PopupStore;
+  popupStore: PopupStore;
   auction?: Auction;
 }
 
@@ -166,7 +166,13 @@ export interface Order {
   id: number;
   userId: number;
   addressId?: number;
-  status: 'pending' | 'paid' | 'cancelled' | 'shipped' | 'delivered' | 'refunded';
+  status:
+    | 'pending'
+    | 'paid'
+    | 'cancelled'
+    | 'shipped'
+    | 'delivered'
+    | 'refunded';
   totalAmount: number;
   shippingFee: number;
   createdAt: Date;
@@ -228,8 +234,8 @@ export interface Story {
   createdAt: Date;
   updatedAt: Date;
   user?: User;
-  product?: Product;
-  images?: StoryImage[];
+  product: Product;
+  images: StoryImage[];
 }
 
 export interface StoryImage {
