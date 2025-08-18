@@ -1,13 +1,9 @@
-import "@workspace/ui/globals.css";
+import '@workspace/ui/globals.css';
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <>
-      <main className="pt-40 max-w-container mx-auto w-full">{children}</main>
-    </>
-  );
+  return <main>{children}</main>;
 }
