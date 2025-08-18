@@ -1,5 +1,5 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "@workspace/ui/lib/utils";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { cn } from '@workspace/ui/lib/utils';
 
 interface PaginationProps {
   currentPage: number;
@@ -29,7 +29,7 @@ export function Pagination({
       pages.push(1);
 
       if (currentPage > 3) {
-        pages.push("...");
+        pages.push('...');
       }
 
       // Show pages around current page
@@ -41,7 +41,7 @@ export function Pagination({
       }
 
       if (currentPage < totalPages - 2) {
-        pages.push("...");
+        pages.push('...');
       }
 
       // Always show last page
@@ -54,30 +54,30 @@ export function Pagination({
   const pageNumbers = getPageNumbers();
 
   return (
-    <div className={cn("flex items-center justify-center gap-2", className)}>
+    <div className={cn('flex items-center justify-center gap-2', className)}>
       {/* Previous Button */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className={cn(
-          "flex items-center justify-center w-9 h-9 rounded-lg border transition-colors",
+          'flex items-center justify-center w-9 h-9  border transition-colors',
           currentPage === 1
-            ? "border-gray-200 text-gray-300 cursor-not-allowed"
-            : "border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+            ? 'border-gray-200 text-gray-300 cursor-not-allowed'
+            : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
         )}
-        aria-label="이전 페이지"
+        aria-label='이전 페이지'
       >
-        <ChevronLeft className="w-4 h-4" />
+        <ChevronLeft className='w-4 h-4' />
       </button>
 
       {/* Page Numbers */}
-      <div className="flex items-center gap-1">
+      <div className='flex items-center gap-1'>
         {pageNumbers.map((page, index) => {
-          if (page === "...") {
+          if (page === '...') {
             return (
               <span
                 key={`ellipsis-${index}`}
-                className="w-9 h-9 flex items-center justify-center text-gray-400"
+                className='w-9 h-9 flex items-center justify-center text-gray-400'
               >
                 ...
               </span>
@@ -92,13 +92,13 @@ export function Pagination({
               key={pageNumber}
               onClick={() => onPageChange(pageNumber)}
               className={cn(
-                "w-9 h-9 rounded-lg border font-medium transition-colors",
+                'w-9 h-9  border font-medium transition-colors',
                 isActive
-                  ? "bg-black text-white border-black"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                  ? 'bg-black text-white border-black'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
               )}
               aria-label={`페이지 ${pageNumber}`}
-              aria-current={isActive ? "page" : undefined}
+              aria-current={isActive ? 'page' : undefined}
             >
               {pageNumber}
             </button>
@@ -111,14 +111,14 @@ export function Pagination({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className={cn(
-          "flex items-center justify-center w-9 h-9 rounded-lg border transition-colors",
+          'flex items-center justify-center w-9 h-9 border transition-colors',
           currentPage === totalPages
-            ? "border-gray-200 text-gray-300 cursor-not-allowed"
-            : "border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+            ? 'border-gray-200 text-gray-300 cursor-not-allowed'
+            : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
         )}
-        aria-label="다음 페이지"
+        aria-label='다음 페이지'
       >
-        <ChevronRight className="w-4 h-4" />
+        <ChevronRight className='w-4 h-4' />
       </button>
     </div>
   );
@@ -140,7 +140,7 @@ export function PaginationInfo({
   const end = Math.min(currentPage * itemsPerPage, totalItems);
 
   return (
-    <div className="text-sm text-gray-600">
+    <div className='text-sm text-gray-600'>
       전체 {totalItems}개 중 {start}-{end}개 표시
     </div>
   );
