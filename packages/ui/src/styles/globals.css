@@ -1,22 +1,22 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @source "../../../apps/**/*.{ts,tsx}";
 @source "../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
 
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 /* Pretendard Variable Font */
 @font-face {
-  font-family: "Pretendard Variable";
+  font-family: 'Pretendard Variable';
   font-weight: 100 900;
   font-display: swap;
-  src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
+  src: url('/fonts/PretendardVariable.woff2') format('woff2-variations');
 }
 
 :root {
-  --bg-secondary: "#f5f5f5";
+  --bg-secondary: '#f5f5f5';
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -50,11 +50,12 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  
+
   /* Custom brand colors */
-  --brand-mint: #B5F5EB;
-  --brand-mint-light: #D6FAF4;
-  --brand-mint-dark: #8FE8DB;
+  --brand-mint: #b5f5eb;
+  --brand-mint-light: #d6faf4;
+  --brand-mint-dark: #8fe8db;
+  --foreground-dark: #111111;
 }
 
 @theme inline {
@@ -95,11 +96,12 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  
+
   /* Custom brand colors */
   --color-brand-mint: var(--brand-mint);
   --color-brand-mint-light: var(--brand-mint-light);
   --color-brand-mint-dark: var(--brand-mint-dark);
+  --color-foreground-dark: var(--foreground-dark);
 
   /* Custom max-width utilities */
   --max-width-container: 976px;
