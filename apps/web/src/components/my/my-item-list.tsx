@@ -1,0 +1,180 @@
+"use client";
+
+import { useMyItemsWithPagination } from "@/hooks/queries/useMyItems";
+import { ItemFilters } from "@/services/api/my";
+import MyItem from "./my-item";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
+import { Item } from "@/services/api/my";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { Pagination } from "../ui/pagination";
+import { Skeleton } from "../ui/skeleton";
+
+interface MyItemListProps {
+  filters: ItemFilters;
+}
+
+export default function MyItemList({ filters }: MyItemListProps) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const page = parseInt(searchParams.get("page") || String(1));
+  const combinedFilters = useMemo(
+    () => ({
+      ...filters,
+      page,
+      pageSize: 6,
+    }),
+    [filters, page]
+  );
+
+  const {
+    data: paginatedItems,
+    isLoading,
+    isPlaceholderData,
+  } = useMyItemsWithPagination(combinedFilters);
+
+  if (isLoading && !isPlaceholderData) {
+    return <MyItemListSkeleton />;
+  }
+
+  const handlePageChange = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.push(`?${params.toString()}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const items = paginatedItems?.data || [];
+  const pagination = paginatedItems?.pagination;
+  const totalPages = pagination?.totalPages || 1;
+
+  type GroupedItems = {
+    [key: string]: Item[];
+  };
+
+  const groupedItems = items.reduce((acc, item) => {
+    const dateKey = format(new Date(item.date), "yyyy.MM.dd", {
+      locale: ko,
+    });
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
+    }
+    acc[dateKey].push(item);
+    return acc;
+  }, {} as GroupedItems);
+
+  const sortedDates = Object.keys(groupedItems || {}).sort(
+    (a, b) => new Date(b).getTime() - new Date(a).getTime()
+  );
+
+  if (items.length === 0) {
+    return (
+      <div className='text-center py-10 text-gray-500'>
+        검색 결과가 없습니다.
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className='space-y-8'>
+        {sortedDates.map((date) => (
+          <div key={date}>
+            <div className='border-t-2 border-[#111111] mb-4'></div>
+            <h2 className='text-lg font-semibold text-gray-800 mb-4 ml-4'>
+              {date}
+            </h2>
+            <div className='space-y-4'>
+              {groupedItems[date]?.map((item) => (
+                <MyItem
+                  key={item.id}
+                  item={item}
+                  onClick={() => {
+                    router.push(item.link || "");
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {totalPages > 1 && (
+        <div className='flex justify-center py-20'>
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
+    </>
+  );
+}
+
+function MyItemListSkeleton() {
+  return (
+    <div className='space-y-8'>
+      <div className='flex flex-col gap-4'>
+        <div className='border-t-2 border-[#111111] mb-4'></div>
+        <Skeleton className='h-6 w-32 ml-4' />
+        <div className='space-y-4'>
+          {Array.from({ length: 2 }).map((_, idx) => (
+            <div
+              key={idx}
+              className='flex p-4 gap-4 items-center border-t border-gray-200 justify-between'
+            >
+              <div className='flex flex-1 flex-shrink-0 gap-6 items-center'>
+                <Skeleton className='w-29 h-29 rounded-sm' />
+                <div className='flex flex-col gap-1.5 flex-1'>
+                  <Skeleton className='h-6 w-3/4' />
+                  <Skeleton className='h-4 w-1/2' />
+                </div>
+              </div>
+              <div className='mx-4 h-29 w-px bg-gray-100 hidden md:block'></div>
+              <div className='flex flex-col items-center gap-2 text-center w-full md:w-1/3 flex-shrink-0'>
+                <Skeleton className='h-6 w-24' />
+                <Skeleton className='h-4 w-32' />
+                <Skeleton className='h-4 w-28' />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className='flex flex-col gap-4'>
+        <div className='border-t-2 border-[#111111] mb-4'></div>
+        <Skeleton className='h-6 w-32 ml-4' />
+        <div className='space-y-4'>
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <div
+              key={idx}
+              className='flex p-4 gap-4 items-center border-t border-gray-200 justify-between'
+            >
+              <div className='flex flex-1 flex-shrink-0 gap-6 items-center'>
+                <Skeleton className='w-29 h-29 rounded-sm' />
+                <div className='flex flex-col gap-1.5 flex-1'>
+                  <Skeleton className='h-6 w-3/4' />
+                  <Skeleton className='h-4 w-1/2' />
+                </div>
+              </div>
+              <div className='mx-4 h-29 w-px bg-gray-100 hidden md:block'></div>
+              <div className='flex flex-col items-center gap-2 text-center w-full md:w-1/3 flex-shrink-0'>
+                <Skeleton className='h-6 w-24' />
+                <Skeleton className='h-4 w-32' />
+                <Skeleton className='h-4 w-28' />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className='flex justify-center py-20'>
+        <Skeleton className='h-8 w-48' />
+      </div>
+    </div>
+  );
+}
