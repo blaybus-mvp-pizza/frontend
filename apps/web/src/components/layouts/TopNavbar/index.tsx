@@ -12,7 +12,7 @@ export function TopNavBar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <header className="fixed z-50 bg-white top-0 left-0 right-0 border-b border-[#E5E5EC]">
+    <header className="z-50 bg-white top-0 left-0 right-0 border-b border-[#E5E5EC]">
       <div className="bg-black text-center">
         <Typography
           variant="caption"
