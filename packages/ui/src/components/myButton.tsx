@@ -13,11 +13,11 @@ export function MyButton({
 }: MyButtonProps) {
   return (
     <button
-      className={`p-2 cursor-pointer rounded-sm border-[#E5E5EC] border ${className || ""}`}
+      className={`px-2 py-1 cursor-pointer rounded-sm border-[#E5E5EC] border ${className || ""}`}
       onClick={onClick}
       {...props}
     >
-      <Typography variant="button" weight="bold">
+      <Typography variant="button" weight={'semibold'}>
         {text}
       </Typography>
     </button>

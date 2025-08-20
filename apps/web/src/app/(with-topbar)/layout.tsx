@@ -10,7 +10,7 @@ export default function RootLayout({
   return (
     <>
       <TopNavBar />
-      <main className='pt-5 relative max-w-container px-2 md:px-4 mx-auto w-full'>
+      <main className='pt-5 min-h-[100svh] relative max-w-container px-2 md:px-4 mx-auto w-full'>
         {children}
       </main>
       <Footer />

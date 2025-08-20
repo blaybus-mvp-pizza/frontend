@@ -122,7 +122,7 @@ function ProductContent() {
         <div className="flex gap-x-2 text-nowrap overflow-x-auto" style={{scrollbarWidth:'none'}}>
           <span
             onClick={() => handleFilterClick("전체")}
-            className={`${filter === "전체" ? "bg-black text-white" : "bg-white text-[#111111]"} cursor-pointer px-4 py-2 border border-[#E5E5E5] rounded-full`}
+            className={`${filter === "전체" ? "bg-black text-white" : "bg-white text-[#111111]"} cursor-pointer px-3 py-1 border border-[#E5E5E5] rounded-full`}
           >
             전체
           </span>
@@ -130,7 +130,7 @@ function ProductContent() {
             <span
               key={v.name}
               onClick={() => handleFilterClick(v.name)}
-              className={`${filter === v.name ? "bg-black text-white" : "bg-white text-[#111111]"} cursor-pointer px-4 py-2 border border-[#E5E5E5] rounded-full`}
+              className={`${filter === v.name ? "bg-black text-white" : "bg-white text-[#111111]"} cursor-pointer px-3 py-1 border border-[#E5E5E5] rounded-full`}
             >
               {v.name}
             </span>

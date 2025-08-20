@@ -89,7 +89,7 @@ export default function HomePage() {
       </div>
 
       {/* 카테고리 태그 */}
-      <div className="mt-6 md:mt-8">
+      <div className="mt-6 md:mt-10">
         <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2 md:gap-3">
           {PRODUCT_TAGS.map((v) => (
             <div
@@ -119,7 +119,7 @@ export default function HomePage() {
       </div>
 
       {/* 상품 리스트 섹션 */}
-      <div className="space-y-12 md:space-y-16 lg:space-y-20 mt-8 md:mt-12 lg:mt-16 pb-8 md:pb-12 lg:pb-16">
+      <div className="space-y-12 md:space-y-16 lg:space-y-20 mt-8 md:mt-12 lg:mt-14 pb-8 md:pb-12 lg:pb-16">
         <ProductSampleList
           products={urgentProducts}
           auctions={auctions}
@@ -181,7 +181,7 @@ export default function HomePage() {
                 </Typography>
               </div>
               <div className="flex h-[400px] gap-x-8">
-                <div className="relative w-[600px] h-[400px] rounded-lg overflow-hidden">
+                <div className="relative aspect-square h-[397px] w-[442px] overflow-hidden">
                   <Image
                     src={storeData.store.image_url || "/images/KANU_POPUP_THUMBNAIL.png"}
                     alt={`${storeData.store.name} 썸네일`}

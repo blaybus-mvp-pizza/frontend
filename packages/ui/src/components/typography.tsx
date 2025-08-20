@@ -19,7 +19,7 @@ const typographyVariants = cva("font-['Pretendard_Variable']", {
       caption: "text-xs md:text-sm font-normal text-muted-foreground",
       overline: "text-xs md:text-sm font-medium uppercase tracking-wider",
       label: "text-sm md:text-base font-medium",
-      button: "text-sm md:text-base font-medium",
+      button: "text-xs md:text-sm font-medium",
     },
     color: {
       default: "text-foreground",

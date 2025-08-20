@@ -39,13 +39,10 @@ export interface ProductDetail {
 
 export interface StoreMeta {
   store_id: number;
-  store_name: string;
-  logo_image?: string;
-  banner_image?: string;
+  name: string;
+  image_url?: string;
   description?: string;
-  products_count: number;
-  followers_count: number;
-  is_following?: boolean;
+  sales_description?: string;
 }
 
 export interface StoreWithProducts {
