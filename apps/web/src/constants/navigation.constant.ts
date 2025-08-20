@@ -1,5 +1,5 @@
 export const TOP_NAVBAR_MENU = [
-  { name: "홈", href: "/" },
+  { name: "홈", href: "/home" },
   { name: "인기상품", href: "/products?content=popular" },
   { name: "신규상품", href: "/products?content=new" },
   { name: "오픈예정", href: "/products?content=upcoming" },
