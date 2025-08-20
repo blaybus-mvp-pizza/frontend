@@ -5,18 +5,19 @@ import Image from 'next/image';
 import { useGoogleLogin } from '@/api/hooks/mutations/useAuth';
 import { useUIStore } from '@/store/ui.store';
 
-export default function LoginForm() {
+export default function SignupForm() {
   const googleLogin = useGoogleLogin();
   const { setLoading, isLoading } = useUIStore();
 
-  const handleGoogleLogin = async () => {
-    setLoading('google-login', true);
+  const handleGoogleSignup = async () => {
+    setLoading('google-signup', true);
     try {
+      // Same OAuth flow for signup as login
       await googleLogin.mutateAsync();
     } catch (error) {
-      console.error('Google login failed:', error);
+      console.error('Google signup failed:', error);
     } finally {
-      setLoading('google-login', false);
+      setLoading('google-signup', false);
     }
   };
 
@@ -24,20 +25,20 @@ export default function LoginForm() {
     <div className='flex flex-col gap-8 w-full max-w-[400px] mx-auto px-4'>
       <div className='flex flex-col items-center gap-2 w-full'>
         <p className='text-lg md:text-[20px] font-normal leading-[1.4] text-center tracking-[-0.025em] text-[#767676] w-full'>
-          가치 있는 소비, 특별한 시작
+          나팔과 함께 시작하는 의미 있는 소비
         </p>
         <div className='flex flex-col items-center gap-0.5 w-full'>
           <h1 className='text-xl md:text-[22px] font-bold leading-[1.4] text-center tracking-[-0.025em] text-[#111111]'>
-            세상을 바꾸는 소비
+            회원가입하고
           </h1>
           <h1 className='text-xl md:text-[22px] font-bold leading-[1.4] tracking-[-0.025em] text-[#111111]'>
-            지금 나팔에서 특별한 변화를 경험하세요.
+            특별한 쇼핑 경험을 시작하세요.
           </h1>
         </div>
       </div>
       <Button
-        onClick={handleGoogleLogin}
-        disabled={isLoading('google-login') || googleLogin.isPending}
+        onClick={handleGoogleSignup}
+        disabled={isLoading('google-signup') || googleLogin.isPending}
         className='
           w-full h-[50px] mx-auto
           py-[15px] px-6
@@ -58,16 +59,16 @@ export default function LoginForm() {
           />
         </div>
         <span>
-          {isLoading('google-login') || googleLogin.isPending
-            ? '로그인 중...'
-            : 'Google로 시작하기'}
+          {isLoading('google-signup') || googleLogin.isPending
+            ? '회원가입 중...'
+            : 'Google로 회원가입'}
         </span>
         <div className='w-6 h-6'></div>
       </Button>
       <div className='text-center text-sm text-[#767676]'>
-        처음이신가요?{' '}
-        <a href='/auth/signup' className='text-[#111111] font-medium hover:underline'>
-          회원가입
+        이미 계정이 있으신가요?{' '}
+        <a href='/auth/login' className='text-[#111111] font-medium hover:underline'>
+          로그인
         </a>
       </div>
     </div>

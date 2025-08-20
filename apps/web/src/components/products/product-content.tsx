@@ -119,7 +119,7 @@ function ProductContent() {
         <h2 className="text-sm text-gray-500">
           {CONTENT_TITLES[content].subtitle}
         </h2>
-        <div className="flex gap-x-2">
+        <div className="flex gap-x-2 text-nowrap overflow-x-auto" style={{scrollbarWidth:'none'}}>
           <span
             onClick={() => handleFilterClick("전체")}
             className={`${filter === "전체" ? "bg-black text-white" : "bg-white text-[#111111]"} cursor-pointer px-4 py-2 border border-[#E5E5E5] rounded-full`}
@@ -142,7 +142,7 @@ function ProductContent() {
       <div className="flex flex-col gap-y-4 py-4">
         {/* 상단 필터 버튼과 정렬 */}
         <div className="flex justify-between items-center">
-          <div className="flex gap-x-3">
+          <div className="flex gap-3 flex-wrap">
             {/* 상태 드롭다운 */}
             <Dropdown
               value={status}

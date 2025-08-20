@@ -600,8 +600,14 @@ const filterAndSortProducts = (
   return filtered;
 };
 
-// API service functions
-export const productApi = {
+// Import real API if enabled
+import { productApiReal } from './products-real';
+
+// Check if we should use mock data
+const USE_MOCK_DATA = process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA === 'true';
+
+// Mock API service functions
+const productApiMock = {
   // Get paginated products with filters
   async getProductsWithPagination(
     filters: ProductFilters = {}
@@ -723,3 +729,6 @@ export const productApi = {
     return auction || null;
   },
 };
+
+// Export the appropriate API based on environment
+export const productApi = USE_MOCK_DATA ? productApiMock : productApiReal;

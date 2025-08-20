@@ -8,6 +8,7 @@ import {
   useFeaturedProducts,
   usePopupStoreProducts,
 } from "@/hooks/queries/useProducts";
+import { useRecentStores } from "@/api/hooks/queries/useProducts";
 import {
   Skeleton,
   ProductListSkeleton,
@@ -23,6 +24,9 @@ export default function HomePage() {
 
   // Fetch Kanu popup store products (ID: 10)
   const { data: kanuData, isLoading: kanuLoading } = usePopupStoreProducts(10);
+  
+  // Fetch recent stores with products
+  const { data: recentStoresData, isLoading: recentStoresLoading } = useRecentStores();
 
   const handleProductClick = (productId: number) => {
     console.log(`Clicked product ${productId}`);
@@ -33,7 +37,7 @@ export default function HomePage() {
   };
 
   // Show skeleton loading state
-  if (featuredLoading || kanuLoading) {
+  if (featuredLoading || kanuLoading || recentStoresLoading) {
     return (
       <div className="min-h-screen">
         {/* 히어로 배너 skeleton */}
@@ -160,8 +164,115 @@ export default function HomePage() {
         />
       </div>
 
-      {/* Kanu Popup Store Section 1 */}
-      {kanuProducts.length > 0 && (
+      {/* Recent Popup Stores Section */}
+      {recentStoresData && recentStoresData.items && recentStoresData.items.length > 0 && (
+        <>
+          {recentStoresData.items.filter(storeData => storeData.products && storeData.products.length > 0).map((storeData, storeIndex) => (
+            <div key={`store-${storeData.store.store_id}`} className="w-full space-y-2 mt-20">
+              <div className="mt-8 flex gap-x-2 items-center">
+                <span className="bg-black text-brand-mint items-center p-1 w-fit flex gap-x-2">
+                  <MapIcon />
+                  <Typography className="text-brand-mint font-semibold md:text-xl">
+                    {storeData.store.name}
+                  </Typography>
+                </span>
+                <Typography variant={"h6"} className="md:text-xl font-semibold">
+                  {storeData.store.sales_description || '팝업스토어에서 판매중인 아이템'}
+                </Typography>
+              </div>
+              <div className="flex h-[400px] gap-x-8">
+                <div className="relative w-[600px] h-[400px] rounded-lg overflow-hidden">
+                  <Image
+                    src={storeData.store.image_url || "/images/KANU_POPUP_THUMBNAIL.png"}
+                    alt={`${storeData.store.name} 썸네일`}
+                    fill
+                    className="object-cover"
+                    sizes="600px"
+                    loading="lazy"
+                  />
+                  {/* Store description overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
+                    <Typography variant="h5" className="text-white font-bold mb-2">
+                      {storeData.store.name}
+                    </Typography>
+                    <Typography variant="body1" className="text-white/90">
+                      {storeData.store.description}
+                    </Typography>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  {storeData.products.slice(0, 2).map((product) => {
+                    // Convert API product to frontend Product type for ProductCard
+                    const productData = {
+                      id: product.product_id,
+                      popupStoreId: storeData.store.store_id,
+                      category: "아트/컬렉터블",
+                      name: product.product_name,
+                      summary: product.popup_store_name,
+                      description: "",
+                      price: product.buy_now_price || product.current_highest_bid || 0,
+                      stock: 1,
+                      shippingBaseFee: 3000,
+                      shippingFreeThreshold: 50000,
+                      isActive: true,
+                      createdAt: new Date(),
+                      updatedAt: new Date(),
+                      images: product.representative_image ? [{
+                        id: product.product_id,
+                        productId: product.product_id,
+                        imageUrl: product.representative_image,
+                        sortOrder: 0,
+                      }] : [],
+                      tags: [],
+                      popupStore: {
+                        id: storeData.store.store_id,
+                        name: product.popup_store_name,
+                        createdAt: new Date(),
+                      },
+                    };
+                    
+                    const auctionData = product.auction_ends_at ? {
+                      id: product.product_id,
+                      productId: product.product_id,
+                      startPrice: product.current_highest_bid || 0,
+                      minBidPrice: 1000,
+                      buyNowPrice: product.buy_now_price || 0,
+                      depositAmount: 0,
+                      startsAt: new Date(),
+                      endsAt: new Date(product.auction_ends_at),
+                      status: new Date(product.auction_ends_at) > new Date() ? "running" as const : "ended" as const,
+                      createdAt: new Date(),
+                      updatedAt: new Date(),
+                      currentBid: product.current_highest_bid ? {
+                        id: 1,
+                        auctionId: product.product_id,
+                        userId: 1,
+                        bidOrder: 1,
+                        amount: product.current_highest_bid,
+                        createdAt: new Date(),
+                      } : undefined,
+                      bidCount: 0,
+                    } : undefined;
+                    
+                    return (
+                      <ProductCard
+                        key={product.product_id}
+                        product={productData}
+                        auction={auctionData}
+                        showTimeLeft={!!auctionData}
+                        onClick={() => handleProductClick(product.product_id)}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+
+      {/* Fallback to Kanu if no recent stores */}
+      {(!recentStoresData || !recentStoresData.items || recentStoresData.items.length === 0) && kanuProducts.length > 0 && (
         <div className="w-full space-y-2 mt-20">
           <div className="mt-8 flex gap-x-2 items-center">
             <span className="bg-black text-brand-mint items-center p-1 w-fit flex gap-x-2">
@@ -193,50 +304,6 @@ export default function HomePage() {
                 return (
                   <ProductCard
                     key={product.id}
-                    product={product}
-                    auction={auction}
-                    showTimeLeft={!!auction}
-                    onClick={() => handleProductClick(product.id)}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {kanuProducts.length > 2 && (
-        <div className="w-full space-y-2 mt-20">
-          <div className="mt-8 flex gap-x-2 items-center">
-            <span className="bg-black text-brand-mint items-center p-1 w-fit flex gap-x-2">
-              <MapIcon />
-              <Typography className="text-brand-mint font-semibold md:text-xl">
-                카누 온더 테이블
-              </Typography>
-            </span>
-            <Typography variant={"h6"} className="md:text-xl font-semibold">
-              팝업스토어에서 판매중인 아이템
-            </Typography>
-          </div>
-          <div className="flex h-[400px] gap-x-8">
-            <div className="relative w-[600px] h-[400px]">
-              <Image
-                src="/images/KANU_POPUP_THUMBNAIL.png"
-                alt="카누 팝업 썸네일"
-                fill
-                className="object-cover"
-                sizes="600px"
-                loading="lazy"
-              />
-            </div>
-            <div className="flex gap-4">
-              {kanuProducts.slice(0, 2).map((product) => {
-                const auction = kanuAuctions.find(
-                  (a) => a.productId === product.id
-                );
-                return (
-                  <ProductCard
-                    key={`dup-${product.id}`}
                     product={product}
                     auction={auction}
                     showTimeLeft={!!auction}

@@ -2,11 +2,11 @@
 
 import * as React from "react"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
-import { QueryProvider } from "@/providers/query-provider"
+import { AppProvider } from "@/providers/AppProvider"
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <QueryProvider>
+    <AppProvider>
       <NextThemesProvider
         attribute="class"
         defaultTheme="system"
@@ -16,6 +16,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
       >
         {children}
       </NextThemesProvider>
-    </QueryProvider>
+    </AppProvider>
   )
 }
