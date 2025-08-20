@@ -1,7 +1,10 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useProductsWithPagination, useAuctionsForProducts } from "@/hooks/queries/useProducts";
+import {
+  useProductsWithPagination,
+  useAuctionsForProducts,
+} from "@/hooks/queries/useProducts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dropdown } from "@/components/ui/dropdown";
 import { SearchableDropdown } from "@/components/ui/searchable-dropdown";
@@ -26,46 +29,51 @@ function ProductContent() {
   const router = useRouter();
 
   // URL parameters with defaults
-  const content = (searchParams.get("content") as ContentType) || DEFAULT_FILTERS.content;
+  const content =
+    (searchParams.get("content") as ContentType) || DEFAULT_FILTERS.content;
   const filter = searchParams.get("filter") || DEFAULT_FILTERS.filter;
   const category = searchParams.get("category");
   const sort = searchParams.get("sort") || DEFAULT_FILTERS.sort;
   const search = searchParams.get("search");
-  const page = parseInt(searchParams.get("page") || String(DEFAULT_FILTERS.page), 10);
+  const page = parseInt(
+    searchParams.get("page") || String(DEFAULT_FILTERS.page),
+    10
+  );
   const status = searchParams.get("status") || DEFAULT_FILTERS.status;
   const bidders = searchParams.get("bidders") || DEFAULT_FILTERS.bidders;
   const price = searchParams.get("price") || DEFAULT_FILTERS.price;
 
   // Prepare filters for API call
-  const filters = useMemo(() => ({
-    content,
-    category: filter !== "전체" ? filter : category || undefined,
-    sort,
-    search: search || undefined,
-    page,
-    pageSize: ITEMS_PER_PAGE,
-    status,
-    bidders,
-    price,
-  }), [content, filter, category, sort, search, page, status, bidders, price]);
+  const filters = useMemo(
+    () => ({
+      content,
+      category: filter !== "전체" ? filter : category || undefined,
+      sort,
+      search: search || undefined,
+      page,
+      pageSize: ITEMS_PER_PAGE,
+      status,
+      bidders,
+      price,
+    }),
+    [content, filter, category, sort, search, page, status, bidders, price]
+  );
 
   // Fetch paginated products using React Query
-  const { 
-    data: paginatedResponse, 
+  const {
+    data: paginatedResponse,
     isLoading: productsLoading,
-    isPlaceholderData 
+    isPlaceholderData,
   } = useProductsWithPagination(filters);
 
   // Get product IDs for fetching auctions
-  const productIds = useMemo(() => 
-    paginatedResponse?.data.map(p => p.id) || [],
+  const productIds = useMemo(
+    () => paginatedResponse?.data.map((p) => p.id) || [],
     [paginatedResponse]
   );
 
   // Fetch auctions for current page products
-  const { 
-    data: auctions 
-  } = useAuctionsForProducts(productIds);
+  const { data: auctions } = useAuctionsForProducts(productIds);
 
   const handleFilterClick = (tag: any) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -94,11 +102,51 @@ function ProductContent() {
   // Loading state
   if (productsLoading && !isPlaceholderData) {
     return (
-      <div className="min-h-screen">
-        <Skeleton className="h-20 w-full mb-4" />
-        <div className="grid grid-cols-4 gap-4">
+      <div>
+        {/* Title skeleton */}
+        <div className="space-y-4 pb-4 border-b border-[#E5E5E5]">
+          <Skeleton className="h-9 w-32" />
+          <Skeleton className="h-5 w-64" />
+          {/* Category tags skeleton */}
+          <div className="flex gap-x-2">
+            {[...Array(7)].map((_, i) => (
+              <Skeleton key={i} className="h-8 w-20 rounded-full" />
+            ))}
+          </div>
+        </div>
+
+        {/* Filters skeleton */}
+        <div className="flex flex-col gap-y-4 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex gap-3">
+              <Skeleton className="h-10 w-28 rounded-lg" />
+              <Skeleton className="h-10 w-32 rounded-lg" />
+              <Skeleton className="h-10 w-28 rounded-lg" />
+            </div>
+          </div>
+        </div>
+
+        {/* Header with count and sort skeleton */}
+        <div className="flex justify-between items-center py-4 border-b border-[#E5E5E5]">
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-10 w-28 rounded-lg" />
+        </div>
+
+        {/* Product grid skeleton */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-6">
           {[...Array(16)].map((_, i) => (
-            <Skeleton key={i} className="h-96 w-full" />
+            <div key={i} className="space-y-3">
+              <Skeleton className="aspect-square w-full rounded-lg" />
+              <div className="space-y-2 px-1">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-5 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <div className="flex justify-between items-center pt-1">
+                  <Skeleton className="h-6 w-24" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -119,10 +167,13 @@ function ProductContent() {
         <h2 className="text-sm text-gray-500">
           {CONTENT_TITLES[content].subtitle}
         </h2>
-        <div className="flex gap-x-2 text-nowrap overflow-x-auto" style={{scrollbarWidth:'none'}}>
+        <div
+          className="flex gap-x-2 text-nowrap overflow-x-auto"
+          style={{ scrollbarWidth: "none" }}
+        >
           <span
             onClick={() => handleFilterClick("전체")}
-            className={`${filter === "전체" ? "bg-black text-white" : "bg-white text-[#111111]"} cursor-pointer px-3 py-1 border border-[#E5E5E5] rounded-full`}
+            className={`${filter === "전체" ? "bg-black text-white" : "bg-white text-[#111111]"} text-sm cursor-pointer px-3 py-1 border border-[#E5E5E5] rounded-full`}
           >
             전체
           </span>
@@ -130,7 +181,7 @@ function ProductContent() {
             <span
               key={v.name}
               onClick={() => handleFilterClick(v.name)}
-              className={`${filter === v.name ? "bg-black text-white" : "bg-white text-[#111111]"} cursor-pointer px-3 py-1 border border-[#E5E5E5] rounded-full`}
+              className={`${filter === v.name ? "bg-black text-white" : "bg-white text-[#111111]"} text-sm cursor-pointer px-3 py-1 border border-[#E5E5E5] rounded-full`}
             >
               {v.name}
             </span>
