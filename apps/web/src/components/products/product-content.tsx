@@ -248,11 +248,20 @@ function ProductContent() {
             {products.map((product) => {
               // 각 상품에 대한 경매 정보 찾기
               const auction = auctions?.find((a) => a.productId === product.id);
+              
+              // If price is 0, use current_highest_bid or buy_now_price from the product
+              const displayProduct = {
+                ...product,
+                price: product.price || 
+                       (auction?.currentBid?.amount) || 
+                       (auction?.startPrice) || 
+                       product.price
+              };
 
               return (
                 <ProductCard
                   key={product.id}
-                  product={product}
+                  product={displayProduct}
                   auction={auction}
                   showTimeLeft={true}
                   onClick={() => {

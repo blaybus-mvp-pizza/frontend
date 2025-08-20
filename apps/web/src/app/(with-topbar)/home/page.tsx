@@ -17,8 +17,10 @@ import {
 } from "@/components/ui/skeleton";
 import { PRODUCT_TAGS } from "@/constants/filter.constant";
 import { Button } from "@workspace/ui/components/button";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
+  const router = useRouter();
   // Fetch featured products data using React Query
   const { data: featuredData, isLoading: featuredLoading } =
     useFeaturedProducts();
@@ -31,11 +33,16 @@ export default function HomePage() {
     useRecentStores();
 
   const handleProductClick = (productId: number) => {
-    console.log(`Clicked product ${productId}`);
+    router.push(`/products/${productId}`);
   };
 
-  const handleViewAllClick = () => {
-    console.log("View all clicked");
+  const handleViewAllClick = (content?: string) => {
+    // Redirect to products page with content parameter
+    if (content) {
+      router.push(`/products?content=${content}`);
+    } else {
+      router.push("/products");
+    }
   };
 
   // Show skeleton loading state
@@ -180,7 +187,7 @@ export default function HomePage() {
                 (storeData) =>
                   storeData.products && storeData.products.length > 0
               )
-              .map((storeData, storeIndex) => (
+              .map((storeData) => (
                 <div
                   key={`store-${storeData.store.store_id}`}
                   className="w-full space-y-2 mt-20"

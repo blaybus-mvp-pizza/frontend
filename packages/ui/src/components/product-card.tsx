@@ -43,14 +43,11 @@ export function ProductCard({
 
   return (
     <div
-      className={cn(
-        "group cursor-pointer overflow-hidden rounded-sm border border-border bg-card transition-all",
-        className
-      )}
+      className={cn("group cursor-pointer bg-card transition-all", className)}
       onClick={onClick}
     >
       {/* 이미지 컨테이너 */}
-      <div className="relative aspect-square overflow-hidden bg-muted">
+      <div className="relative aspect-square overflow-hidden rounded-sm bg-muted">
         <img
           src={mainImage}
           alt={product.name}
@@ -62,11 +59,12 @@ export function ProductCard({
           <div className="absolute bottom-0 bg-black/80 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1">
             <Typography
               variant="caption"
-              className="text-white flex items-center justify-center gap-x-1"
+              className="text-white  flex items-center justify-center gap-x-1"
             >
               <ClockIcon size={16} />
-              <span>
-                남은 시간 <span className="text-brand-mint">{timeLeft}</span>
+              <span className="font-semibold">
+                남은 시간{" "}
+                <span className="font-normal text-brand-mint">{timeLeft}</span>
               </span>
             </Typography>
           </div>
@@ -74,7 +72,7 @@ export function ProductCard({
       </div>
 
       {/* 상품 정보 */}
-      <div className="p-4 space-y-1">
+      <div className="p-1 space-y-1">
         {/* 팝업스토어 이름 */}
         {product.popupStore && (
           <Typography variant="caption" color="muted">
