@@ -43,7 +43,7 @@ export default function LoginForm() {
         toast.error("아이디 또는 비밀번호가 올바르지 않습니다.");
       } else {
         toast.success("로그인 성공");
-        router.push("/");
+        router.push("/dashboard");
       }
     });
   }
