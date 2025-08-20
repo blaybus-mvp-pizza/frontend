@@ -6,7 +6,9 @@ import {
   ProductListItem,
   StoreWithProducts,
   AuctionStatus,
-  SortOption
+  SortOption,
+  BiddersFilter,
+  PriceBucket
 } from "@/api/types";
 
 // Interface for paginated response
@@ -76,14 +78,14 @@ const convertToApiFilters = (filters: ProductFilters): ApiProductFilters => {
   if (filters.bidders) {
     switch (filters.bidders) {
       case "0-10":
-        apiFilters.bidders = "LE_10";
+        apiFilters.bidders = BiddersFilter.LE_10;
         break;
       case "11-50":
-        apiFilters.bidders = "BT_10_20";
+        apiFilters.bidders = BiddersFilter.BT_10_20;
         break;
       case "51-100":
       case "100+":
-        apiFilters.bidders = "GE_20";
+        apiFilters.bidders = BiddersFilter.GE_20;
         break;
     }
   }
@@ -92,16 +94,16 @@ const convertToApiFilters = (filters: ProductFilters): ApiProductFilters => {
   if (filters.price) {
     switch (filters.price) {
       case "0-100000":
-        apiFilters.price_bucket = "LT_10000";
+        apiFilters.price_bucket = PriceBucket.LT_10000;
         break;
       case "100000-500000":
-        apiFilters.price_bucket = "BT_30000_50000";
+        apiFilters.price_bucket = PriceBucket.BT_30000_50000;
         break;
       case "500000-1000000":
-        apiFilters.price_bucket = "BT_300000_500000";
+        apiFilters.price_bucket = PriceBucket.BT_300000_500000;
         break;
       case "1000000+":
-        apiFilters.price_bucket = "BT_300000_500000";
+        apiFilters.price_bucket = PriceBucket.BT_300000_500000;
         break;
     }
   }

@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/stores";
+import { useAuthStore } from "@/store/auth.store";
 
 export function useAuth() {
   const { isAuthenticated, login, logout } = useAuthStore();

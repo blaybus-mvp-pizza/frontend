@@ -65,7 +65,7 @@ export class ErrorHandler {
     if (!error.response) {
       const appError: AppError = {
         code: 'NETWORK_ERROR',
-        message: this.errorMessages['NETWORK_ERROR'],
+        message: this.errorMessages['NETWORK_ERROR'] || '네트워크 오류가 발생했습니다.',
       };
       showError(appError.message);
       return appError;

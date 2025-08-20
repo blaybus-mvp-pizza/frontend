@@ -50,7 +50,7 @@ export const useInfiniteProducts = (
   return useInfiniteQuery({
     queryKey: queryKeys.products.list(filters || {}),
     queryFn: ({ pageParam = 1 }) => 
-      productsApi.getProducts({ ...filters, page: pageParam }),
+      productsApi.getProducts({ ...filters, page: pageParam as number }),
     getNextPageParam: (lastPage, pages) => {
       const nextPage = pages.length + 1;
       return lastPage.total > nextPage * (filters?.size || 20) ? nextPage : undefined;

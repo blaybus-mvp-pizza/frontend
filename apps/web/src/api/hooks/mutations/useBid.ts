@@ -6,12 +6,12 @@ import { BidRequest, BidResult } from '@/api/types';
 import { AxiosError } from 'axios';
 
 export const useBidMutation = (
-  options?: UseMutationOptions<BidResult, AxiosError, BidRequest>
+  options?: UseMutationOptions<BidResult, AxiosError, BidRequest, { previousData: unknown }>
 ) => {
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useUIStore();
 
-  return useMutation({
+  return useMutation<BidResult, AxiosError, BidRequest, { previousData: unknown }>({
     mutationFn: auctionApi.placeBid,
     
     onMutate: async (variables) => {
