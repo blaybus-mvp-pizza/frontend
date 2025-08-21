@@ -9,17 +9,12 @@ import {
   Clock,
   Users,
   Shield,
-  Truck,
   ChevronLeft,
   ChevronRight,
   Plus,
   Minus,
   Store,
   Calendar,
-  MessageCircle,
-  AlertCircle,
-  Check,
-  X,
 } from "lucide-react";
 import { formatCurrency } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
@@ -27,108 +22,24 @@ import { Typography } from "@workspace/ui/components/typography";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProductDetail } from "@/hooks/queries/useProductDetail";
 import type { BidItem } from "@/types/api";
+import { cn } from "@/utils/cn";
 
 interface ProductDetailPageProps {
   productId: number;
 }
 
-// Helper functions
-function cn(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-// Components
-function ImageGallery({ images }: { images: string[] }) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  if (!images || images.length === 0) {
-    return (
-      <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-        <Store className="w-16 h-16 text-gray-300" />
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      {/* Main Image */}
-      <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
-        <Image
-          src={images[selectedIndex] || "/placeholder.png"}
-          alt="Product image"
-          fill
-          className="object-cover"
-          priority
-        />
-
-        {/* Navigation Arrows */}
-        {images.length > 1 && (
-          <>
-            <button
-              onClick={() => setSelectedIndex(Math.max(0, selectedIndex - 1))}
-              disabled={selectedIndex === 0}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur rounded-full p-2 shadow-lg disabled:opacity-50"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() =>
-                setSelectedIndex(Math.min(images.length - 1, selectedIndex + 1))
-              }
-              disabled={selectedIndex === images.length - 1}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur rounded-full p-2 shadow-lg disabled:opacity-50"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </>
-        )}
-
-        {/* Image Counter */}
-        {images.length > 1 && (
-          <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-            {selectedIndex + 1} / {images.length}
-          </div>
-        )}
-      </div>
-
-      {/* Thumbnails */}
-      {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {images.map((image, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedIndex(index)}
-              className={cn(
-                "relative w-20 h-20 rounded-lg overflow-hidden border-2 flex-shrink-0",
-                selectedIndex === index ? "border-black" : "border-gray-200"
-              )}
-            >
-              <Image
-                src={image}
-                alt={`Thumbnail ${index + 1}`}
-                fill
-                className="object-cover"
-              />
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function CountdownTimer({ endsAt }: { endsAt: string }) {
-  const [timeLeft, setTimeLeft] = useState<string>("");
+// Helper function for time remaining
+function TimeRemaining({ endsAt }: { endsAt: string }) {
+  const [timeRemaining, setTimeRemaining] = useState<string | null>(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const calculateTime = () => {
       const now = new Date();
-      const end = new Date(endsAt);
-      const diff = end.getTime() - now.getTime();
+      const endTime = new Date(endsAt);
+      const diff = endTime.getTime() - now.getTime();
 
       if (diff <= 0) {
-        setTimeLeft("종료됨");
-        clearInterval(timer);
+        setTimeRemaining("종료됨");
         return;
       }
 
@@ -137,80 +48,26 @@ function CountdownTimer({ endsAt }: { endsAt: string }) {
         (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
       );
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
       if (days > 0) {
-        setTimeLeft(`${days}일 ${hours}시간 ${minutes}분`);
+        setTimeRemaining(`${days}일 ${hours}시간 ${minutes}분`);
       } else if (hours > 0) {
-        setTimeLeft(`${hours}시간 ${minutes}분 ${seconds}초`);
+        setTimeRemaining(`${hours}시간 ${minutes}분`);
       } else {
-        setTimeLeft(`${minutes}분 ${seconds}초`);
+        setTimeRemaining(`${minutes}분`);
       }
-    }, 1000);
+    };
 
-    return () => clearInterval(timer);
+    calculateTime();
+    const interval = setInterval(calculateTime, 1000);
+
+    return () => clearInterval(interval);
   }, [endsAt]);
 
-  return <span className="font-semibold text-red-600">{timeLeft}</span>;
-}
-
-function BidHistory({ bids }: { bids: BidItem[] }) {
-  if (!bids || bids.length === 0) {
-    return (
-      <div className="text-center py-8 text-gray-400">
-        <Users className="w-12 h-12 mx-auto mb-2" />
-        <Typography variant="body2">아직 입찰 내역이 없습니다</Typography>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-3">
-      {bids.map((bid, index) => (
-        <div
-          key={`${bid.user.id}-${bid.bid_at}`}
-          className={cn(
-            "flex items-center justify-between p-4 rounded-lg",
-            index === 0 ? "bg-green-50 border border-green-200" : "bg-gray-50"
-          )}
-        >
-          <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-200">
-              {bid.user.profile_image ? (
-                <Image
-                  src={bid.user.profile_image}
-                  alt=""
-                  fill
-                  className="object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <Users className="w-5 h-5 text-gray-400" />
-                </div>
-              )}
-            </div>
-            <div>
-              <Typography variant="body2" weight="medium">
-                {bid.user.name || `입찰자 ${bid.user.id}`}
-              </Typography>
-              <Typography variant="caption" className="text-gray-500">
-                {new Date(bid.bid_at).toLocaleString("ko-KR")}
-              </Typography>
-            </div>
-          </div>
-          <div className="text-right">
-            <Typography variant="body1" weight="semibold">
-              {formatCurrency(bid.bid_amount)}
-            </Typography>
-            {index === 0 && (
-              <Typography variant="caption" className="text-green-600">
-                최고 입찰
-              </Typography>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
+    <span className="font-semibold text-red-600">
+      {timeRemaining || "계산 중..."}
+    </span>
   );
 }
 
@@ -218,12 +75,13 @@ export default function ProductDetailPage({
   productId,
 }: ProductDetailPageProps) {
   const router = useRouter();
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [bidAmount, setBidAmount] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<
-    "description" | "specs" | "shipping"
-  >("description");
+  const [activeTab, setActiveTab] = useState<"description" | "reviews" | "qa">(
+    "description"
+  );
 
-  const { product, auction, bids, similar, isLoading, refetch } =
+  const { product, auction, bids, similar, isLoading } =
     useProductDetail(productId);
 
   // Initialize bid amount
@@ -267,450 +125,473 @@ export default function ProductDetailPage({
   const currentPrice =
     auction?.current_highest_bid || auction?.start_price || 0;
 
+  const handleBidAmountChange = (direction: number) => {
+    if (!auction) return;
+    const currentAmount = bidAmount || auction.start_price;
+    const newAmount = Math.max(
+      auction.min_bid_price,
+      currentAmount + direction * auction.min_bid_price
+    );
+    setBidAmount(newAmount);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+      <nav className="flex items-center gap-2 text-sm text-gray-600 mb-6">
         <button
           onClick={() => router.push("/")}
-          className="hover:text-gray-700"
+          className="hover:text-gray-800"
         >
           홈
         </button>
-        <span>/</span>
-        <button
-          onClick={() => router.push(`/stores/${product.store.store_id}`)}
-          className="hover:text-gray-700"
-        >
-          {product.store.name}
-        </button>
-        <span>/</span>
+        <span>{">"}</span>
+        <span>{product.category || "가전/리빙"}</span>
+        <span>{">"}</span>
         <span className="text-gray-900">{product.name}</span>
       </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Left: Image Gallery */}
-        <ImageGallery images={product.images || []} />
+        <div>
+          {/* Main Image */}
+          <div className="aspect-square bg-gray-50 rounded-lg overflow-hidden mb-4">
+            <Image
+              src={product.images?.[selectedImageIndex] || "/placeholder.png"}
+              alt={product.name}
+              width={600}
+              height={600}
+              className="w-full h-full object-cover"
+              priority
+            />
+          </div>
 
-        {/* Right: Product Info */}
-        <div className="space-y-6">
-          {/* Store Info */}
-          <div className="flex items-center justify-between pb-4 border-b">
-            <div className="flex items-center gap-3">
-              <Store className="w-5 h-5 text-gray-500" />
-              <Typography variant="body2" weight="medium">
-                {product.store.name}
-              </Typography>
+          {/* Thumbnail Images */}
+          {product.images && product.images.length > 1 && (
+            <div className="grid grid-cols-4 gap-2">
+              {product.images.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImageIndex(index)}
+                  className={cn(
+                    "aspect-square bg-gray-50 rounded overflow-hidden border-2 transition-all",
+                    selectedImageIndex === index
+                      ? "border-black"
+                      : "border-transparent hover:border-gray-300"
+                  )}
+                >
+                  <Image
+                    src={image}
+                    alt={`${product.name} ${index + 1}`}
+                    width={150}
+                    height={150}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
             </div>
+          )}
+
+          {/* Product Info Tabs */}
+          <div className="mt-8">
+            <div className="flex gap-8 border-b">
+              <button
+                onClick={() => setActiveTab("description")}
+                className={cn(
+                  "py-4 px-1 border-b-2 font-medium text-sm transition-colors",
+                  activeTab === "description"
+                    ? "border-black text-gray-900"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                )}
+              >
+                상품정보
+              </button>
+              <button
+                onClick={() => setActiveTab("reviews")}
+                className={cn(
+                  "py-4 px-1 border-b-2 font-medium text-sm transition-colors",
+                  activeTab === "reviews"
+                    ? "border-black text-gray-900"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                )}
+              >
+                리뷰 ({bids?.total || 0})
+              </button>
+              <button
+                onClick={() => setActiveTab("qa")}
+                className={cn(
+                  "py-4 px-1 border-b-2 font-medium text-sm transition-colors",
+                  activeTab === "qa"
+                    ? "border-black text-gray-900"
+                    : "border-transparent text-gray-500 hover:text-gray-700"
+                )}
+              >
+                문의 (5)
+              </button>
+            </div>
+
+            <div className="py-6">
+              {activeTab === "description" && (
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="font-semibold mb-3">상품 사양</h3>
+                    <table className="w-full text-sm">
+                      <tbody>
+                        {product.specs?.material && (
+                          <tr className="border-b">
+                            <td className="py-3 text-gray-600 w-32">소재</td>
+                            <td className="py-3">{product.specs.material}</td>
+                          </tr>
+                        )}
+                        {product.specs?.place_of_use && (
+                          <tr className="border-b">
+                            <td className="py-3 text-gray-600">사용 장소</td>
+                            <td className="py-3">
+                              {product.specs.place_of_use}
+                            </td>
+                          </tr>
+                        )}
+                        {(product.specs?.width_cm ||
+                          product.specs?.height_cm) && (
+                          <tr className="border-b">
+                            <td className="py-3 text-gray-600">크기 (W×H)</td>
+                            <td className="py-3">
+                              {product.specs.width_cm}cm ×{" "}
+                              {product.specs.height_cm}cm
+                            </td>
+                          </tr>
+                        )}
+                        {product.specs?.tolerance_cm && (
+                          <tr className="border-b">
+                            <td className="py-3 text-gray-600">오차 범위</td>
+                            <td className="py-3">
+                              ±{product.specs.tolerance_cm}cm
+                            </td>
+                          </tr>
+                        )}
+                        {product.specs?.edition_info && (
+                          <tr className="border-b">
+                            <td className="py-3 text-gray-600">에디션</td>
+                            <td className="py-3">
+                              {product.specs.edition_info}
+                            </td>
+                          </tr>
+                        )}
+                        {product.specs?.condition_note && (
+                          <tr className="border-b">
+                            <td className="py-3 text-gray-600">컨디션</td>
+                            <td className="py-3">
+                              {product.specs.condition_note}
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold mb-3">제품 특징</h3>
+                    <ul className="text-sm text-gray-700 space-y-2">
+                      <li>• 100% 천연 오크 원목 사용</li>
+                      <li>• 친환경 수성 도료로 마감 처리</li>
+                      <li>• 조립식 구조로 이동 및 보관이 용이</li>
+                      <li>• 북유럽 스타일의 미니멀한 디자인</li>
+                      <li>• 다양한 공간에 어울리는 컴팩트한 사이즈</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold mb-3">배송/교환/환불</h3>
+                    <div className="text-sm text-gray-700 space-y-2">
+                      <p>
+                        <strong>배송비:</strong> 무료배송
+                      </p>
+                      <p>
+                        <strong>배송기간:</strong> 결제 완료 후 2-3일 이내
+                        (주말/공휴일 제외)
+                      </p>
+                      <p>
+                        <strong>교환/환불:</strong> 상품 수령 후 7일 이내 가능
+                        (단순 변심 시 왕복 배송비 구매자 부담)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "reviews" && (
+                <div className="text-center py-8 text-gray-500">
+                  아직 리뷰가 없습니다.
+                </div>
+              )}
+
+              {activeTab === "qa" && (
+                <div className="text-center py-8 text-gray-500">
+                  아직 문의가 없습니다.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Product Details & Purchase */}
+        <div>
+          {/* Category Tags */}
+          <div className="flex gap-2 mb-4">
+            {product.tags?.map((tag) => (
+              <span
+                key={tag}
+                className="px-3 py-1 text-xs border border-gray-300 rounded"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
 
           {/* Product Title */}
-          <div>
-            <div className="flex items-start justify-between mb-2">
-              <Typography variant="h2">
-                {product.title || product.name}
-              </Typography>
-              <div className="flex gap-2">
-                <button className="p-2 rounded-lg border hover:bg-gray-50">
-                  <Heart className="w-5 h-5" />
-                </button>
-                <button className="p-2 rounded-lg border hover:bg-gray-50">
-                  <Share2 className="w-5 h-5" />
-                </button>
+          <h1 className="text-2xl font-bold mb-2">
+            {product.title || product.name}
+          </h1>
+          <p className="text-gray-600 mb-6">{product.description}</p>
+
+          {/* Store Info */}
+          <div className="bg-gray-50 p-4 rounded-lg mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <img
+                  src={product.store?.image_url || "/placeholder.png"}
+                  alt={product.store?.name}
+                  className="w-12 h-12 rounded"
+                />
+                <div>
+                  <p className="font-semibold">{product.store?.name}</p>
+                  <p className="text-sm text-gray-600">
+                    {product.store?.description}
+                  </p>
+                </div>
+              </div>
+              <button className="text-gray-400">
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Price Info */}
+          <div className="border-t border-b py-4 mb-6">
+            <div className="flex items-baseline justify-between mb-2">
+              <span className="text-sm text-gray-600">현재가</span>
+              <div className="text-right">
+                <span className="text-2xl font-bold">
+                  {formatCurrency(currentPrice)}
+                </span>
+                <span className="text-sm text-green-600 ml-2">최소 입찰가</span>
               </div>
             </div>
-            {product.description && (
-              <Typography variant="body2" className="text-gray-600">
-                {product.description}
-              </Typography>
+          </div>
+
+          {/* Bid Amount Control */}
+          {isAuctionActive && (
+            <div className="mb-6">
+              <p className="text-sm text-gray-600 mb-2">입찰 금액</p>
+              <div className="flex items-center gap-2 mb-3">
+                <button
+                  onClick={() => handleBidAmountChange(-1)}
+                  className="w-10 h-10 border rounded flex items-center justify-center hover:bg-gray-50"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <input
+                  type="text"
+                  value={bidAmount ? formatCurrency(bidAmount) : ""}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    setBidAmount(value ? Number(value) : null);
+                  }}
+                  className="flex-1 px-4 py-2 border rounded text-center font-semibold"
+                />
+                <button
+                  onClick={() => handleBidAmountChange(1)}
+                  className="w-10 h-10 border rounded flex items-center justify-center hover:bg-gray-50"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-xs text-gray-500">
+                * 최소 입찰 단위:{" "}
+                {formatCurrency(auction?.min_bid_price || 5000)}
+              </p>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 mb-6">
+            {isAuctionActive ? (
+              <>
+                <button className="flex-1 py-3 bg-black text-white rounded font-semibold hover:bg-gray-800">
+                  입찰하기
+                </button>
+                {auction?.buy_now_price && (
+                  <button className="flex-1 py-3 border border-black rounded font-semibold hover:bg-gray-50">
+                    즉시 구매하기
+                  </button>
+                )}
+              </>
+            ) : auction?.status === "SCHEDULED" ? (
+              <button
+                className="flex-1 py-3 bg-gray-300 text-gray-500 rounded font-semibold"
+                disabled
+              >
+                <Calendar className="w-4 h-4 inline mr-2" />
+                경매 예정
+              </button>
+            ) : (
+              <button
+                className="flex-1 py-3 bg-gray-300 text-gray-500 rounded font-semibold"
+                disabled
+              >
+                경매 종료
+              </button>
             )}
           </div>
 
           {/* Auction Info */}
           {auction && (
-            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-gray-500" />
-                  <Typography variant="body2" className="text-gray-600">
-                    {auction.status === "SCHEDULED"
-                      ? "시작까지"
-                      : auction.status === "RUNNING"
-                        ? "종료까지"
-                        : auction.status === "ENDED"
-                          ? "경매 종료"
-                          : "경매 취소"}
-                  </Typography>
-                </div>
-                {auction.status === "RUNNING" && (
-                  <CountdownTimer endsAt={auction.ends_at} />
-                )}
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-gray-500" />
-                  <Typography variant="body2" className="text-gray-600">
-                    입찰 참여
-                  </Typography>
-                </div>
-                <Typography variant="body1" weight="semibold">
-                  {auction.bidder_count}명
-                </Typography>
-              </div>
-
-              {auction.deposit_amount > 0 && (
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-gray-500" />
-                    <Typography variant="body2" className="text-gray-600">
-                      보증금
-                    </Typography>
-                  </div>
-                  <Typography variant="body1" weight="semibold">
-                    {formatCurrency(auction.deposit_amount)}
-                  </Typography>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Price Section */}
-          <div className="space-y-4">
-            <div>
-              <Typography variant="body2" className="text-gray-600 mb-1">
-                {auction?.current_highest_bid ? "현재 최고가" : "시작가"}
-              </Typography>
-              <Typography variant="h2" weight="bold">
-                {formatCurrency(currentPrice)}
-              </Typography>
-            </div>
-
-            {/* Bid Steps */}
-            {isAuctionActive && auction.bid_steps && (
-              <div className="space-y-2">
-                <Typography variant="caption" className="text-gray-600">
-                  추천 입찰가
-                </Typography>
-                <div className="flex gap-2 flex-wrap">
-                  {auction.bid_steps.slice(0, 3).map((step) => (
-                    <button
-                      key={step}
-                      onClick={() => setBidAmount(step)}
-                      className={cn(
-                        "px-4 py-2 rounded-lg border transition-colors",
-                        bidAmount === step
-                          ? "border-black bg-black text-white"
-                          : "border-gray-200 hover:border-gray-300"
-                      )}
-                    >
-                      {formatCurrency(step)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Custom Bid Input */}
-            {isAuctionActive && (
+            <div className="bg-gray-50 p-4 rounded-lg mb-6">
               <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() =>
-                      setBidAmount(
-                        Math.max(
-                          auction.min_bid_price,
-                          (bidAmount || 0) - auction.min_bid_price
-                        )
-                      )
-                    }
-                    className="p-2 rounded-lg border hover:bg-gray-50"
-                  >
-                    <Minus className="w-4 h-4" />
-                  </button>
-                  <input
-                    type="text"
-                    value={bidAmount ? formatCurrency(bidAmount) : ""}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/[^0-9]/g, "");
-                      setBidAmount(value ? Number(value) : null);
-                    }}
-                    className="flex-1 px-4 py-3 text-center border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                  />
-                  <button
-                    onClick={() =>
-                      setBidAmount((bidAmount || 0) + auction.min_bid_price)
-                    }
-                    className="p-2 rounded-lg border hover:bg-gray-50"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                </div>
-                <div className="flex items-center gap-1 text-sm text-gray-500">
-                  <AlertCircle className="w-3 h-3" />
-                  최소 입찰 단위: {formatCurrency(auction.min_bid_price)}
-                </div>
-              </div>
-            )}
-
-            {/* Buy Now Price */}
-            {auction?.buy_now_price && (
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                <Typography variant="body2">즉시구매가</Typography>
-                <Typography variant="body1" weight="semibold">
-                  {formatCurrency(auction.buy_now_price)}
-                </Typography>
-              </div>
-            )}
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3">
-            {isAuctionActive ? (
-              <>
-                <Button
-                  size="lg"
-                  className="flex-1"
-                  disabled={!bidAmount || bidAmount <= currentPrice}
-                >
-                  입찰하기
-                </Button>
-                {auction.buy_now_price && (
-                  <Button size="lg" variant="outline" className="flex-1">
-                    즉시구매
-                  </Button>
-                )}
-              </>
-            ) : auction?.status === "SCHEDULED" ? (
-              <Button size="lg" className="flex-1" disabled>
-                <Calendar className="w-4 h-4 mr-2" />
-                경매 예정
-              </Button>
-            ) : (
-              <Button size="lg" className="flex-1" disabled>
-                경매 종료
-              </Button>
-            )}
-          </div>
-
-          {/* Trust Badges */}
-          <div className="flex gap-4 py-4 border-t">
-            <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-gray-500" />
-              <Typography variant="caption" className="text-gray-600">
-                안전거래
-              </Typography>
-            </div>
-            <div className="flex items-center gap-2">
-              <Truck className="w-4 h-4 text-gray-500" />
-              <Typography variant="caption" className="text-gray-600">
-                무료배송
-              </Typography>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-gray-500" />
-              <Typography variant="caption" className="text-gray-600">
-                정품보증
-              </Typography>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Product Details Tabs */}
-      <div className="mt-12">
-        <div className="border-b">
-          <div className="flex gap-8">
-            {["description", "specs", "shipping"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab as any)}
-                className={cn(
-                  "py-4 px-1 border-b-2 font-medium text-sm transition-colors",
-                  activeTab === tab
-                    ? "border-black text-gray-900"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
-                )}
-              >
-                {tab === "description" && "상품 설명"}
-                {tab === "specs" && "상품 스펙"}
-                {tab === "shipping" && "배송/교환/환불"}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="py-8">
-          {activeTab === "description" && (
-            <div className="space-y-8">
-              <div className="prose max-w-none">
-                <Typography variant="body1" className="whitespace-pre-wrap">
-                  {product.description || "상품 설명이 없습니다."}
-                </Typography>
-              </div>
-
-              {/* Tags */}
-              {product.tags && product.tags.length > 0 && (
-                <div>
-                  <Typography
-                    variant="body2"
-                    weight="semibold"
-                    className="mb-3"
-                  >
-                    관련 태그
-                  </Typography>
-                  <div className="flex flex-wrap gap-2">
-                    {product.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200 cursor-pointer"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Bid History */}
-              {bids && bids.items && (
-                <div>
-                  <Typography variant="h4" weight="semibold" className="mb-4">
-                    입찰 내역
-                  </Typography>
-                  <BidHistory bids={bids.items} />
-                  {bids.total > bids.items.length && (
-                    <button className="w-full mt-4 py-2 text-sm text-gray-600 hover:text-gray-900">
-                      더 보기 ({bids.total - bids.items.length}개 더)
-                    </button>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">남은 시간</span>
+                  {auction.status === "RUNNING" && (
+                    <TimeRemaining endsAt={auction.ends_at} />
                   )}
                 </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">입찰 참여</span>
+                  <span className="font-semibold">
+                    {auction.bidder_count}명
+                  </span>
+                </div>
+                {auction.buy_now_price && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">즉시구매가</span>
+                    <span className="font-semibold">
+                      {formatCurrency(auction.buy_now_price)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Bid History */}
+          {bids && bids.items && bids.items.length > 0 && (
+            <div className="border rounded-lg p-4">
+              <h3 className="font-semibold mb-4 flex items-center justify-between">
+                입찰 내역
+                <span className="text-sm font-normal text-gray-600">
+                  총 {bids.total}건
+                </span>
+              </h3>
+              <div className="space-y-3">
+                {bids.items.slice(0, 3).map((bid: BidItem, index: number) => (
+                  <div
+                    key={`${bid.user.id}-${bid.bid_at}`}
+                    className="flex items-center justify-between py-2 border-b last:border-0"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-200 rounded-full overflow-hidden">
+                        {bid.user.profile_image ? (
+                          <img
+                            src={bid.user.profile_image}
+                            alt={bid.user.name || "User"}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Users className="w-4 h-4 text-gray-400" />
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">
+                          {bid.user.name || `사용자 ${bid.user.id}`}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(bid.bid_at).toLocaleString("ko-KR")}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">
+                        {formatCurrency(bid.bid_amount)}
+                      </p>
+                      {index === 0 && (
+                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                          최고입찰
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {bids.total > 3 && (
+                <button className="w-full mt-4 py-2 bg-gray-100 text-sm font-medium rounded hover:bg-gray-200">
+                  입찰내역 더보기
+                </button>
               )}
             </div>
           )}
 
-          {activeTab === "specs" && (
-            <div className="bg-gray-50 rounded-lg p-6">
-              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {product.specs?.material && (
-                  <div>
-                    <dt className="text-sm text-gray-600 mb-1">소재</dt>
-                    <dd className="text-sm font-medium">
-                      {product.specs.material}
-                    </dd>
-                  </div>
-                )}
-                {product.specs?.place_of_use && (
-                  <div>
-                    <dt className="text-sm text-gray-600 mb-1">사용 장소</dt>
-                    <dd className="text-sm font-medium">
-                      {product.specs.place_of_use}
-                    </dd>
-                  </div>
-                )}
-                {(product.specs?.width_cm || product.specs?.height_cm) && (
-                  <div>
-                    <dt className="text-sm text-gray-600 mb-1">크기</dt>
-                    <dd className="text-sm font-medium">
-                      {product.specs.width_cm} × {product.specs.height_cm}cm
-                      {product.specs.tolerance_cm &&
-                        ` (±${product.specs.tolerance_cm}cm)`}
-                    </dd>
-                  </div>
-                )}
-                {product.specs?.edition_info && (
-                  <div>
-                    <dt className="text-sm text-gray-600 mb-1">에디션</dt>
-                    <dd className="text-sm font-medium">
-                      {product.specs.edition_info}
-                    </dd>
-                  </div>
-                )}
-                {product.specs?.condition_note && (
-                  <div className="sm:col-span-2">
-                    <dt className="text-sm text-gray-600 mb-1">
-                      컨디션/주의사항
-                    </dt>
-                    <dd className="text-sm font-medium">
-                      {product.specs.condition_note}
-                    </dd>
-                  </div>
-                )}
-              </dl>
-            </div>
-          )}
-
-          {activeTab === "shipping" && (
-            <div className="space-y-6">
-              <div>
-                <Typography variant="body2" weight="semibold" className="mb-2">
-                  배송 정보
-                </Typography>
-                <Typography variant="body2" className="text-gray-600">
-                  • 전 상품 무료배송
-                  <br />
-                  • 경매 종료 후 영업일 기준 2-3일 이내 발송
-                  <br />• 도서/산간 지역은 추가 1-2일 소요
-                </Typography>
-              </div>
-              <div>
-                <Typography variant="body2" weight="semibold" className="mb-2">
-                  교환/환불 정책
-                </Typography>
-                <Typography variant="body2" className="text-gray-600">
-                  • 상품 수령 후 7일 이내 교환/환불 가능
-                  <br />
-                  • 단순 변심의 경우 왕복 배송비 구매자 부담
-                  <br />
-                  • 상품 하자의 경우 판매자가 배송비 부담
-                  <br />• 경매 상품 특성상 부분 환불 불가
-                </Typography>
+          {/* Additional Info */}
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+            <div className="flex items-start gap-2">
+              <Shield className="w-5 h-5 text-blue-600 mt-0.5" />
+              <div className="text-sm">
+                <p className="font-semibold text-blue-900 mb-1">
+                  이 상품 낙찰 시 혜택
+                </p>
+                <p className="text-blue-700">무료 배송 + 나팔 포인트 1% 적립</p>
+                <p className="text-xs text-blue-600 mt-1">
+                  * 혜택은 상황에 따라 변경될 수 있습니다
+                </p>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
 
       {/* Similar Products */}
       {similar && similar.items && similar.items.length > 0 && (
-        <div className="mt-12">
-          <Typography variant="h3" weight="semibold" className="mb-6">
-            비슷한 상품
-          </Typography>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {similar.items.map((item) => (
+        <div className="mt-16">
+          <h2 className="text-xl font-bold mb-6">이 상품과 유사한 상품</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {similar.items.slice(0, 4).map((item) => (
               <button
                 key={item.product_id}
                 onClick={() => router.push(`/products/${item.product_id}`)}
-                className="group text-left"
+                className="text-left group"
               >
-                <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-3">
-                  {item.representative_image ? (
-                    <Image
-                      src={item.representative_image}
-                      alt={item.product_name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <Store className="w-8 h-8 text-gray-300" />
-                    </div>
+                <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-3">
+                  <img
+                    src={item.representative_image || "/placeholder.png"}
+                    alt={item.product_name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                  />
+                </div>
+                <p className="text-xs text-gray-600 mb-1">
+                  {item.popup_store_name}
+                </p>
+                <p className="text-sm font-medium mb-2 line-clamp-2">
+                  {item.product_name}
+                </p>
+                <p className="font-bold">
+                  {formatCurrency(
+                    item.current_highest_bid || item.buy_now_price || 0
                   )}
-                </div>
-                <div>
-                  <Typography variant="caption" className="text-gray-500">
-                    {item.popup_store_name}
-                  </Typography>
-                  <Typography variant="body2" className="line-clamp-2 mb-1">
-                    {item.product_name}
-                  </Typography>
-                  <Typography variant="body2" weight="semibold">
-                    {formatCurrency(
-                      item.current_highest_bid || item.buy_now_price || 0
-                    )}
-                  </Typography>
-                </div>
+                </p>
+                <p className="text-xs text-gray-500">
+                  입찰 {Math.floor(Math.random() * 10) + 1}명 ·{" "}
+                  {Math.floor(Math.random() * 3) + 1}일 남음
+                </p>
               </button>
             ))}
           </div>
@@ -724,19 +605,19 @@ function ProductDetailSkeleton() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <Skeleton className="h-5 w-64 mb-6" />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div className="space-y-4">
           <Skeleton className="aspect-square rounded-lg" />
-          <div className="flex gap-2">
+          <div className="grid grid-cols-4 gap-2">
             {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="w-20 h-20 rounded-lg" />
+              <Skeleton key={i} className="aspect-square rounded" />
             ))}
           </div>
         </div>
         <div className="space-y-6">
-          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-8 w-3/4" />
+          <Skeleton className="h-20" />
           <Skeleton className="h-32" />
-          <Skeleton className="h-24" />
           <Skeleton className="h-14" />
         </div>
       </div>
