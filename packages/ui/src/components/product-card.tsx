@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import { Product, Auction } from "@workspace/ui/types";
 import { Typography } from "@workspace/ui/components/typography";
 import { cn } from "@workspace/ui/lib/utils";
@@ -19,26 +20,40 @@ export function ProductCard({
   className,
   onClick,
 }: ProductCardProps) {
-  // 경매 남은 시간 계산
-  const getTimeLeft = () => {
-    if (!auction || auction.status !== "running") return null;
+  const [timeLeft, setTimeLeft] = useState<string | null>(null);
 
-    const now = new Date();
-    const end = new Date(auction.endsAt);
-    const diff = end.getTime() - now.getTime();
+  useEffect(() => {
+    // 경매 남은 시간 계산
+    const calculateTimeLeft = () => {
+      if (!auction || !auction.endsAt) return null;
 
-    if (diff <= 0) return "종료됨";
+      const now = new Date();
+      const end = new Date(auction.endsAt);
+      const diff = end.getTime() - now.getTime();
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      if (diff <= 0) return "종료됨";
 
-    if (days > 0) return `${days}일 ${hours}시간`;
-    if (hours > 0) return `${hours}시간 ${minutes}분`;
-    return `${minutes}분`;
-  };
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
-  const timeLeft = getTimeLeft();
+      if (days > 0) return `${days}일 ${hours}시간`;
+      if (hours > 0) return `${hours}시간 ${minutes}분`;
+      return `${minutes}분`;
+    };
+
+    // Initial calculation
+    setTimeLeft(calculateTimeLeft());
+
+    // Update every minute if showing time
+    if (showTimeLeft && auction?.endsAt) {
+      const interval = setInterval(() => {
+        setTimeLeft(calculateTimeLeft());
+      }, 60000); // Update every minute
+
+      return () => clearInterval(interval);
+    }
+  }, [auction, showTimeLeft]);
   const mainImage = product.images?.[0]?.imageUrl || "/placeholder.png";
 
   return (
@@ -55,7 +70,7 @@ export function ProductCard({
         />
 
         {/* 남은 시간 표시 */}
-        {showTimeLeft && timeLeft && auction?.status === "running" && (
+        {showTimeLeft && timeLeft && timeLeft !== "종료됨" && (
           <div className="absolute bottom-0 bg-black/80 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1">
             <Typography
               variant="caption"
