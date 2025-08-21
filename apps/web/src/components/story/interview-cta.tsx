@@ -1,4 +1,5 @@
 import { Button } from '@workspace/ui/components/button';
+import { cn } from '@/utils/cn';
 
 export default function InterviewCTA() {
   return (
@@ -15,29 +16,38 @@ export default function InterviewCTA() {
       }}
     >
       <div className='flex flex-col gap-1 md:gap-2 mb-4 md:mb-0'>
-        <p className='text-sm font-normal text-[#B5F5EB] leading-[180%] tracking-[-0.025em]'>
+        <p className={cn(
+          'text-sm font-normal leading-[180%] tracking-[-0.025em]',
+          'text-brand-mint'
+        )}>
           혹시 여러분도 특별한 나팔 스토리를 가지고 계신가요?
         </p>
-        <p className='text-[16px] font-semibold text-white leading-[175%] tracking-[-0.025em] md:text-[20px]'>
+        <p className={cn(
+          'text-[16px] font-semibold leading-[175%] tracking-[-0.025em] md:text-[20px]',
+          'text-text-inverse'
+        )}>
           나팔 스토리에서 더 많은 재탄생 이야기를 만나보세요.
         </p>
       </div>
 
       <Button
-        className='
-          flex-shrink-0
-          px-3 py-0 gap-2
-          w-full md:w-[110px] h-12
-          rounded-[4px] bg-white text-black
-          hover:bg-gray-100
-          cursor-pointer
-        '
+        className={cn(
+          'flex-shrink-0',
+          'px-3 py-0 gap-2',
+          'w-full md:w-[110px] h-12',
+          'rounded-[4px] bg-background-100 text-text-primary',
+          'hover:bg-background-200',
+          'cursor-pointer'
+        )}
         onClick={() => {
           // TODO: 인터뷰 신청하기 동작
           console.log('인터뷰 신청하기');
         }}
       >
-        <span className='font-semibold text-[14px] leading-[160%] tracking-[-0.025em] text-[#111111]'>
+        <span className={cn(
+          'font-semibold text-[14px] leading-[160%] tracking-[-0.025em]',
+          'text-text-primary'
+        )}>
           인터뷰 신청하기
         </span>
       </Button>

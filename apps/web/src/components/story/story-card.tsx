@@ -1,6 +1,7 @@
 'use client';
 
 import { Story } from '@workspace/ui/types';
+import { cn } from '@/utils/cn';
 
 interface StoryCardProps {
   story: Story;
@@ -13,7 +14,10 @@ export default function StoryCard({ story, onClick }: StoryCardProps) {
 
   return (
     <div
-      className='w-[301px] flex flex-col rounded-[1px] overflow-hidden bg-white cursor-pointer'
+      className={cn(
+        'w-[301px] flex flex-col rounded-[1px] overflow-hidden cursor-pointer',
+        'bg-background-100'
+      )}
       onClick={onClick}
     >
       <div className='relative w-full h-[200px] overflow-hidden bg-muted'>
@@ -26,16 +30,25 @@ export default function StoryCard({ story, onClick }: StoryCardProps) {
 
       <div className='px-4 pt-4 pb-6 space-y-3'>
         <div className='flex flex-col gap-2'>
-          <div className='font-semibold text-base text-[#111111] leading-[140%] tracking-[-0.025em] line-clamp-1'>
+          <div className={cn(
+            'font-semibold text-base leading-[140%] tracking-[-0.025em] line-clamp-1',
+            'text-text-primary'
+          )}>
             {story.title}
           </div>
-          <p className='font-medium text-sm text-[#767676] leading-[160%] tracking-[-0.025em] line-clamp-2'>
+          <p className={cn(
+            'font-medium text-sm leading-[160%] tracking-[-0.025em] line-clamp-2',
+            'text-text-tertiary'
+          )}>
             {story.content}
           </p>
         </div>
       </div>
 
-      <div className='bg-[#F5F5F5] w-full h-[96px] p-4 flex items-start space-x-4'>
+      <div className={cn(
+        'w-full h-[96px] p-4 flex items-start space-x-4',
+        'bg-background-200'
+      )}>
         <div className='relative w-10 h-10 rounded-sm overflow-hidden shrink-0'>
           <img
             src={popupStore.bannerImageUrl || '/placeholder.png'}
@@ -44,10 +57,16 @@ export default function StoryCard({ story, onClick }: StoryCardProps) {
           />
         </div>
         <div className='flex flex-col gap-1'>
-          <span className='text-sm font-semibold text-[#111111] line-clamp-1'>
+          <span className={cn(
+            'text-sm font-semibold line-clamp-1',
+            'text-text-primary'
+          )}>
             {popupStore.name}
           </span>
-          <span className='text-[13px] font-normal text-[#505050] leading-[150%] tracking-[-0.025em] line-clamp-2'>
+          <span className={cn(
+            'text-[13px] font-normal leading-[150%] tracking-[-0.025em] line-clamp-2',
+            'text-text-secondary'
+          )}>
             {popupStore.description}
           </span>
         </div>

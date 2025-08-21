@@ -4,6 +4,7 @@ import { useUserProfile } from "@/hooks/queries/useMyItems";
 import { Button } from "@workspace/ui/components/button";
 import { ChevronRight } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
+import { cn } from "@/utils/cn";
 
 interface UserProfileProps {
   onEditClick: () => void;
@@ -17,8 +18,14 @@ export default function MyProfile({ onEditClick }: UserProfileProps) {
   }
 
   return (
-    <div className='flex gap-3 items-center bg-white px-6 py-4 h-full'>
-      <div className='w-14 h-14 rounded-full overflow-hidden border-1 border-gray-200'>
+    <div className={cn(
+      'flex gap-3 items-center px-6 py-4 h-full',
+      'bg-background-100'
+    )}>
+      <div className={cn(
+        'w-14 h-14 rounded-full overflow-hidden border',
+        'border-border-default'
+      )}>
         <img
           src={user?.profileImageUrl}
           alt='profile'
@@ -28,7 +35,11 @@ export default function MyProfile({ onEditClick }: UserProfileProps) {
       <div className='text-lg font-semibold'>{user?.nickname}</div>
       <Button
         onClick={onEditClick}
-        className='flex items-center gap-0 bg-white text-black border-1 border-gray-200 rounded hover:bg-gray-100 text-[13px] font-semibold p-1.5'
+        className={cn(
+          'flex items-center gap-0 rounded text-[13px] font-semibold p-1.5',
+          'bg-background-100 text-text-primary border border-border-default',
+          'hover:bg-background-200'
+        )}
       >
         정보 수정 <ChevronRight />
       </Button>
@@ -38,7 +49,10 @@ export default function MyProfile({ onEditClick }: UserProfileProps) {
 
 function MyProfileSkeleton() {
   return (
-    <div className='flex gap-3 items-center bg-white px-6 py-4 h-full'>
+    <div className={cn(
+      'flex gap-3 items-center px-6 py-4 h-full',
+      'bg-background-100'
+    )}>
       <Skeleton className='w-14 h-14 rounded-full' />
       <Skeleton className='h-6 w-16' />
       <Skeleton className='h-8 w-20' />

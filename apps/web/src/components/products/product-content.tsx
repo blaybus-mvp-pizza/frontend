@@ -18,6 +18,7 @@ import {
   ITEMS_PER_PAGE,
   DEFAULT_FILTERS,
 } from "@/constants/product.constant";
+import { cn } from "@/utils/cn";
 import { useMemo } from "react";
 
 function ProductContent() {
@@ -150,7 +151,12 @@ function ProductContent() {
         >
           <span
             onClick={() => handleFilterClick("전체")}
-            className={`${filter === "전체" ? "bg-black text-white" : "bg-white text-[#111111]"} text-sm cursor-pointer px-3 py-1 border border-[#E5E5E5] rounded-full`}
+            className={cn(
+              'text-sm cursor-pointer px-3 py-1 border rounded-full transition-colors',
+              filter === "전체"
+                ? 'bg-text-primary text-text-inverse border-text-primary'
+                : 'bg-background-100 text-text-primary border-border-default hover:bg-background-200'
+            )}
           >
             전체
           </span>
@@ -158,7 +164,12 @@ function ProductContent() {
             <span
               key={v.name}
               onClick={() => handleFilterClick(v.name)}
-              className={`${filter === v.name ? "bg-black text-white" : "bg-white text-[#111111]"} text-sm cursor-pointer px-3 py-1 border border-[#E5E5E5] rounded-full`}
+              className={cn(
+                'text-sm cursor-pointer px-3 py-1 border rounded-full transition-colors',
+                filter === v.name
+                  ? 'bg-text-primary text-text-inverse border-text-primary'
+                  : 'bg-background-100 text-text-primary border-border-default hover:bg-background-200'
+              )}
             >
               {v.name}
             </span>

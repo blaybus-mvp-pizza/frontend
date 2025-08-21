@@ -3,6 +3,7 @@
 import React from 'react';
 import { useUIStore } from '@/store/ui.store';
 import { AnimatePresence, motion } from 'framer-motion';
+import { cn } from '@/utils/cn';
 
 export const ToastContainer: React.FC = () => {
   const toasts = useUIStore((state) => state.toasts);
@@ -11,15 +12,15 @@ export const ToastContainer: React.FC = () => {
   const getToastStyles = (type: 'success' | 'error' | 'warning' | 'info') => {
     switch (type) {
       case 'success':
-        return 'bg-green-500 text-white';
+        return 'bg-status-success text-text-inverse';
       case 'error':
-        return 'bg-red-500 text-white';
+        return 'bg-status-error text-text-inverse';
       case 'warning':
-        return 'bg-yellow-500 text-white';
+        return 'bg-status-warning text-text-inverse';
       case 'info':
-        return 'bg-blue-500 text-white';
+        return 'bg-status-info text-text-inverse';
       default:
-        return 'bg-gray-500 text-white';
+        return 'bg-background-600 text-text-inverse';
     }
   };
 
@@ -61,7 +62,10 @@ export const ToastContainer: React.FC = () => {
             initial={{ opacity: 0, y: 50, scale: 0.3 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg min-w-[300px] max-w-md ${getToastStyles(toast.type)}`}
+            className={cn(
+              'flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg min-w-[300px] max-w-md',
+              getToastStyles(toast.type)
+            )}
           >
             <div className="flex-shrink-0">
               {getToastIcon(toast.type)}

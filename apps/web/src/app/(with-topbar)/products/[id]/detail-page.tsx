@@ -3,10 +3,23 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { 
-  Heart, Share2, Clock, Users, Shield, Truck, 
-  ChevronLeft, ChevronRight, Plus, Minus, Store,
-  Calendar, MessageCircle, AlertCircle, Check, X
+import {
+  Heart,
+  Share2,
+  Clock,
+  Users,
+  Shield,
+  Truck,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Minus,
+  Store,
+  Calendar,
+  MessageCircle,
+  AlertCircle,
+  Check,
+  X,
 } from "lucide-react";
 import { formatCurrency } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
@@ -41,13 +54,13 @@ function ImageGallery({ images }: { images: string[] }) {
       {/* Main Image */}
       <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
         <Image
-          src={images[selectedIndex]}
+          src={images[selectedIndex] || "/placeholder.png"}
           alt="Product image"
           fill
           className="object-cover"
           priority
         />
-        
+
         {/* Navigation Arrows */}
         {images.length > 1 && (
           <>
@@ -59,7 +72,9 @@ function ImageGallery({ images }: { images: string[] }) {
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
-              onClick={() => setSelectedIndex(Math.min(images.length - 1, selectedIndex + 1))}
+              onClick={() =>
+                setSelectedIndex(Math.min(images.length - 1, selectedIndex + 1))
+              }
               disabled={selectedIndex === images.length - 1}
               className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur rounded-full p-2 shadow-lg disabled:opacity-50"
             >
@@ -88,7 +103,12 @@ function ImageGallery({ images }: { images: string[] }) {
                 selectedIndex === index ? "border-black" : "border-gray-200"
               )}
             >
-              <Image src={image} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
+              <Image
+                src={image}
+                alt={`Thumbnail ${index + 1}`}
+                fill
+                className="object-cover"
+              />
             </button>
           ))}
         </div>
@@ -113,7 +133,9 @@ function CountdownTimer({ endsAt }: { endsAt: string }) {
       }
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const hours = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
@@ -155,7 +177,12 @@ function BidHistory({ bids }: { bids: BidItem[] }) {
           <div className="flex items-center gap-3">
             <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-200">
               {bid.user.profile_image ? (
-                <Image src={bid.user.profile_image} alt="" fill className="object-cover" />
+                <Image
+                  src={bid.user.profile_image}
+                  alt=""
+                  fill
+                  className="object-cover"
+                />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <Users className="w-5 h-5 text-gray-400" />
@@ -187,18 +214,25 @@ function BidHistory({ bids }: { bids: BidItem[] }) {
   );
 }
 
-export default function ProductDetailPage({ productId }: ProductDetailPageProps) {
+export default function ProductDetailPage({
+  productId,
+}: ProductDetailPageProps) {
   const router = useRouter();
   const [bidAmount, setBidAmount] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<"description" | "specs" | "shipping">("description");
+  const [activeTab, setActiveTab] = useState<
+    "description" | "specs" | "shipping"
+  >("description");
 
-  const { product, auction, bids, similar, isLoading, refetch } = useProductDetail(productId);
+  const { product, auction, bids, similar, isLoading, refetch } =
+    useProductDetail(productId);
 
   // Initialize bid amount
   useEffect(() => {
     if (auction && !bidAmount) {
-      const suggestedBid = auction.bid_steps?.[0] || 
-        (auction.current_highest_bid || auction.start_price) + auction.min_bid_price;
+      const suggestedBid =
+        auction.bid_steps?.[0] ||
+        (auction.current_highest_bid || auction.start_price) +
+          auction.min_bid_price;
       setBidAmount(suggestedBid);
     }
   }, [auction, bidAmount]);
@@ -211,11 +245,17 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
-          <Typography variant="h3" className="mb-2">상품을 찾을 수 없습니다</Typography>
+          <Typography variant="h3" className="mb-2">
+            상품을 찾을 수 없습니다
+          </Typography>
           <Typography variant="body2" className="text-gray-500">
             요청하신 상품이 존재하지 않거나 삭제되었습니다.
           </Typography>
-          <Button variant="outline" className="mt-4" onClick={() => router.back()}>
+          <Button
+            variant="outline"
+            className="mt-4"
+            onClick={() => router.back()}
+          >
             돌아가기
           </Button>
         </div>
@@ -224,15 +264,24 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
   }
 
   const isAuctionActive = auction?.status === "RUNNING";
-  const currentPrice = auction?.current_highest_bid || auction?.start_price || 0;
+  const currentPrice =
+    auction?.current_highest_bid || auction?.start_price || 0;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-        <button onClick={() => router.push("/")} className="hover:text-gray-700">홈</button>
+        <button
+          onClick={() => router.push("/")}
+          className="hover:text-gray-700"
+        >
+          홈
+        </button>
         <span>/</span>
-        <button onClick={() => router.push(`/stores/${product.store.id}`)} className="hover:text-gray-700">
+        <button
+          onClick={() => router.push(`/stores/${product.store.store_id}`)}
+          className="hover:text-gray-700"
+        >
           {product.store.name}
         </button>
         <span>/</span>
@@ -249,28 +298,18 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
           <div className="flex items-center justify-between pb-4 border-b">
             <div className="flex items-center gap-3">
               <Store className="w-5 h-5 text-gray-500" />
-              <Typography variant="body2" weight="medium">{product.store.name}</Typography>
-            </div>
-            <div className="flex gap-2">
-              {product.store.instagram_link && (
-                <button className="p-2 rounded-lg hover:bg-gray-100">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
-                  </svg>
-                </button>
-              )}
-              {product.store.kakao_link && (
-                <button className="p-2 rounded-lg hover:bg-gray-100">
-                  <MessageCircle className="w-5 h-5" />
-                </button>
-              )}
+              <Typography variant="body2" weight="medium">
+                {product.store.name}
+              </Typography>
             </div>
           </div>
 
           {/* Product Title */}
           <div>
             <div className="flex items-start justify-between mb-2">
-              <Typography variant="h2">{product.title || product.name}</Typography>
+              <Typography variant="h2">
+                {product.title || product.name}
+              </Typography>
               <div className="flex gap-2">
                 <button className="p-2 rounded-lg border hover:bg-gray-50">
                   <Heart className="w-5 h-5" />
@@ -294,9 +333,13 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-gray-500" />
                   <Typography variant="body2" className="text-gray-600">
-                    {auction.status === "SCHEDULED" ? "시작까지" : 
-                     auction.status === "RUNNING" ? "종료까지" :
-                     auction.status === "ENDED" ? "경매 종료" : "경매 취소"}
+                    {auction.status === "SCHEDULED"
+                      ? "시작까지"
+                      : auction.status === "RUNNING"
+                        ? "종료까지"
+                        : auction.status === "ENDED"
+                          ? "경매 종료"
+                          : "경매 취소"}
                   </Typography>
                 </div>
                 {auction.status === "RUNNING" && (
@@ -307,16 +350,22 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Users className="w-4 h-4 text-gray-500" />
-                  <Typography variant="body2" className="text-gray-600">입찰 참여</Typography>
+                  <Typography variant="body2" className="text-gray-600">
+                    입찰 참여
+                  </Typography>
                 </div>
-                <Typography variant="body1" weight="semibold">{auction.bidder_count}명</Typography>
+                <Typography variant="body1" weight="semibold">
+                  {auction.bidder_count}명
+                </Typography>
               </div>
 
               {auction.deposit_amount > 0 && (
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Shield className="w-4 h-4 text-gray-500" />
-                    <Typography variant="body2" className="text-gray-600">보증금</Typography>
+                    <Typography variant="body2" className="text-gray-600">
+                      보증금
+                    </Typography>
                   </div>
                   <Typography variant="body1" weight="semibold">
                     {formatCurrency(auction.deposit_amount)}
@@ -340,7 +389,9 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
             {/* Bid Steps */}
             {isAuctionActive && auction.bid_steps && (
               <div className="space-y-2">
-                <Typography variant="caption" className="text-gray-600">추천 입찰가</Typography>
+                <Typography variant="caption" className="text-gray-600">
+                  추천 입찰가
+                </Typography>
                 <div className="flex gap-2 flex-wrap">
                   {auction.bid_steps.slice(0, 3).map((step) => (
                     <button
@@ -348,8 +399,8 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
                       onClick={() => setBidAmount(step)}
                       className={cn(
                         "px-4 py-2 rounded-lg border transition-colors",
-                        bidAmount === step 
-                          ? "border-black bg-black text-white" 
+                        bidAmount === step
+                          ? "border-black bg-black text-white"
                           : "border-gray-200 hover:border-gray-300"
                       )}
                     >
@@ -365,7 +416,14 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => setBidAmount(Math.max(auction.min_bid_price, (bidAmount || 0) - auction.min_bid_price))}
+                    onClick={() =>
+                      setBidAmount(
+                        Math.max(
+                          auction.min_bid_price,
+                          (bidAmount || 0) - auction.min_bid_price
+                        )
+                      )
+                    }
                     className="p-2 rounded-lg border hover:bg-gray-50"
                   >
                     <Minus className="w-4 h-4" />
@@ -380,7 +438,9 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
                     className="flex-1 px-4 py-3 text-center border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                   />
                   <button
-                    onClick={() => setBidAmount((bidAmount || 0) + auction.min_bid_price)}
+                    onClick={() =>
+                      setBidAmount((bidAmount || 0) + auction.min_bid_price)
+                    }
                     className="p-2 rounded-lg border hover:bg-gray-50"
                   >
                     <Plus className="w-4 h-4" />
@@ -408,8 +468,8 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
           <div className="flex gap-3">
             {isAuctionActive ? (
               <>
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="flex-1"
                   disabled={!bidAmount || bidAmount <= currentPrice}
                 >
@@ -437,15 +497,21 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
           <div className="flex gap-4 py-4 border-t">
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-gray-500" />
-              <Typography variant="caption" className="text-gray-600">안전거래</Typography>
+              <Typography variant="caption" className="text-gray-600">
+                안전거래
+              </Typography>
             </div>
             <div className="flex items-center gap-2">
               <Truck className="w-4 h-4 text-gray-500" />
-              <Typography variant="caption" className="text-gray-600">무료배송</Typography>
+              <Typography variant="caption" className="text-gray-600">
+                무료배송
+              </Typography>
             </div>
             <div className="flex items-center gap-2">
               <Check className="w-4 h-4 text-gray-500" />
-              <Typography variant="caption" className="text-gray-600">정품보증</Typography>
+              <Typography variant="caption" className="text-gray-600">
+                정품보증
+              </Typography>
             </div>
           </div>
         </div>
@@ -486,7 +552,13 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
               {/* Tags */}
               {product.tags && product.tags.length > 0 && (
                 <div>
-                  <Typography variant="body2" weight="semibold" className="mb-3">관련 태그</Typography>
+                  <Typography
+                    variant="body2"
+                    weight="semibold"
+                    className="mb-3"
+                  >
+                    관련 태그
+                  </Typography>
                   <div className="flex flex-wrap gap-2">
                     {product.tags.map((tag) => (
                       <span
@@ -503,7 +575,9 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
               {/* Bid History */}
               {bids && bids.items && (
                 <div>
-                  <Typography variant="h4" weight="semibold" className="mb-4">입찰 내역</Typography>
+                  <Typography variant="h4" weight="semibold" className="mb-4">
+                    입찰 내역
+                  </Typography>
                   <BidHistory bids={bids.items} />
                   {bids.total > bids.items.length && (
                     <button className="w-full mt-4 py-2 text-sm text-gray-600 hover:text-gray-900">
@@ -521,13 +595,17 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
                 {product.specs?.material && (
                   <div>
                     <dt className="text-sm text-gray-600 mb-1">소재</dt>
-                    <dd className="text-sm font-medium">{product.specs.material}</dd>
+                    <dd className="text-sm font-medium">
+                      {product.specs.material}
+                    </dd>
                   </div>
                 )}
                 {product.specs?.place_of_use && (
                   <div>
                     <dt className="text-sm text-gray-600 mb-1">사용 장소</dt>
-                    <dd className="text-sm font-medium">{product.specs.place_of_use}</dd>
+                    <dd className="text-sm font-medium">
+                      {product.specs.place_of_use}
+                    </dd>
                   </div>
                 )}
                 {(product.specs?.width_cm || product.specs?.height_cm) && (
@@ -535,20 +613,27 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
                     <dt className="text-sm text-gray-600 mb-1">크기</dt>
                     <dd className="text-sm font-medium">
                       {product.specs.width_cm} × {product.specs.height_cm}cm
-                      {product.specs.tolerance_cm && ` (±${product.specs.tolerance_cm}cm)`}
+                      {product.specs.tolerance_cm &&
+                        ` (±${product.specs.tolerance_cm}cm)`}
                     </dd>
                   </div>
                 )}
                 {product.specs?.edition_info && (
                   <div>
                     <dt className="text-sm text-gray-600 mb-1">에디션</dt>
-                    <dd className="text-sm font-medium">{product.specs.edition_info}</dd>
+                    <dd className="text-sm font-medium">
+                      {product.specs.edition_info}
+                    </dd>
                   </div>
                 )}
                 {product.specs?.condition_note && (
                   <div className="sm:col-span-2">
-                    <dt className="text-sm text-gray-600 mb-1">컨디션/주의사항</dt>
-                    <dd className="text-sm font-medium">{product.specs.condition_note}</dd>
+                    <dt className="text-sm text-gray-600 mb-1">
+                      컨디션/주의사항
+                    </dt>
+                    <dd className="text-sm font-medium">
+                      {product.specs.condition_note}
+                    </dd>
                   </div>
                 )}
               </dl>
@@ -558,20 +643,27 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
           {activeTab === "shipping" && (
             <div className="space-y-6">
               <div>
-                <Typography variant="body2" weight="semibold" className="mb-2">배송 정보</Typography>
+                <Typography variant="body2" weight="semibold" className="mb-2">
+                  배송 정보
+                </Typography>
                 <Typography variant="body2" className="text-gray-600">
-                  • 전 상품 무료배송<br />
-                  • 경매 종료 후 영업일 기준 2-3일 이내 발송<br />
-                  • 도서/산간 지역은 추가 1-2일 소요
+                  • 전 상품 무료배송
+                  <br />
+                  • 경매 종료 후 영업일 기준 2-3일 이내 발송
+                  <br />• 도서/산간 지역은 추가 1-2일 소요
                 </Typography>
               </div>
               <div>
-                <Typography variant="body2" weight="semibold" className="mb-2">교환/환불 정책</Typography>
+                <Typography variant="body2" weight="semibold" className="mb-2">
+                  교환/환불 정책
+                </Typography>
                 <Typography variant="body2" className="text-gray-600">
-                  • 상품 수령 후 7일 이내 교환/환불 가능<br />
-                  • 단순 변심의 경우 왕복 배송비 구매자 부담<br />
-                  • 상품 하자의 경우 판매자가 배송비 부담<br />
-                  • 경매 상품 특성상 부분 환불 불가
+                  • 상품 수령 후 7일 이내 교환/환불 가능
+                  <br />
+                  • 단순 변심의 경우 왕복 배송비 구매자 부담
+                  <br />
+                  • 상품 하자의 경우 판매자가 배송비 부담
+                  <br />• 경매 상품 특성상 부분 환불 불가
                 </Typography>
               </div>
             </div>
@@ -582,7 +674,9 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
       {/* Similar Products */}
       {similar && similar.items && similar.items.length > 0 && (
         <div className="mt-12">
-          <Typography variant="h3" weight="semibold" className="mb-6">비슷한 상품</Typography>
+          <Typography variant="h3" weight="semibold" className="mb-6">
+            비슷한 상품
+          </Typography>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {similar.items.map((item) => (
               <button
@@ -612,7 +706,9 @@ export default function ProductDetailPage({ productId }: ProductDetailPageProps)
                     {item.product_name}
                   </Typography>
                   <Typography variant="body2" weight="semibold">
-                    {formatCurrency(item.current_highest_bid || item.buy_now_price || 0)}
+                    {formatCurrency(
+                      item.current_highest_bid || item.buy_now_price || 0
+                    )}
                   </Typography>
                 </div>
               </button>
