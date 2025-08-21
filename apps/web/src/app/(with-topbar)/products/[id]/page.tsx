@@ -48,7 +48,9 @@ function TimeRemaining({ endsAt }: { endsAt: string }) {
       }
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const hours = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
@@ -89,7 +91,9 @@ function BidList({ bids }: { bids: BidItem[] }) {
           key={`${bid.user.id}-${bid.bid_at}`}
           className={cn(
             "flex items-center justify-between p-4 rounded-lg",
-            index === 0 ? "bg-brand-mint/10 border border-brand-mint/20" : "bg-gray-50"
+            index === 0
+              ? "bg-brand-mint/10 border border-brand-mint/20"
+              : "bg-gray-50"
           )}
         >
           <div className="flex items-center gap-3">
@@ -137,12 +141,20 @@ function ProductSpecs({ specs }: { specs: any }) {
   const specItems = [
     { label: "소재", value: specs.material },
     { label: "사용 장소", value: specs.place_of_use },
-    { label: "크기", value: specs.width_cm && specs.height_cm ? 
-      `${specs.width_cm} × ${specs.height_cm}cm` : null },
-    { label: "오차 범위", value: specs.tolerance_cm ? `±${specs.tolerance_cm}cm` : null },
+    {
+      label: "크기",
+      value:
+        specs.width_cm && specs.height_cm
+          ? `${specs.width_cm} × ${specs.height_cm}cm`
+          : null,
+    },
+    {
+      label: "오차 범위",
+      value: specs.tolerance_cm ? `±${specs.tolerance_cm}cm` : null,
+    },
     { label: "에디션", value: specs.edition_info },
     { label: "컨디션", value: specs.condition_note },
-  ].filter(item => item.value);
+  ].filter((item) => item.value);
 
   if (specItems.length === 0) return null;
 
@@ -169,28 +181,32 @@ export default function ProductDetailPage() {
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [bidAmount, setBidAmount] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<"details" | "shipping" | "refund">("details");
+  const [activeTab, setActiveTab] = useState<"details" | "shipping" | "refund">(
+    "details"
+  );
 
-  const { product, auction, bids, similar, isLoading } = useProductDetail(productId);
+  const { product, auction, bids, similar, isLoading } =
+    useProductDetail(productId);
 
   // Initialize bid amount when auction data loads
   useEffect(() => {
     if (auction && !bidAmount) {
-      const suggestedBid = auction.bid_steps[0] || 
-        (auction.current_highest_bid ? 
-          auction.current_highest_bid + auction.min_bid_price : 
-          auction.start_price);
+      const suggestedBid =
+        auction.bid_steps[0] ||
+        (auction.current_highest_bid
+          ? auction.current_highest_bid + auction.min_bid_price
+          : auction.start_price);
       setBidAmount(suggestedBid);
     }
   }, [auction, bidAmount]);
 
   const handleBidAmountChange = (direction: number) => {
     if (!auction) return;
-    
+
     const currentAmount = bidAmount || auction.start_price;
     const newAmount = Math.max(
       auction.min_bid_price,
-      currentAmount + (direction * auction.min_bid_price)
+      currentAmount + direction * auction.min_bid_price
     );
     setBidAmount(newAmount);
   };
@@ -213,7 +229,11 @@ export default function ProductDetailPage() {
           <Typography variant="body2" className="text-gray-500">
             요청하신 상품이 존재하지 않거나 삭제되었습니다.
           </Typography>
-          <Button variant="outline" className="mt-4" onClick={() => window.history.back()}>
+          <Button
+            variant="outline"
+            className="mt-4"
+            onClick={() => window.history.back()}
+          >
             돌아가기
           </Button>
         </div>
@@ -223,12 +243,14 @@ export default function ProductDetailPage() {
 
   const breadcrumbItems = [
     { label: "홈", href: "/" },
-    { label: product.store.name, href: `/stores/${product.store.id}` },
-    { label: product.category || "상품", href: `/products?category=${product.category}` },
+    {
+      label: product.category || "상품",
+      href: `/products?content=popular&filter=${product.category}&page=1`,
+    },
     { label: product.name },
   ];
-
-  const currentPrice = auction?.current_highest_bid || auction?.start_price || 0;
+  const currentPrice =
+    auction?.current_highest_bid || auction?.start_price || 0;
   const isAuctionActive = auction?.status === "RUNNING";
 
   return (
@@ -259,7 +281,9 @@ export default function ProductDetailPage() {
             {product.images && product.images.length > 1 && (
               <>
                 <button
-                  onClick={() => setSelectedImageIndex(Math.max(0, selectedImageIndex - 1))}
+                  onClick={() =>
+                    setSelectedImageIndex(Math.max(0, selectedImageIndex - 1))
+                  }
                   disabled={selectedImageIndex === 0}
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur rounded-full p-2 shadow-lg disabled:opacity-50 hover:bg-white transition-colors"
                   aria-label="이전 이미지"
@@ -269,7 +293,10 @@ export default function ProductDetailPage() {
                 <button
                   onClick={() =>
                     setSelectedImageIndex(
-                      Math.min(product.images.length - 1, selectedImageIndex + 1)
+                      Math.min(
+                        product.images.length - 1,
+                        selectedImageIndex + 1
+                      )
                     )
                   }
                   disabled={selectedImageIndex === product.images.length - 1}
@@ -303,80 +330,104 @@ export default function ProductDetailPage() {
                       : "border-gray-200 hover:border-gray-400"
                   )}
                 >
-                  <Image src={image} alt={`${product.name} ${index + 1}`} fill className="object-cover" />
+                  <Image
+                    src={image}
+                    alt={`${product.name} ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
                 </button>
               ))}
             </div>
           )}
         </div>
-
-        {/* Right: Product Info */}
-        <div className="space-y-6">
-          {/* Store Info */}
-          <div className="flex items-center gap-3 pb-4 border-b">
-            <Store className="w-5 h-5 text-gray-500" />
-            <Typography variant="body2" weight="medium" className="text-gray-700">
-              {product.store.name}
-            </Typography>
-            {product.store.instagram_link && (
-              <a
-                href={product.store.instagram_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ml-auto"
-              >
-                <svg className="w-5 h-5 text-gray-500 hover:text-gray-700" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
-                </svg>
-              </a>
-            )}
-            {product.store.kakao_link && (
-              <a
-                href={product.store.kakao_link}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MessageCircle className="w-5 h-5 text-gray-500 hover:text-gray-700" />
-              </a>
-            )}
-          </div>
-
-          {/* Title and Actions */}
-          <div>
-            <div className="flex items-start justify-between mb-2">
-              <Typography variant="h2" className="flex-1">
-                {product.title || product.name}
-              </Typography>
-              <div className="flex gap-2 ml-4">
-                <button className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                  <Heart className="w-5 h-5" />
-                </button>
-                <button className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                  <Share2 className="w-5 h-5" />
-                </button>
-              </div>
+        <div className="space-y-5">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              {product.tags.map((v) => (
+                <span
+                  key={v}
+                  className="border-[#E5E5EC] text-xs border text-grey-800 px-[10px] py-[2px]"
+                >
+                  {v}
+                </span>
+              ))}
             </div>
-            {product.description && (
-              <Typography variant="body2" className="text-gray-600">
-                {product.description}
-              </Typography>
-            )}
-          </div>
 
-          {/* Auction Status */}
+            <div>
+              <div>
+                <p className="text-2xl text-[#111111] font-bold">
+                  {product.title || product.name}
+                </p>
+              </div>
+              {product.description && (
+                <p className="text-[#505050] text-sm mt-0.5">
+                  {product.description}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="bg-[#F6F6F6] p-4 space-y-3">
+            <div className="flex items-start gap-4">
+              <div className="flex-1 flex flex-col">
+                <h3 className="text-lg font-bold text-[#111111]">
+                  {product.store.name}
+                </h3>
+                <p className="text-sm text-[#505050] mt-1">
+                  {product.store.description}
+                </p>
+              </div>
+              <img
+                src={product.store.image_url || "/placeholder.png"}
+                alt={product.store.name}
+                className="w-10 h-10 rounded-sm object-cover"
+              />
+            </div>
+            <div className="bg-white flex items-center justify-between px-4 py-2">
+              <p className="text-sm text-[#111111]">
+                이 상품과{" "}
+                <span className="font-semibold">
+                  함께 판매하는 상품이 있어요!
+                </span>
+              </p>
+              <ChevronRight className="w-5 h-5 text-gray-400" />
+            </div>
+          </div>
+          {auction?.buy_now_price && (
+            <div className="border-t py-2 flex items-center">
+              <div className="flex-1 flex items-center">
+                <p className="text-[#767676] text-sm">즉시 구매가</p>
+                <p className="flex-1 ml-3 font-bold text-[#111111] text-xl">
+                  {auction.buy_now_price.toLocaleString()}원
+                </p>
+              </div>
+              <button className="px-4 py-3 rounded-sm bg-[#52565B] text-white">
+                즉시 구매하기
+              </button>
+            </div>
+          )}
+
           {auction && (
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-gray-500" />
                   <Typography variant="body2" className="text-gray-600">
-                    {auction.status === "SCHEDULED" ? "시작까지" : 
-                     auction.status === "RUNNING" ? "종료까지" : 
-                     auction.status === "ENDED" ? "경매 종료" : "경매 취소"}
+                    {auction.status === "SCHEDULED"
+                      ? "시작까지"
+                      : auction.status === "RUNNING"
+                        ? "종료까지"
+                        : auction.status === "ENDED"
+                          ? "경매 종료"
+                          : "경매 취소"}
                   </Typography>
                 </div>
                 {auction.status === "RUNNING" && (
-                  <Typography variant="body1" weight="semibold" className="text-red-600">
+                  <Typography
+                    variant="body1"
+                    weight="semibold"
+                    className="text-red-600"
+                  >
                     <TimeRemaining endsAt={auction.ends_at} />
                   </Typography>
                 )}
@@ -420,40 +471,46 @@ export default function ProductDetailPage() {
                 <Typography variant="h2" weight="bold">
                   {formatCurrency(currentPrice)}
                 </Typography>
-                {auction?.current_highest_bid && auction.start_price < auction.current_highest_bid && (
-                  <Typography variant="body2" className="text-green-600">
-                    +{formatCurrency(auction.current_highest_bid - auction.start_price)}
-                  </Typography>
-                )}
+                {auction?.current_highest_bid &&
+                  auction.start_price < auction.current_highest_bid && (
+                    <Typography variant="body2" className="text-green-600">
+                      +
+                      {formatCurrency(
+                        auction.current_highest_bid - auction.start_price
+                      )}
+                    </Typography>
+                  )}
               </div>
             </div>
 
             {/* Bid Steps */}
-            {isAuctionActive && auction.bid_steps && auction.bid_steps.length > 0 && (
-              <div className="space-y-2">
-                <Typography variant="caption" className="text-gray-600">
-                  추천 입찰가
-                </Typography>
-                <div className="flex gap-2 flex-wrap">
-                  {auction.bid_steps.slice(0, 3).map((step) => (
-                    <button
-                      key={step}
-                      onClick={() => handleBidStepClick(step)}
-                      className={cn(
-                        "px-4 py-2 rounded-lg border transition-colors",
-                        bidAmount === step
-                          ? "border-brand-mint bg-brand-mint/10 text-brand-mint"
-                          : "border-gray-200 hover:border-gray-300"
-                      )}
-                    >
-                      <Typography variant="body2" weight="medium">
-                        {formatCurrency(step)}
-                      </Typography>
-                    </button>
-                  ))}
+            {isAuctionActive &&
+              auction.bid_steps &&
+              auction.bid_steps.length > 0 && (
+                <div className="space-y-2">
+                  <Typography variant="caption" className="text-gray-600">
+                    추천 입찰가
+                  </Typography>
+                  <div className="flex gap-2 flex-wrap">
+                    {auction.bid_steps.slice(0, 3).map((step) => (
+                      <button
+                        key={step}
+                        onClick={() => handleBidStepClick(step)}
+                        className={cn(
+                          "px-4 py-2 rounded-lg border transition-colors",
+                          bidAmount === step
+                            ? "border-brand-mint bg-brand-mint/10 text-brand-mint"
+                            : "border-gray-200 hover:border-gray-300"
+                        )}
+                      >
+                        <Typography variant="body2" weight="medium">
+                          {formatCurrency(step)}
+                        </Typography>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Bid Input */}
             {isAuctionActive && (
@@ -481,7 +538,10 @@ export default function ProductDetailPage() {
                     <Plus className="w-4 h-4" />
                   </button>
                 </div>
-                <Typography variant="caption" className="text-gray-500 flex items-center gap-1">
+                <Typography
+                  variant="caption"
+                  className="text-gray-500 flex items-center gap-1"
+                >
                   <AlertCircle className="w-3 h-3" />
                   최소 입찰 단위: {formatCurrency(auction.min_bid_price)}
                 </Typography>
@@ -508,7 +568,11 @@ export default function ProductDetailPage() {
                 <Button
                   size="lg"
                   className="flex-1"
-                  disabled={!bidAmount || bidAmount <= (auction.current_highest_bid || auction.start_price)}
+                  disabled={
+                    !bidAmount ||
+                    bidAmount <=
+                      (auction.current_highest_bid || auction.start_price)
+                  }
                 >
                   입찰하기
                 </Button>
@@ -606,7 +670,11 @@ export default function ProductDetailPage() {
               {/* Tags */}
               {product.tags && product.tags.length > 0 && (
                 <div>
-                  <Typography variant="body2" weight="semibold" className="mb-3">
+                  <Typography
+                    variant="body2"
+                    weight="semibold"
+                    className="mb-3"
+                  >
                     관련 태그
                   </Typography>
                   <div className="flex flex-wrap gap-2">
@@ -652,8 +720,7 @@ export default function ProductDetailPage() {
                   • 경매 종료 후 영업일 기준 2-3일 이내 발송
                   <br />
                   • 도서/산간 지역은 추가 1-2일 소요
-                  <br />
-                  • 해외 배송은 별도 문의
+                  <br />• 해외 배송은 별도 문의
                 </Typography>
               </div>
               <div>
@@ -681,8 +748,7 @@ export default function ProductDetailPage() {
                   • 상품 하자의 경우 판매자가 배송비 부담
                   <br />
                   • 경매 상품 특성상 부분 환불 불가
-                  <br />
-                  • 사용 흔적이 있거나 택이 제거된 경우 교환/환불 불가
+                  <br />• 사용 흔적이 있거나 택이 제거된 경우 교환/환불 불가
                 </Typography>
               </div>
               <div>
@@ -691,8 +757,7 @@ export default function ProductDetailPage() {
                 </Typography>
                 <Typography variant="body2" className="text-gray-600">
                   • 반품 상품 도착 후 영업일 기준 3일 이내 검수
-                  <br />
-                  • 검수 완료 후 영업일 기준 2일 이내 환불 처리
+                  <br />• 검수 완료 후 영업일 기준 2일 이내 환불 처리
                 </Typography>
               </div>
             </div>
@@ -735,7 +800,9 @@ export default function ProductDetailPage() {
                     {item.product_name}
                   </Typography>
                   <Typography variant="body2" weight="semibold">
-                    {formatCurrency(item.current_highest_bid || item.buy_now_price || 0)}
+                    {formatCurrency(
+                      item.current_highest_bid || item.buy_now_price || 0
+                    )}
                   </Typography>
                 </div>
               </a>

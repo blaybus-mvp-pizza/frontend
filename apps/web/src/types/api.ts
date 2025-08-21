@@ -9,17 +9,11 @@ export interface Page<T> {
 }
 
 export interface StoreMeta {
-  id: number;
+  store_id: number;
   name: string;
-  summary: string;
+  image_url: string;
   description: string;
-  banner_image: string;
-  profile_image: string;
-  kakao_link: string;
-  instagram_link: string;
-  is_active: boolean;
-  starts_at: string;
-  ends_at: string;
+  sales_description: string;
 }
 
 export interface ProductSpecs {
@@ -55,7 +49,7 @@ export interface AuctionInfo {
   min_bid_price: number;
   deposit_amount: number;
   bidder_count: number;
-  status: 'SCHEDULED' | 'RUNNING' | 'ENDED' | 'CANCELLED';
+  status: "SCHEDULED" | "RUNNING" | "ENDED" | "CANCELLED";
 }
 
 export interface UserBrief {
@@ -93,8 +87,15 @@ export function mapApiProductToProduct(apiProduct: ProductListItem): any {
     id: apiProduct.product_id,
     name: apiProduct.product_name,
     price: apiProduct.current_highest_bid || apiProduct.buy_now_price || 0,
-    images: apiProduct.representative_image 
-      ? [{ id: 1, productId: apiProduct.product_id, imageUrl: apiProduct.representative_image, sortOrder: 0 }]
+    images: apiProduct.representative_image
+      ? [
+          {
+            id: 1,
+            productId: apiProduct.product_id,
+            imageUrl: apiProduct.representative_image,
+            sortOrder: 0,
+          },
+        ]
       : [],
     popupStore: {
       id: 0,
