@@ -1,13 +1,9 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  useProductsWithPagination,
-  useAuctionsForProducts,
-} from "@/hooks/queries/useProducts";
+import { useProductsWithPagination } from "@/hooks/queries/useProducts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dropdown } from "@/components/ui/dropdown";
-import { SearchableDropdown } from "@/components/ui/searchable-dropdown";
 import { Pagination } from "@/components/ui/pagination";
 import { ProductCard } from "@workspace/ui/components/product-card";
 import { SlidersHorizontal } from "lucide-react";
@@ -28,7 +24,6 @@ function ProductContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // URL parameters with defaults
   const content =
     (searchParams.get("content") as ContentType) || DEFAULT_FILTERS.content;
   const filter = searchParams.get("filter") || DEFAULT_FILTERS.filter;
@@ -43,7 +38,6 @@ function ProductContent() {
   const bidders = searchParams.get("bidders") || DEFAULT_FILTERS.bidders;
   const price = searchParams.get("price") || DEFAULT_FILTERS.price;
 
-  // Prepare filters for API call
   const filters = useMemo(
     () => ({
       content,
@@ -59,26 +53,16 @@ function ProductContent() {
     [content, filter, category, sort, search, page, status, bidders, price]
   );
 
-  // Fetch paginated products using React Query
   const {
     data: paginatedResponse,
     isLoading: productsLoading,
     isPlaceholderData,
   } = useProductsWithPagination(filters);
 
-  // Get product IDs for fetching auctions
-  const productIds = useMemo(
-    () => paginatedResponse?.data.map((p) => p.id) || [],
-    [paginatedResponse]
-  );
-
-  // Fetch auctions for current page products
-  const { data: auctions } = useAuctionsForProducts(productIds);
-
-  const handleFilterClick = (tag: any) => {
+  const handleFilterClick = (tag: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("filter", tag);
-    params.set("page", "1"); // Reset to first page when filter changes
+    params.set("page", "1");
     router.push(`?${params.toString()}`);
   };
 
@@ -86,7 +70,7 @@ function ProductContent() {
     const params = new URLSearchParams(searchParams.toString());
     params.set(key, value);
     if (key !== "page") {
-      params.set("page", "1"); // Reset to first page when filters change
+      params.set("page", "1");
     }
     router.push(`?${params.toString()}`);
   };
@@ -95,19 +79,15 @@ function ProductContent() {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", newPage.toString());
     router.push(`?${params.toString()}`);
-    // Scroll to top when page changes
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Loading state
   if (productsLoading && !isPlaceholderData) {
     return (
       <div>
-        {/* Title skeleton */}
         <div className="space-y-4 pb-4 border-b border-[#E5E5E5]">
           <Skeleton className="h-9 w-32" />
           <Skeleton className="h-5 w-64" />
-          {/* Category tags skeleton */}
           <div className="flex gap-x-2">
             {[...Array(7)].map((_, i) => (
               <Skeleton key={i} className="h-8 w-20 rounded-full" />
@@ -115,7 +95,6 @@ function ProductContent() {
           </div>
         </div>
 
-        {/* Filters skeleton */}
         <div className="flex flex-col gap-y-4 py-4">
           <div className="flex justify-between items-center">
             <div className="flex gap-3">
@@ -126,13 +105,11 @@ function ProductContent() {
           </div>
         </div>
 
-        {/* Header with count and sort skeleton */}
         <div className="flex justify-between items-center py-4 border-b border-[#E5E5E5]">
           <Skeleton className="h-5 w-24" />
           <Skeleton className="h-10 w-28 rounded-lg" />
         </div>
 
-        {/* Product grid skeleton */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-6">
           {[...Array(16)].map((_, i) => (
             <div key={i} className="space-y-3">
@@ -246,16 +223,35 @@ function ProductContent() {
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-6">
             {products.map((product) => {
-              // 각 상품에 대한 경매 정보 찾기
-              const auction = auctions?.find((a) => a.productId === product.id);
-              
-              // If price is 0, use current_highest_bid or buy_now_price from the product
+              // Product already has auction data from API
+              // Create auction object from product data for compatibility with ProductCard
+              const auction = product.auction || (product.auctionEndsAt ? {
+                id: product.id,
+                productId: product.id,
+                status: "running" as const,
+                endsAt: new Date(product.auctionEndsAt),
+                startsAt: new Date(),
+                currentBid: product.currentHighestBid ? {
+                  id: 0,
+                  auctionId: product.id,
+                  amount: product.currentHighestBid,
+                  userId: 0,
+                  bidOrder: 1,
+                  createdAt: new Date()
+                } : undefined,
+                buyNowPrice: product.buyNowPrice,
+                startPrice: product.price || 0,
+                minBidPrice: 10000,
+                depositAmount: 0,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                bidCount: 0
+              } : undefined);
+
+              // Use price from product or auction data
               const displayProduct = {
                 ...product,
-                price: product.price || 
-                       (auction?.currentBid?.amount) || 
-                       (auction?.startPrice) || 
-                       product.price
+                price: product.currentHighestBid || product.buyNowPrice || product.price || 0,
               };
 
               return (
@@ -265,7 +261,6 @@ function ProductContent() {
                   auction={auction}
                   showTimeLeft={true}
                   onClick={() => {
-                    // 상품 상세 페이지로 이동
                     router.push(`/products/${product.id}`);
                   }}
                 />

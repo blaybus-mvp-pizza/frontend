@@ -1,5 +1,75 @@
 // API Response Types
 
+// Common Types
+export interface Page<T> {
+  items: T[];
+  page: number;
+  size: number;
+  total: number;
+}
+
+export interface StoreMeta {
+  id: number;
+  name: string;
+  summary: string;
+  description: string;
+  banner_image: string;
+  profile_image: string;
+  kakao_link: string;
+  instagram_link: string;
+  is_active: boolean;
+  starts_at: string;
+  ends_at: string;
+}
+
+export interface ProductSpecs {
+  material?: string;
+  place_of_use?: string;
+  width_cm?: number;
+  height_cm?: number;
+  tolerance_cm?: number;
+  edition_info?: string;
+  condition_note?: string;
+}
+
+export interface ProductMeta {
+  id: number;
+  name: string;
+  images: string[];
+  tags: string[];
+  title?: string;
+  description?: string;
+  category?: string;
+  store: StoreMeta;
+  specs: ProductSpecs;
+}
+
+export interface AuctionInfo {
+  auction_id: number;
+  buy_now_price?: number;
+  current_highest_bid?: number;
+  bid_steps: number[];
+  starts_at: string;
+  ends_at: string;
+  start_price: number;
+  min_bid_price: number;
+  deposit_amount: number;
+  bidder_count: number;
+  status: 'SCHEDULED' | 'RUNNING' | 'ENDED' | 'CANCELLED';
+}
+
+export interface UserBrief {
+  id: number;
+  name?: string;
+  profile_image?: string;
+}
+
+export interface BidItem {
+  user: UserBrief;
+  bid_amount: number;
+  bid_at: string;
+}
+
 export interface ProductListItem {
   product_id: number;
   popup_store_name: string;

@@ -1,22 +1,22 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @source "../../../apps/**/*.{ts,tsx}";
 @source "../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
 
-@import 'tw-animate-css';
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 /* Pretendard Variable Font */
 @font-face {
-  font-family: 'Pretendard Variable';
+  font-family: "Pretendard Variable";
   font-weight: 100 900;
   font-display: swap;
-  src: url('/fonts/PretendardVariable.woff2') format('woff2-variations');
+  src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
 }
 
 :root {
-  --bg-secondary: '#f5f5f5';
+  --bg-secondary: "#f5f5f5";
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);

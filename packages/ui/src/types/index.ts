@@ -95,6 +95,10 @@ export interface Product {
   tags?: Tag[];
   popupStore: PopupStore;
   auction?: Auction;
+  // Fields from API response
+  auctionEndsAt?: string;
+  currentHighestBid?: number;
+  buyNowPrice?: number;
 }
 
 export interface ProductImage {
