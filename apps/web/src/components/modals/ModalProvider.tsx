@@ -1,12 +1,15 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { useUIStore } from '@/store/ui.store';
-import { AnimatePresence } from 'framer-motion';
-import ModalManager from './ModalManager';
+import React from 'react'
+
+import { AnimatePresence } from 'framer-motion'
+
+import { useUIStore } from '@/store/ui.store'
+
+import ModalManager from './ModalManager'
 
 export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const modals = useUIStore((state) => state.modals);
+  const modals = useUIStore((state) => state.modals)
 
   return (
     <>
@@ -17,5 +20,5 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         ))}
       </AnimatePresence>
     </>
-  );
-};
+  )
+}

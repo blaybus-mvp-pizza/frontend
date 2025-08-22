@@ -1,12 +1,13 @@
-"use client";
+'use client'
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect } from 'react'
+
+import { useRouter } from 'next/navigation'
 
 export default function Page() {
-  const router = useRouter();
+  const router = useRouter()
   useEffect(() => {
-    router.push("/home");
-  }, []);
-  return <div className="flex items-center justify-center min-h-svh"></div>;
+    router.push('/home')
+  }, [])
+  return <div className="flex min-h-svh items-center justify-center"></div>
 }

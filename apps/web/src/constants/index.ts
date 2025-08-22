@@ -1,1 +1,1 @@
-export * from "./navigation.constant";
+export * from './navigation.constant'

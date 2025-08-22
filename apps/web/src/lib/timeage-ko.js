@@ -1,4 +1,4 @@
-import { register } from 'timeago.js';
+import { register } from 'timeago.js'
 
 const ko = function (number, index, totalSec) {
   return [
@@ -16,7 +16,7 @@ const ko = function (number, index, totalSec) {
     ['%s달 전', '%s달 후'],
     ['1년 전', '1년 후'],
     ['%s년 전', '%s년 후'],
-  ][index];
-};
+  ][index]
+}
 
-register('ko', ko);
+register('ko', ko)

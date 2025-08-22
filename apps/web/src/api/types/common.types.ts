@@ -1,22 +1,22 @@
 // Common API Types
 
 export interface Page<T> {
-  items: T[];
-  page: number;
-  size: number;
-  total: number;
+  items: T[]
+  page: number
+  size: number
+  total: number
 }
 
 export interface ErrorResponse {
-  code: string;
-  message: string;
-  details?: any;
+  code: string
+  message: string
+  details?: any
 }
 
 export interface SuccessResponse<T = any> {
-  success: boolean;
-  data?: T;
-  message?: string;
+  success: boolean
+  data?: T
+  message?: string
 }
 
 // Enums
@@ -53,17 +53,17 @@ export enum SortOption {
 
 // Query Parameters
 export interface ProductFilters {
-  page?: number;
-  size?: number;
-  sort?: SortOption;
-  status?: AuctionStatus;
-  bidders?: BiddersFilter;
-  price_bucket?: PriceBucket;
-  price_min?: number;
-  price_max?: number;
+  page?: number
+  size?: number
+  sort?: SortOption
+  status?: AuctionStatus
+  bidders?: BiddersFilter
+  price_bucket?: PriceBucket
+  price_min?: number
+  price_max?: number
 }
 
 export interface StoreFilters {
-  page?: number;
-  size?: number;
+  page?: number
+  size?: number
 }

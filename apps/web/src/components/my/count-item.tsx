@@ -3,21 +3,19 @@ export default function CountItem({
   label,
   count,
 }: {
-  className?: string;
-  label: string;
-  count: number;
+  className?: string
+  label: string
+  count: number
 }) {
   return (
     <div
-      className={`flex flex-col gap-1.5 items-center justify-center bg-white px-6 py-4 ${className}`}
+      className={`flex flex-col items-center justify-center gap-1.5 bg-white px-6 py-4 ${className}`}
     >
-      <div className='font-medium text-gray-500 text-xs sm:text-sm whitespace-nowrap'>
-        {label}
-      </div>
-      <div className='flex items-center font-semibold text-black gap-1 mb-0.5'>
-        <span className='text-xl'>{count}</span>
-        <span className='text-lg'>건</span>
+      <div className="whitespace-nowrap text-xs font-medium text-gray-500 sm:text-sm">{label}</div>
+      <div className="mb-0.5 flex items-center gap-1 font-semibold text-black">
+        <span className="text-xl">{count}</span>
+        <span className="text-lg">건</span>
       </div>
     </div>
-  );
+  )
 }

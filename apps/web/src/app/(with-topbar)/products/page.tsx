@@ -1,6 +1,7 @@
-import ProductContent from "@/components/products/product-content";
-import { ProductListSkeleton } from "@/components/ui/skeleton";
-import { Suspense } from "react";
+import { Suspense } from 'react'
+
+import ProductContent from '@/components/products/product-content'
+import { ProductListSkeleton } from '@/components/ui/skeleton'
 
 // Main component with Suspense boundary
 export default function ProductPage() {
@@ -8,7 +9,7 @@ export default function ProductPage() {
     <Suspense
       fallback={
         <div className="min-h-screen p-4 md:p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto">
+          <div className="mx-auto max-w-7xl">
             <ProductListSkeleton />
           </div>
         </div>
@@ -16,5 +17,5 @@ export default function ProductPage() {
     >
       <ProductContent />
     </Suspense>
-  );
+  )
 }

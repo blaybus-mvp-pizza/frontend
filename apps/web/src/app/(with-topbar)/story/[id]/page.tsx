@@ -1,16 +1,12 @@
-import StoryContent from '@/components/story/story-content';
+import StoryContent from '@/components/story/story-content'
 
-type PageParams = Promise<{ id: string }>;
+type PageParams = Promise<{ id: string }>
 
-export default async function StoryDetailPage({
-  params,
-}: {
-  params: PageParams;
-}) {
-  const { id } = await params;
+export default async function StoryDetailPage({ params }: { params: PageParams }) {
+  const { id } = await params
   return (
-    <div className='max-w-[800px] mx-auto my-15'>
+    <div className="my-15 mx-auto max-w-[800px]">
       <StoryContent id={id} />
     </div>
-  );
+  )
 }

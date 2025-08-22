@@ -1,94 +1,84 @@
-"use client";
+'use client'
 
-import { Button } from "@workspace/ui/components/button";
-import { Calendar } from "@workspace/ui/components/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@workspace/ui/components/popover";
-import { SetStateAction, useEffect, useState } from "react";
-import { format, subMonths, startOfDay } from "date-fns";
-import { ko } from "date-fns/locale";
-import { ChevronDownIcon } from "lucide-react";
+import { SetStateAction, useEffect, useState } from 'react'
+
+import { Button } from '@workspace/ui/components/button'
+import { Calendar } from '@workspace/ui/components/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@workspace/ui/components/popover'
+import { format, startOfDay, subMonths } from 'date-fns'
+import { ko } from 'date-fns/locale'
+import { ChevronDownIcon } from 'lucide-react'
 
 const dateRanges = [
-  { label: "최근 1개월", value: "1month" },
-  { label: "최근 3개월", value: "3months" },
-  { label: "직접 입력", value: "custom" },
-];
+  { label: '최근 1개월', value: '1month' },
+  { label: '최근 3개월', value: '3months' },
+  { label: '직접 입력', value: 'custom' },
+]
 
 interface DateRangeSelectorProps {
-  onDateRangeChange: (from: Date | undefined, to: Date | undefined) => void;
+  onDateRangeChange: (from: Date | undefined, to: Date | undefined) => void
 }
 
-export default function DateRangeSelector({
-  onDateRangeChange,
-}: DateRangeSelectorProps) {
-  const [selectedRange, setSelectedRange] = useState("1month");
-  const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
-  const [toDate, setToDate] = useState<Date | undefined>(undefined);
+export default function DateRangeSelector({ onDateRangeChange }: DateRangeSelectorProps) {
+  const [selectedRange, setSelectedRange] = useState('1month')
+  const [fromDate, setFromDate] = useState<Date | undefined>(undefined)
+  const [toDate, setToDate] = useState<Date | undefined>(undefined)
 
   useEffect(() => {
-    const today = startOfDay(new Date());
-    let newFromDate: Date | undefined;
-    let newToDate: Date | undefined;
+    const today = startOfDay(new Date())
+    let newFromDate: Date | undefined
+    let newToDate: Date | undefined
     switch (selectedRange) {
-      case "1month":
-        newFromDate = subMonths(today, 1);
-        newToDate = today;
-        break;
-      case "3months":
-        newFromDate = subMonths(today, 3);
-        newToDate = today;
-        break;
+      case '1month':
+        newFromDate = subMonths(today, 1)
+        newToDate = today
+        break
+      case '3months':
+        newFromDate = subMonths(today, 3)
+        newToDate = today
+        break
       default:
-        return;
+        return
     }
-    setFromDate(newFromDate);
-    setToDate(newToDate);
-    onDateRangeChange(newFromDate, newToDate);
-  }, [selectedRange, onDateRangeChange]);
+    setFromDate(newFromDate)
+    setToDate(newToDate)
+    onDateRangeChange(newFromDate, newToDate)
+  }, [selectedRange, onDateRangeChange])
 
   useEffect(() => {
-    if (selectedRange === "custom" && fromDate && toDate) {
-      onDateRangeChange(fromDate, toDate);
+    if (selectedRange === 'custom' && fromDate && toDate) {
+      onDateRangeChange(fromDate, toDate)
     }
-  }, [fromDate, toDate, selectedRange, onDateRangeChange]);
+  }, [fromDate, toDate, selectedRange, onDateRangeChange])
 
   const handleRangeClick = (range: SetStateAction<string>) => {
-    setSelectedRange(range);
-  };
+    setSelectedRange(range)
+  }
 
   const handleFromDateSelect = (date: Date | undefined) => {
-    setFromDate(date);
+    setFromDate(date)
     if (toDate) {
-      onDateRangeChange(date, toDate);
+      onDateRangeChange(date, toDate)
     }
-    setSelectedRange("custom");
-  };
+    setSelectedRange('custom')
+  }
 
   const handleToDateSelect = (date: Date | undefined) => {
-    setToDate(date);
+    setToDate(date)
     if (fromDate) {
-      onDateRangeChange(fromDate, date);
+      onDateRangeChange(fromDate, date)
     }
-    setSelectedRange("custom");
-  };
+    setSelectedRange('custom')
+  }
 
   return (
-    <div className='flex flex-col md:flex-row md:items-center gap-4'>
+    <div className="flex flex-col gap-4 md:flex-row md:items-center">
       {/* 기간 선택 버튼 */}
-      <div className='flex items-center'>
+      <div className="flex items-center">
         {dateRanges.map((range, idx) => (
           <Button
             key={range.value}
-            className={`
-              flex-1 md:flex-none h-12
-              bg-transparent shadow-none rounded-none transition-colors p-5 hover:bg-gray-100 border
-              ${selectedRange === range.value ? "text-black border-black z-10" : "text-gray-300 border-gray-200"}
-              ${idx > 0 ? "-ml-[1px]" : ""}
-            `}
+            className={`h-12 flex-1 rounded-none border bg-transparent p-5 shadow-none transition-colors hover:bg-gray-100 md:flex-none ${selectedRange === range.value ? 'z-10 border-black text-black' : 'border-gray-200 text-gray-300'} ${idx > 0 ? '-ml-[1px]' : ''} `}
             onClick={() => handleRangeClick(range.value)}
           >
             {range.label}
@@ -97,21 +87,13 @@ export default function DateRangeSelector({
       </div>
 
       {/* 시작일, 종료일 */}
-      <div className='flex items-center gap-2'>
-        <DateButton
-          label='시작일'
-          date={fromDate}
-          onDateSelect={handleFromDateSelect}
-        />
+      <div className="flex items-center gap-2">
+        <DateButton label="시작일" date={fromDate} onDateSelect={handleFromDateSelect} />
         <span>~</span>
-        <DateButton
-          label='종료일'
-          date={toDate}
-          onDateSelect={handleToDateSelect}
-        />
+        <DateButton label="종료일" date={toDate} onDateSelect={handleToDateSelect} />
       </div>
     </div>
-  );
+  )
 }
 
 function DateButton({
@@ -119,31 +101,31 @@ function DateButton({
   date,
   onDateSelect,
 }: {
-  label: string;
-  date: Date | undefined;
-  onDateSelect: (date: Date | undefined) => void;
+  label: string
+  date: Date | undefined
+  onDateSelect: (date: Date | undefined) => void
 }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant='outline'
-          className='w-38 justify-between p-5 rounded-none border-gray-200 hover:bg-gray-100 shadow-none'
+          variant="outline"
+          className="w-38 justify-between rounded-none border-gray-200 p-5 shadow-none hover:bg-gray-100"
         >
-          {date ? format(date, "PPP", { locale: ko }) : label}
+          {date ? format(date, 'PPP', { locale: ko }) : label}
           <ChevronDownIcon />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-auto'>
+      <PopoverContent className="w-auto">
         <Calendar
-          mode='single'
+          mode="single"
           selected={date}
           onSelect={onDateSelect}
           locale={ko}
-          captionLayout='dropdown'
+          captionLayout="dropdown"
           defaultMonth={date}
         />
       </PopoverContent>
     </Popover>
-  );
+  )
 }

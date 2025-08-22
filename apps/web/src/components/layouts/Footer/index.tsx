@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
-    <div className="h-8 w-full text-xs mt-10 flex items-center justify-center bg-black text-white">
+    <div className="mt-10 flex h-8 w-full items-center justify-center bg-black text-xs text-white">
       <p>ⓒ 2025. NafaL. All rights reserved.</p>
     </div>
-  );
+  )
 }

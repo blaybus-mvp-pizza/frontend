@@ -1,9 +1,9 @@
-import '@workspace/ui/globals.css';
+import '@workspace/ui/globals.css'
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
-  return <main>{children}</main>;
+  return <main>{children}</main>
 }

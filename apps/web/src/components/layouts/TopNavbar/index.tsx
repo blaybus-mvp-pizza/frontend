@@ -1,15 +1,20 @@
-"use client";
-import { TOP_NAVBAR_MENU } from "@/constants";
-import { Bell, Search, Menu, X } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { AuthBtns } from "./AuthBtns";
-import { Typography } from "@workspace/ui/components/typography";
-import { useState } from "react";
+'use client'
+
+import { useState } from 'react'
+
+import Image from 'next/image'
+import Link from 'next/link'
+
+import { Typography } from '@workspace/ui/components/typography'
+import { Bell, Menu, Search, X } from 'lucide-react'
+
+import { TOP_NAVBAR_MENU } from '@/constants'
+
+import { AuthBtns } from './AuthBtns'
 
 export function TopNavBar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
 
   return (
     <div className="relative">
@@ -18,12 +23,11 @@ export function TopNavBar() {
         <Typography
           variant="caption"
           align="center"
-          className="text-white p-1 px-2 text-xs md:text-sm"
+          className="p-1 px-2 text-xs text-white md:text-sm"
         >
-          신규 오픈, 지금 <span className="text-brand-mint">NafaL</span>에서{" "}
+          신규 오픈, 지금 <span className="text-brand-mint">NafaL</span>에서{' '}
           <span className="hidden sm:inline">
-            <span className="text-brand-mint">나만의 한정판 굿즈</span>를
-            입찰하세요
+            <span className="text-brand-mint">나만의 한정판 굿즈</span>를 입찰하세요
           </span>
           <span className="sm:hidden">
             <span className="text-brand-mint">한정판</span> 입찰!
@@ -32,13 +36,13 @@ export function TopNavBar() {
       </div>
 
       {/* Sticky navigation header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-[#E5E5EC]">
+      <header className="sticky top-0 z-50 border-b border-[#E5E5EC] bg-white">
         <nav className="bg-white">
           <div className="max-w-container mx-auto px-2 md:px-4">
-            <div className="flex justify-between items-center h-16 md:h-18">
-              <div className="flex items-center gap-x-2 md:gap-x-4 flex-1">
+            <div className="md:h-18 flex h-16 items-center justify-between">
+              <div className="flex flex-1 items-center gap-x-2 md:gap-x-4">
                 <button
-                  className="md:hidden p-2"
+                  className="p-2 md:hidden"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -55,32 +59,29 @@ export function TopNavBar() {
                 </Link>
 
                 {/* 데스크톱 검색바 */}
-                <div className="hidden md:block relative w-full max-w-xs lg:max-w-md xl:max-w-lg">
+                <div className="relative hidden w-full max-w-xs md:block lg:max-w-md xl:max-w-lg">
                   <input
-                    className="bg-[#f5f5f5] rounded-lg px-4 pr-10 w-full text-sm h-10 md:h-12"
+                    className="h-10 w-full rounded-lg bg-[#f5f5f5] px-4 pr-10 text-sm md:h-12"
                     placeholder="찾으시는 상품이 있으신가요?"
                   />
-                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Search className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
                 </div>
               </div>
 
               {/* 오른쪽: 아이콘 + 버튼 */}
               <div className="flex items-center gap-x-2 md:gap-x-4">
                 {/* 모바일 검색 토글 */}
-                <button
-                  className="md:hidden p-2"
-                  onClick={() => setIsSearchOpen(!isSearchOpen)}
-                >
+                <button className="p-2 md:hidden" onClick={() => setIsSearchOpen(!isSearchOpen)}>
                   <Search size={20} />
                 </button>
 
                 {/* 알림 아이콘 */}
                 <button className="p-2">
-                  <Bell size={20} className="md:w-6 md:h-6" />
+                  <Bell size={20} className="md:h-6 md:w-6" />
                 </button>
 
                 {/* 인증 버튼 */}
-                <div className="hidden sm:block space-x-2">
+                <div className="hidden space-x-2 sm:block">
                   <AuthBtns />
                 </div>
               </div>
@@ -88,25 +89,25 @@ export function TopNavBar() {
 
             {/* 모바일 검색바 */}
             {isSearchOpen && (
-              <div className="md:hidden pb-3">
+              <div className="pb-3 md:hidden">
                 <div className="relative">
                   <input
-                    className="bg-[#f5f5f5] rounded-lg px-4 pr-10 w-full text-sm h-10"
+                    className="h-10 w-full rounded-lg bg-[#f5f5f5] px-4 pr-10 text-sm"
                     placeholder="찾으시는 상품이 있으신가요?"
                   />
-                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Search className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
                 </div>
               </div>
             )}
 
             {/* 데스크톱 메뉴 */}
-            <div className="hidden md:flex w-full h-12 items-center">
+            <div className="hidden h-12 w-full items-center md:flex">
               <ul className="flex gap-x-2 lg:gap-x-4">
                 {TOP_NAVBAR_MENU.map((v) => (
                   <li key={v.href}>
                     <Link
                       href={v.href}
-                      className="px-3 py-2 hover:bg-[#f5f5f5] rounded-md transition-colors"
+                      className="rounded-md px-3 py-2 transition-colors hover:bg-[#f5f5f5]"
                     >
                       {v.name}
                     </Link>
@@ -118,10 +119,10 @@ export function TopNavBar() {
 
           {/* 모바일 메뉴 */}
           {isMobileMenuOpen && (
-            <div className="md:hidden border-t border-[#E5E5EC] bg-white">
+            <div className="border-t border-[#E5E5EC] bg-white md:hidden">
               <div className="px-4 py-2">
                 {/* 모바일 인증 버튼 */}
-                <div className="sm:hidden py-3 border-b border-[#E5E5EC]">
+                <div className="border-b border-[#E5E5EC] py-3 sm:hidden">
                   <AuthBtns />
                 </div>
 
@@ -131,7 +132,7 @@ export function TopNavBar() {
                     <li key={v.href}>
                       <Link
                         href={v.href}
-                        className="block px-2 py-3 hover:bg-[#f5f5f5] rounded-md"
+                        className="block rounded-md px-2 py-3 hover:bg-[#f5f5f5]"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Typography variant="body2" weight="medium">
@@ -147,5 +148,5 @@ export function TopNavBar() {
         </nav>
       </header>
     </div>
-  );
+  )
 }

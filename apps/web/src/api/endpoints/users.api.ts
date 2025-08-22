@@ -1,54 +1,54 @@
-import { apiClient } from '../client/apiClient';
-import { 
-  UserRead, 
-  UserUpdate, 
-  PhoneVerificationRequest, 
+import { apiClient } from '../client/apiClient'
+import {
   PhoneVerificationConfirm,
+  PhoneVerificationRequest,
+  PhoneVerificationResult,
   SendSMSResult,
-  PhoneVerificationResult 
-} from '../types';
+  UserRead,
+  UserUpdate,
+} from '../types'
 
 export const usersApi = {
   // Get current user
   getMe: async (): Promise<UserRead> => {
-    const response = await apiClient.get('/users/me');
-    return response.data;
+    const response = await apiClient.get('/users/me')
+    return response.data
   },
-  
+
   // Update current user
   updateMe: async (data: UserUpdate): Promise<UserRead> => {
-    const response = await apiClient.put('/users/me', data);
-    return response.data;
+    const response = await apiClient.put('/users/me', data)
+    return response.data
   },
-  
+
   // Send phone verification SMS
   sendPhoneVerificationSMS: async (data: PhoneVerificationRequest): Promise<SendSMSResult> => {
-    const response = await apiClient.post('/users/me/phone-verification-sms', data);
-    return response.data;
+    const response = await apiClient.post('/users/me/phone-verification-sms', data)
+    return response.data
   },
-  
+
   // Verify phone with code
   verifyPhone: async (data: PhoneVerificationConfirm): Promise<PhoneVerificationResult> => {
-    const response = await apiClient.post('/users/me/phone-verification-sms/verify', data);
-    return response.data;
+    const response = await apiClient.post('/users/me/phone-verification-sms/verify', data)
+    return response.data
   },
-  
+
   // Get user profile by ID
   getUserProfile: async (userId: number): Promise<UserRead> => {
-    const response = await apiClient.get(`/users/${userId}`);
-    return response.data;
+    const response = await apiClient.get(`/users/${userId}`)
+    return response.data
   },
-  
+
   // Upload profile image
   uploadProfileImage: async (file: File): Promise<{ url: string }> => {
-    const formData = new FormData();
-    formData.append('file', file);
-    
+    const formData = new FormData()
+    formData.append('file', file)
+
     const response = await apiClient.post('/users/me/profile-image', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    });
-    return response.data;
+    })
+    return response.data
   },
-};
+}

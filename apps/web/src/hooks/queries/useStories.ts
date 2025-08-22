@@ -1,7 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { storiesApi } from '@/api/endpoints/stories.api';
-import type { Page } from '@/api/types/common.types';
-import type { StoryListItem, StoryMeta } from '@/api/types/story.types';
+import { useQuery } from '@tanstack/react-query'
+
+import { storiesApi } from '@/api/endpoints/stories.api'
+import type { Page } from '@/api/types/common.types'
+import type { StoryListItem, StoryMeta } from '@/api/types/story.types'
 
 export const storyKeys = {
   all: ['stories'] as const,
@@ -9,7 +10,7 @@ export const storyKeys = {
   list: (page: number, size: number) => [...storyKeys.lists(), { page, size }] as const,
   details: () => [...storyKeys.all, 'detail'] as const,
   detail: (id: number) => [...storyKeys.details(), id] as const,
-};
+}
 
 export function useStories(page: number = 1, size: number = 9) {
   return useQuery<Page<StoryListItem>>({
@@ -18,7 +19,7 @@ export function useStories(page: number = 1, size: number = 9) {
     staleTime: 1000 * 60 * 2, // 2 minutes
     gcTime: 1000 * 60 * 5, // 5 minutes
     placeholderData: (previousData) => previousData,
-  });
+  })
 }
 
 export function useStoryDetail(id: number) {
@@ -28,5 +29,5 @@ export function useStoryDetail(id: number) {
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes
     enabled: !!id,
-  });
+  })
 }

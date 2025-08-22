@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
 interface ProductInfoProps {
-  tags: string[];
-  title: string;
-  description?: string;
+  tags: string[]
+  title: string
+  description?: string
 }
 
 export function ProductInfo({ tags, title, description }: ProductInfoProps) {
@@ -13,7 +13,7 @@ export function ProductInfo({ tags, title, description }: ProductInfoProps) {
         {tags.map((tag) => (
           <span
             key={tag}
-            className="border-[#E5E5EC] text-xs border text-grey-800 px-[10px] py-[2px]"
+            className="text-grey-800 border border-[#E5E5EC] px-[10px] py-[2px] text-xs"
           >
             {tag}
           </span>
@@ -21,11 +21,9 @@ export function ProductInfo({ tags, title, description }: ProductInfoProps) {
       </div>
 
       <div>
-        <p className="text-2xl text-[#111111] font-bold">{title}</p>
-        {description && (
-          <p className="text-[#505050] text-sm mt-0.5">{description}</p>
-        )}
+        <p className="text-2xl font-bold text-[#111111]">{title}</p>
+        {description && <p className="mt-0.5 text-sm text-[#505050]">{description}</p>}
       </div>
     </div>
-  );
+  )
 }

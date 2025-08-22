@@ -1,22 +1,23 @@
-"use client";
+'use client'
 
-import DateRangeSelector from "@/components/my/date-range-selector";
-import Searchbar from "@/components/my/search-bar";
-import MyProfile from "@/components/my/my-profile";
-import MyStats from "@/components/my/my-stats";
-import { useCallback, useState } from "react";
-import MyItemList from "@/components/my/my-item-list";
-import { ItemFilters } from "@/services/api/my";
-import ProfileTabs from "@/components/my/profile-tabs";
+import { useCallback, useState } from 'react'
+
+import DateRangeSelector from '@/components/my/date-range-selector'
+import MyItemList from '@/components/my/my-item-list'
+import MyProfile from '@/components/my/my-profile'
+import MyStats from '@/components/my/my-stats'
+import ProfileTabs from '@/components/my/profile-tabs'
+import Searchbar from '@/components/my/search-bar'
+import { ItemFilters } from '@/services/api/my'
 
 export default function MyPageContent() {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false)
 
   const [filters, setFilters] = useState<ItemFilters>({
-    search: "",
+    search: '',
     startDate: undefined,
     endDate: undefined,
-  });
+  })
 
   const handleDateRangeChange = useCallback(
     (startDate: Date | undefined, endDate: Date | undefined) => {
@@ -24,34 +25,34 @@ export default function MyPageContent() {
         ...prevFilters,
         startDate,
         endDate,
-      }));
+      }))
     },
-    [setFilters]
-  );
+    [setFilters],
+  )
 
   const handleSearchChange = useCallback(
     (searchValue: string) => {
       setFilters((prevFilters) => ({
         ...prevFilters,
         search: searchValue,
-      }));
+      }))
     },
-    [setFilters]
-  );
+    [setFilters],
+  )
 
   return (
     <>
       {isEditing ? (
-        <div className='flex justify-center'>
+        <div className="flex justify-center">
           <ProfileTabs />
         </div>
       ) : (
-        <div className='flex flex-col gap-5'>
-          <div className='flex flex-col sm:flex-row gap-2 bg-secondary border-1 p-5 rounded-sm'>
+        <div className="flex flex-col gap-5">
+          <div className="bg-secondary border-1 flex flex-col gap-2 rounded-sm p-5 sm:flex-row">
             <MyProfile onEditClick={() => setIsEditing(true)} />
             <MyStats />
           </div>
-          <div className='flex flex-col gap-4 sm:flex-row sm:gap-8 justify-between items-center w-full'>
+          <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row sm:gap-8">
             <DateRangeSelector onDateRangeChange={handleDateRangeChange} />
             <Searchbar onSearchChange={handleSearchChange} />
           </div>
@@ -61,5 +62,5 @@ export default function MyPageContent() {
         </div>
       )}
     </>
-  );
+  )
 }

@@ -1,27 +1,26 @@
-import { Story } from '@workspace/ui/types';
+import { Story } from '@workspace/ui/types'
 
 // Mock delay to simulate API call
-const mockDelay = (ms: number = 500) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+const mockDelay = (ms: number = 500) => new Promise((resolve) => setTimeout(resolve, ms))
 
 // Interface for paginated response
 export interface PaginatedResponse<T> {
-  data: T[];
+  data: T[]
   pagination: {
-    page: number;
-    pageSize: number;
-    total: number;
-    totalPages: number;
-  };
+    page: number
+    pageSize: number
+    total: number
+    totalPages: number
+  }
 }
 
 export interface StoryFilters {
-  page?: number;
-  pageSize?: number;
+  page?: number
+  pageSize?: number
 }
 
 const generateMockStories = (): Story[] => {
-  const stories: Story[] = [];
+  const stories: Story[] = []
 
   for (let i = 1; i <= 18; i++) {
     stories.push({
@@ -70,27 +69,25 @@ const generateMockStories = (): Story[] => {
           sortOrder: 1,
         },
       ],
-    });
+    })
   }
-  return stories;
-};
+  return stories
+}
 
-const mockStories = generateMockStories();
+const mockStories = generateMockStories()
 
 export const storyApi = {
-  async getStoriesWithPagination(
-    filters: StoryFilters = {}
-  ): Promise<PaginatedResponse<Story>> {
-    await mockDelay(500);
+  async getStoriesWithPagination(filters: StoryFilters = {}): Promise<PaginatedResponse<Story>> {
+    await mockDelay(500)
 
-    const page = filters.page || 1;
-    const pageSize = filters.pageSize || 16;
+    const page = filters.page || 1
+    const pageSize = filters.pageSize || 16
 
-    const total = mockStories.length;
-    const totalPages = Math.ceil(total / pageSize);
-    const start = (page - 1) * pageSize;
-    const end = start + pageSize;
-    const paginatedData = mockStories.slice(start, end);
+    const total = mockStories.length
+    const totalPages = Math.ceil(total / pageSize)
+    const start = (page - 1) * pageSize
+    const end = start + pageSize
+    const paginatedData = mockStories.slice(start, end)
 
     return {
       data: paginatedData,
@@ -100,12 +97,12 @@ export const storyApi = {
         total,
         totalPages,
       },
-    };
+    }
   },
 
   async getStoryById(id: number): Promise<Story | null> {
-    await mockDelay();
-    const story = mockStories.find((story) => story.id === id);
-    return story || null;
+    await mockDelay()
+    const story = mockStories.find((story) => story.id === id)
+    return story || null
   },
-};
+}

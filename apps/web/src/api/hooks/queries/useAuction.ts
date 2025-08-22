@@ -1,13 +1,14 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { queryKeys } from '@/api/queryKeys';
-import { auctionApi } from '@/api/endpoints/auction.api';
-import { AuctionDetail, BidHistoryItem } from '@/api/types';
+import { UseQueryOptions, useQuery } from '@tanstack/react-query'
+
+import { auctionApi } from '@/api/endpoints/auction.api'
+import { queryKeys } from '@/api/queryKeys'
+import { AuctionDetail, BidHistoryItem } from '@/api/types'
 
 // Get auction detail with optional polling for real-time updates
 export const useAuctionDetail = (
   auctionId: number,
   enablePolling = true,
-  options?: UseQueryOptions<AuctionDetail>
+  options?: UseQueryOptions<AuctionDetail>,
 ) => {
   return useQuery({
     queryKey: queryKeys.auctions.detail(auctionId),
@@ -16,27 +17,24 @@ export const useAuctionDetail = (
     refetchIntervalInBackground: false,
     enabled: !!auctionId,
     ...options,
-  });
-};
+  })
+}
 
 // Get bid history for an auction
-export const useBidHistory = (
-  auctionId: number,
-  options?: UseQueryOptions<BidHistoryItem[]>
-) => {
+export const useBidHistory = (auctionId: number, options?: UseQueryOptions<BidHistoryItem[]>) => {
   return useQuery({
     queryKey: queryKeys.auctions.bids(auctionId),
     queryFn: () => auctionApi.getBidHistory(auctionId),
     enabled: !!auctionId,
     staleTime: 10000, // 10 seconds
     ...options,
-  });
-};
+  })
+}
 
 // Check if user can bid
 export const useCanBid = (
   auctionId: number,
-  options?: UseQueryOptions<{ canBid: boolean; reason?: string }>
+  options?: UseQueryOptions<{ canBid: boolean; reason?: string }>,
 ) => {
   return useQuery({
     queryKey: [...queryKeys.auctions.detail(auctionId), 'can-bid'],
@@ -44,8 +42,8 @@ export const useCanBid = (
     enabled: !!auctionId,
     staleTime: 5000, // 5 seconds
     ...options,
-  });
-};
+  })
+}
 
 // Get user's active bids
 export const useUserBids = (options?: UseQueryOptions<AuctionDetail[]>) => {
@@ -54,8 +52,8 @@ export const useUserBids = (options?: UseQueryOptions<AuctionDetail[]>) => {
     queryFn: () => auctionApi.getUserBids(),
     staleTime: 30000, // 30 seconds
     ...options,
-  });
-};
+  })
+}
 
 // Get watched auctions
 export const useWatchedAuctions = (options?: UseQueryOptions<AuctionDetail[]>) => {
@@ -64,5 +62,5 @@ export const useWatchedAuctions = (options?: UseQueryOptions<AuctionDetail[]>) =
     queryFn: () => auctionApi.getWatchedAuctions(),
     staleTime: 30000, // 30 seconds
     ...options,
-  });
-};
+  })
+}

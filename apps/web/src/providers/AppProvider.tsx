@@ -1,13 +1,15 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { QueryProvider } from './QueryProvider';
-import { ModalProvider } from '@/components/modals/ModalProvider';
-import { ToastContainer } from '@/components/toast/ToastContainer';
-import ErrorBoundary from '@/components/error/ErrorBoundary';
+import React from 'react'
+
+import ErrorBoundary from '@/components/error/ErrorBoundary'
+import { ModalProvider } from '@/components/modals/ModalProvider'
+import { ToastContainer } from '@/components/toast/ToastContainer'
+
+import { QueryProvider } from './QueryProvider'
 
 interface AppProviderProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export function AppProvider({ children }: AppProviderProps) {
@@ -20,5 +22,5 @@ export function AppProvider({ children }: AppProviderProps) {
         </ModalProvider>
       </QueryProvider>
     </ErrorBoundary>
-  );
+  )
 }

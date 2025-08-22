@@ -1,16 +1,17 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from 'react'
+
+import { motion } from 'framer-motion'
 
 interface ConfirmModalProps {
-  title?: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  onClose: () => void;
-  onConfirm: () => void;
-  variant?: 'default' | 'danger';
+  title?: string
+  message: string
+  confirmText?: string
+  cancelText?: string
+  onClose: () => void
+  onConfirm: () => void
+  variant?: 'default' | 'danger'
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -34,27 +35,25 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl"
+        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-xl font-bold mb-4">{title}</h2>
-        <p className="text-gray-600 mb-6">{message}</p>
-        
+        <h2 className="mb-4 text-xl font-bold">{title}</h2>
+        <p className="mb-6 text-gray-600">{message}</p>
+
         <div className="flex gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors font-medium"
+            className="flex-1 rounded-xl border border-gray-300 px-4 py-3 font-medium transition-colors hover:bg-gray-50"
           >
             {cancelText}
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className={`flex-1 px-4 py-3 rounded-xl text-white font-medium transition-colors ${
-              variant === 'danger'
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-blue-500 hover:bg-blue-600'
+            className={`flex-1 rounded-xl px-4 py-3 font-medium text-white transition-colors ${
+              variant === 'danger' ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
             }`}
           >
             {confirmText}
@@ -62,7 +61,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
         </div>
       </motion.div>
     </motion.div>
-  );
-};
+  )
+}
 
-export default ConfirmModal;
+export default ConfirmModal

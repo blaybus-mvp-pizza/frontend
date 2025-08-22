@@ -1,8 +1,10 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { ThemeProvider as NextThemesProvider } from "next-themes"
-import { AppProvider } from "@/providers/AppProvider"
+import * as React from 'react'
+
+import { ThemeProvider as NextThemesProvider } from 'next-themes'
+
+import { AppProvider } from '@/providers/AppProvider'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
