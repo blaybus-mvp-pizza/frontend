@@ -228,8 +228,6 @@ function ProductContent() {
         <>
           <div className="grid grid-cols-2 gap-4 py-6 md:grid-cols-3 lg:grid-cols-4">
             {products.map((product) => {
-              // Product already has auction data from API
-              // Create auction object from product data for compatibility with ProductCard
               const auction =
                 product.auction ||
                 (product.auctionEndsAt

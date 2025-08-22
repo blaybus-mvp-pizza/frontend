@@ -3,6 +3,8 @@ import { usersApi } from '@/api/endpoints/users.api'
 import { UserUpdate, UserRead, SendSMSResult, PhoneVerificationResult } from '@/api/types'
 import { useUIStore } from '@/store/ui.store'
 import { myPageKeys } from '@/api/hooks/queries/useMyPage'
+import { queryKeys } from '@/api/queryKeys'
+import { useRouter } from 'next/navigation'
 
 // Update user profile
 export const useUpdateUserProfile = () => {
@@ -45,7 +47,7 @@ export const useSendPhoneVerificationSMS = () => {
 export const useVerifyPhone = () => {
   const queryClient = useQueryClient()
   const { showSuccess, showError } = useUIStore()
-
+  const router = useRouter();
   return useMutation<
     PhoneVerificationResult,
     Error,
@@ -54,8 +56,11 @@ export const useVerifyPhone = () => {
     mutationFn: ({ phone_number, code6 }) => usersApi.verifyPhone(phone_number, code6),
     onSuccess: (data) => {
       if (data.success) {
+        // Invalidate both myPage profile and current user queries
         queryClient.invalidateQueries({ queryKey: myPageKeys.profile() })
+        queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
         showSuccess('휴대폰 인증이 완료되었습니다.')
+        router.refresh()
       } else {
         showError('인증에 실패했습니다.')
       }

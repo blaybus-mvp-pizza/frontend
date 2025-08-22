@@ -7,6 +7,7 @@ import { Button } from '@workspace/ui/components/button'
 import { useSendPhoneVerificationSMS, useVerifyPhone } from '@/api/hooks/mutations/useUserProfile'
 
 import { ProfileInput } from './profile-section'
+import { useRouter } from 'next/navigation'
 
 interface PhoneNumberVerificationProps {
   userPhoneNumber: string
@@ -103,7 +104,7 @@ export default function PhoneNumberVerification({ userPhoneNumber }: PhoneNumber
           )}
         </div>
         <Button
-          className="h-12 w-[100px] whitespace-nowrap rounded-sm border border-black bg-white px-4 text-black disabled:border-[#999] disabled:bg-[#999] disabled:text-white"
+          className="h-12 w-[100px] whitespace-nowrap rounded-sm border border-black bg-white px-4 text-black disabled:border-[#999] disabled:bg-[#999] disabled:text-white hover:bg-white"
           onClick={handleSendAuthCode}
           disabled={(isTimerActive && timeLeft > 0) || sendSMS.isPending}
         >
