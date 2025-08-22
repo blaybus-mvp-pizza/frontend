@@ -41,7 +41,6 @@ export default function HomePage() {
   };
 
   const handleViewAllClick = (content?: string) => {
-    // Redirect to products page with content parameter
     if (content) {
       router.push(`/products?content=${content}`);
     } else {
@@ -203,7 +202,7 @@ export default function HomePage() {
           showViewAll={true}
           showTimeLeft={true}
           onProductClick={handleProductClick}
-          onViewAllClick={handleViewAllClick}
+          onViewAllClick={() => handleViewAllClick("ending-soon")}
         />
         <ProductSampleList
           products={mdPicks}
@@ -213,7 +212,7 @@ export default function HomePage() {
           showViewAll={true}
           showTimeLeft={true}
           onProductClick={handleProductClick}
-          onViewAllClick={handleViewAllClick}
+          onViewAllClick={() => handleViewAllClick("popular")}
         />
         <ProductSampleList
           products={newProducts}
@@ -223,7 +222,7 @@ export default function HomePage() {
           showViewAll={true}
           showTimeLeft={true}
           onProductClick={handleProductClick}
-          onViewAllClick={handleViewAllClick}
+          onViewAllClick={() => handleViewAllClick("new")}
         />
       </div>
 

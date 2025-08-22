@@ -1,14 +1,14 @@
 import { Product, Auction } from "@workspace/ui/types";
 import { apiClient } from "@/api/client/apiClient";
-import { 
-  Page, 
+import {
+  Page,
   ProductFilters as ApiProductFilters,
   ProductListItem,
   StoreWithProducts,
   AuctionStatus,
   SortOption,
   BiddersFilter,
-  PriceBucket
+  PriceBucket,
 } from "@/api/types";
 
 // Interface for paginated response
@@ -35,7 +35,6 @@ export interface ProductFilters {
   pageSize?: number;
 }
 
-// Convert mock filters to API filters
 const convertToApiFilters = (filters: ProductFilters): ApiProductFilters => {
   const apiFilters: ApiProductFilters = {
     page: filters.page || 1,
@@ -112,18 +111,23 @@ const convertToApiFilters = (filters: ProductFilters): ApiProductFilters => {
 };
 
 // Convert API response to frontend Product type
-const convertApiProductToProduct = (apiProduct: ProductListItem, index: number = 0): Product => {
+const convertApiProductToProduct = (
+  apiProduct: ProductListItem,
+  index: number = 0
+): Product => {
   return {
     id: apiProduct.product_id,
     name: apiProduct.product_name,
-    images: apiProduct.representative_image ? [
-      {
-        id: apiProduct.product_id,
-        productId: apiProduct.product_id,
-        imageUrl: apiProduct.representative_image,
-        sortOrder: 0,
-      }
-    ] : [],
+    images: apiProduct.representative_image
+      ? [
+          {
+            id: apiProduct.product_id,
+            productId: apiProduct.product_id,
+            imageUrl: apiProduct.representative_image,
+            sortOrder: 0,
+          },
+        ]
+      : [],
     tags: [],
     labels: apiProduct.labels || [],
     description: `${apiProduct.product_name} - ${apiProduct.popup_store_name}`,
@@ -150,7 +154,10 @@ const convertApiProductToProduct = (apiProduct: ProductListItem, index: number =
 };
 
 // Convert API product to Auction type
-const convertApiProductToAuction = (apiProduct: ProductListItem, index: number = 0): Auction | undefined => {
+const convertApiProductToAuction = (
+  apiProduct: ProductListItem,
+  index: number = 0
+): Auction | undefined => {
   if (!apiProduct.auction_ends_at) return undefined;
 
   return {
@@ -162,17 +169,20 @@ const convertApiProductToAuction = (apiProduct: ProductListItem, index: number =
     depositAmount: 0,
     startsAt: new Date(),
     endsAt: new Date(apiProduct.auction_ends_at),
-    status: new Date(apiProduct.auction_ends_at) > new Date() ? "running" : "ended",
+    status:
+      new Date(apiProduct.auction_ends_at) > new Date() ? "running" : "ended",
     createdAt: new Date(),
     updatedAt: new Date(),
-    currentBid: apiProduct.current_highest_bid ? {
-      id: 1,
-      auctionId: apiProduct.product_id,
-      userId: 1,
-      bidOrder: 1,
-      amount: apiProduct.current_highest_bid,
-      createdAt: new Date(),
-    } : undefined,
+    currentBid: apiProduct.current_highest_bid
+      ? {
+          id: 1,
+          auctionId: apiProduct.product_id,
+          userId: 1,
+          bidOrder: 1,
+          amount: apiProduct.current_highest_bid,
+          createdAt: new Date(),
+        }
+      : undefined,
     bidCount: apiProduct.bidders_count || 0,
   };
 };
@@ -184,20 +194,20 @@ export const productApiReal = {
     filters: ProductFilters = {}
   ): Promise<PaginatedResponse<Product>> {
     const apiFilters = convertToApiFilters(filters);
-    
+
     // Determine which endpoint to use based on content filter
-    let endpoint = '/products/recommended';
-    if (filters.content === 'ending-soon') {
-      endpoint = '/products/ending-soon';
-    } else if (filters.content === 'new') {
-      endpoint = '/products/new';
+    let endpoint = "/products/recommended";
+    if (filters.content === "ending-soon") {
+      endpoint = "/products/ending-soon";
+    } else if (filters.content === "new") {
+      endpoint = "/products/new";
     }
 
     const response = await apiClient.get<Page<ProductListItem>>(endpoint, {
-      params: apiFilters
+      params: apiFilters,
     });
 
-    const products = response.data.items.map((item, index) => 
+    const products = response.data.items.map((item, index) =>
       convertApiProductToProduct(item, index)
     );
 
@@ -217,7 +227,7 @@ export const productApiReal = {
     // For now, we'll create auctions from the product data
     // In a real implementation, there would be a separate endpoint
     const auctions: Auction[] = [];
-    
+
     for (const productId of productIds) {
       try {
         // We could fetch individual product details here if needed
@@ -237,10 +247,13 @@ export const productApiReal = {
           bidCount: 0,
         });
       } catch (error) {
-        console.error(`Failed to fetch auction for product ${productId}:`, error);
+        console.error(
+          `Failed to fetch auction for product ${productId}:`,
+          error
+        );
       }
     }
-    
+
     return auctions;
   },
 
@@ -249,26 +262,32 @@ export const productApiReal = {
     category?: string;
     popupStoreId?: number;
   }): Promise<Product[]> {
-    const response = await apiClient.get<Page<ProductListItem>>('/products/recommended', {
-      params: {
-        page: 1,
-        size: 100,
+    const response = await apiClient.get<Page<ProductListItem>>(
+      "/products/recommended",
+      {
+        params: {
+          page: 1,
+          size: 100,
+        },
       }
-    });
+    );
 
-    return response.data.items.map((item, index) => 
+    return response.data.items.map((item, index) =>
       convertApiProductToProduct(item, index)
     );
   },
 
   async getAuctions(): Promise<Auction[]> {
     // Fetch products and convert to auctions
-    const response = await apiClient.get<Page<ProductListItem>>('/products/ending-soon', {
-      params: {
-        page: 1,
-        size: 100,
+    const response = await apiClient.get<Page<ProductListItem>>(
+      "/products/ending-soon",
+      {
+        params: {
+          page: 1,
+          size: 100,
+        },
       }
-    });
+    );
 
     return response.data.items
       .map((item, index) => convertApiProductToAuction(item, index))
@@ -280,19 +299,21 @@ export const productApiReal = {
     auctions: Auction[];
   }> {
     // Use recent stores endpoint
-    const response = await apiClient.get<Page<StoreWithProducts>>('/products/stores/recent');
-    
+    const response = await apiClient.get<Page<StoreWithProducts>>(
+      "/products/stores/recent"
+    );
+
     // Find the specific store or use the first one
     const storeData = response.data.items[0];
-    
+
     if (!storeData) {
       return { products: [], auctions: [] };
     }
 
-    const products = storeData.products.map((item, index) => 
+    const products = storeData.products.map((item, index) =>
       convertApiProductToProduct(item, index)
     );
-    
+
     const auctions = storeData.products
       .map((item, index) => convertApiProductToAuction(item, index))
       .filter((auction): auction is Auction => auction !== undefined);
@@ -309,26 +330,26 @@ export const productApiReal = {
     try {
       // Fetch different product categories in parallel
       const [endingSoonRes, recommendedRes, newRes] = await Promise.all([
-        apiClient.get<Page<ProductListItem>>('/products/ending-soon', {
-          params: { page: 1, size: 4 }
+        apiClient.get<Page<ProductListItem>>("/products/ending-soon", {
+          params: { page: 1, size: 4 },
         }),
-        apiClient.get<Page<ProductListItem>>('/products/recommended', {
-          params: { page: 1, size: 4 }
+        apiClient.get<Page<ProductListItem>>("/products/recommended", {
+          params: { page: 1, size: 4 },
         }),
-        apiClient.get<Page<ProductListItem>>('/products/new', {
-          params: { page: 1, size: 4 }
+        apiClient.get<Page<ProductListItem>>("/products/new", {
+          params: { page: 1, size: 4 },
         }),
       ]);
 
-      const urgentProducts = endingSoonRes.data.items.map((item, index) => 
+      const urgentProducts = endingSoonRes.data.items.map((item, index) =>
         convertApiProductToProduct(item, index)
       );
-      
-      const mdPicks = recommendedRes.data.items.map((item, index) => 
+
+      const mdPicks = recommendedRes.data.items.map((item, index) =>
         convertApiProductToProduct(item, index)
       );
-      
-      const newProducts = newRes.data.items.map((item, index) => 
+
+      const newProducts = newRes.data.items.map((item, index) =>
         convertApiProductToProduct(item, index)
       );
 
@@ -338,7 +359,7 @@ export const productApiReal = {
         ...recommendedRes.data.items,
         ...newRes.data.items,
       ];
-      
+
       const auctions = allApiProducts
         .map((item, index) => convertApiProductToAuction(item, index))
         .filter((auction): auction is Auction => auction !== undefined);
@@ -350,7 +371,7 @@ export const productApiReal = {
         auctions,
       };
     } catch (error) {
-      console.error('Failed to fetch featured products:', error);
+      console.error("Failed to fetch featured products:", error);
       // Return empty arrays on error
       return {
         urgentProducts: [],
@@ -365,14 +386,19 @@ export const productApiReal = {
     try {
       // This would need a proper product detail endpoint
       // For now, we'll fetch from recommended and find the product
-      const response = await apiClient.get<Page<ProductListItem>>('/products/recommended', {
-        params: { page: 1, size: 100 }
-      });
-      
-      const apiProduct = response.data.items.find(item => item.product_id === id);
-      
+      const response = await apiClient.get<Page<ProductListItem>>(
+        "/products/recommended",
+        {
+          params: { page: 1, size: 100 },
+        }
+      );
+
+      const apiProduct = response.data.items.find(
+        (item) => item.product_id === id
+      );
+
       if (!apiProduct) return null;
-      
+
       return convertApiProductToProduct(apiProduct);
     } catch (error) {
       console.error(`Failed to fetch product ${id}:`, error);
@@ -384,14 +410,19 @@ export const productApiReal = {
     try {
       // This would need a proper auction detail endpoint
       // For now, we'll create a placeholder
-      const response = await apiClient.get<Page<ProductListItem>>('/products/ending-soon', {
-        params: { page: 1, size: 100 }
-      });
-      
-      const apiProduct = response.data.items.find(item => item.product_id === productId);
-      
+      const response = await apiClient.get<Page<ProductListItem>>(
+        "/products/ending-soon",
+        {
+          params: { page: 1, size: 100 },
+        }
+      );
+
+      const apiProduct = response.data.items.find(
+        (item) => item.product_id === productId
+      );
+
       if (!apiProduct) return null;
-      
+
       return convertApiProductToAuction(apiProduct) || null;
     } catch (error) {
       console.error(`Failed to fetch auction for product ${productId}:`, error);
