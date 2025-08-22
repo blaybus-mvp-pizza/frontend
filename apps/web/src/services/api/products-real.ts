@@ -115,18 +115,7 @@ const convertToApiFilters = (filters: ProductFilters): ApiProductFilters => {
 const convertApiProductToProduct = (apiProduct: ProductListItem, index: number = 0): Product => {
   return {
     id: apiProduct.product_id,
-    popupStoreId: 1, // Default, as API doesn't provide this
-    category: "아트/컬렉터블", // Default category
     name: apiProduct.product_name,
-    summary: apiProduct.popup_store_name,
-    description: `${apiProduct.product_name} - ${apiProduct.popup_store_name}`,
-    price: apiProduct.buy_now_price || apiProduct.current_highest_bid || 0,
-    stock: 1, // Default stock
-    shippingBaseFee: 3000,
-    shippingFreeThreshold: 50000,
-    isActive: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
     images: apiProduct.representative_image ? [
       {
         id: apiProduct.product_id,
@@ -136,11 +125,27 @@ const convertApiProductToProduct = (apiProduct: ProductListItem, index: number =
       }
     ] : [],
     tags: [],
+    labels: apiProduct.labels || [],
+    description: `${apiProduct.product_name} - ${apiProduct.popup_store_name}`,
+    category: "아트/컬렉터블",
     popupStore: {
       id: 1,
       name: apiProduct.popup_store_name,
       createdAt: new Date(),
     },
+    currentHighestBid: apiProduct.current_highest_bid,
+    buyNowPrice: apiProduct.buy_now_price,
+    auctionEndsAt: apiProduct.auction_ends_at,
+    // Legacy fields for compatibility
+    price: apiProduct.buy_now_price || apiProduct.current_highest_bid || 0,
+    popupStoreId: 1,
+    popupStoreName: apiProduct.popup_store_name,
+    representativeImage: apiProduct.representative_image,
+    stock: 1,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isActive: true,
+    shippingBaseFee: 3000,
   };
 };
 
@@ -394,3 +399,6 @@ export const productApiReal = {
     }
   },
 };
+
+// Export with both names for compatibility
+export const productApi = productApiReal;

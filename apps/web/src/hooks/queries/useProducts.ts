@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { productApi, ProductFilters, PaginatedResponse } from "@/services/api/products";
+import { productApi, ProductFilters, PaginatedResponse } from "@/services/api/products-real";
 import { Product, Auction } from "@workspace/ui/types";
 
 // Query keys factory for better organization
