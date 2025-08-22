@@ -61,7 +61,7 @@ export default function PopUpStoreInfo({ id }: PopUpStoreDetailSectionProps) {
               src={popupstore.image_url}
               alt={popupstore.name}
               fill
-              style={{ objectFit: "cover" }}
+              style={{ objectFit: "contain" }}
               sizes='(max-width: 768px) 100vw, 33vw'
               unoptimized={true}
               className='transition-opacity duration-200'

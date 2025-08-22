@@ -1,13 +1,13 @@
 "use client";
 
-import { popup_store } from "@/generated/prisma";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@workspace/ui/components/button";
+import { PopupStoreItem } from '@/api/popupstore/type';
 
-export const columns: ColumnDef<popup_store>[] = [
+export const columns: ColumnDef<PopupStoreItem>[] = [
   {
     accessorKey: "image_url",
     header: "",
@@ -34,7 +34,7 @@ export const columns: ColumnDef<popup_store>[] = [
     },
   },
   {
-    accessorKey: "id",
+    accessorKey: "store_id",
     header: "ID",
   },
   {
@@ -50,30 +50,6 @@ export const columns: ColumnDef<popup_store>[] = [
     header: "판매 조건",
   },
   {
-    accessorKey: "starts_at",
-    header: "시작일",
-    cell: ({ row }) => {
-      const startsAt = row.original.starts_at;
-      if (startsAt) {
-        const date = new Date(startsAt);
-        return date.toLocaleDateString();
-      }
-      return "-";
-    },
-  },
-  {
-    accessorKey: "ends_at",
-    header: "종료일",
-    cell: ({ row }) => {
-      const endsAt = row.original.ends_at;
-      if (endsAt) {
-        const date = new Date(endsAt);
-        return date.toLocaleDateString();
-      }
-      return "-";
-    },
-  },
-  {
     id: "actions",
     cell: ({ row }) => {
       const popupstore = row.original;
@@ -82,7 +58,7 @@ export const columns: ColumnDef<popup_store>[] = [
         <Button
           variant='outline'
           onClick={() => {
-            router.push(`/popupstore/${popupstore.id}`);
+            router.push(`/popupstore/${popupstore.store_id}`);
           }}
         >
           상세보기
