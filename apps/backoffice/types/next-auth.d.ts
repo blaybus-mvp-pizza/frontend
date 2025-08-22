@@ -6,5 +6,14 @@ declare module "next-auth" {
       id: string;
       role: "SUPERADMIN" | "ADMIN";
     } & DefaultSession["user"];
+    accessToken?: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    role: "SUPERADMIN" | "ADMIN";
+    accessToken?: string;
   }
 }

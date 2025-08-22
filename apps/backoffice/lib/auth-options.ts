@@ -25,9 +25,13 @@ export const authOptions: NextAuthOptions = {
         if (!admin) return null;
         const isPasswordValid = password === admin.password;
         if (!isPasswordValid) return null;
+
+        const accessToken = process.env.NEXT_PUBLIC_ACCESS_TOKEN;
+
         return {
           id: admin.nickname,
           role: admin.role,
+          accessToken: accessToken,
         };
       },
     }),
@@ -37,6 +41,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.accessToken = user.accessToken;
       }
       return token;
     },
@@ -44,6 +49,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as "SUPERADMIN" | "ADMIN";
+        (session as any).accessToken = token.accessToken;
       }
       return session;
     },
