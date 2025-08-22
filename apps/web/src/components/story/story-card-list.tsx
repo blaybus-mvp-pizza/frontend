@@ -3,7 +3,7 @@
 import StoryCard from '@/components/story/story-card';
 import { Pagination } from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useStoriesWithPagination } from '@/hooks/queries/useStories';
+import { useStories } from '@/hooks/queries/useStories';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
@@ -12,16 +12,8 @@ export default function StoryCardList() {
   const router = useRouter();
 
   const page = parseInt(searchParams.get('page') || String(1));
-  const filters = useMemo(
-    () => ({
-      page,
-      pageSize: 9,
-    }),
-    [page]
-  );
 
-  const { data, isLoading, isPlaceholderData } =
-    useStoriesWithPagination(filters);
+  const { data, isLoading } = useStories(page, 9);
 
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -31,13 +23,55 @@ export default function StoryCardList() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const stories = data?.data || [];
-  const pagination = data?.pagination;
-  const totalPages = pagination?.totalPages || 1;
+  const handleStoryClick = (storyId: number) => {
+    router.push(`/story/${storyId}`);
+  };
+
+  const stories = data?.items || [];
+  const totalPages = Math.ceil((data?.total || 0) / (data?.size || 9));
+
+  // Transform API data to Story format expected by StoryCard
+  const transformToStory = (apiStory: any) => {
+    return {
+      id: apiStory.story_id,
+      userId: 0, // Not provided by API
+      productId: 0, // Not provided by API
+      title: apiStory.title,
+      content: '', // Not provided in list API
+      createdAt: new Date(apiStory.created_at),
+      updatedAt: new Date(apiStory.created_at),
+      product: {
+        id: 0,
+        popupStoreId: 0,
+        category: '',
+        name: '',
+        price: 0,
+        stock: 0,
+        shippingBaseFee: 0,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        images: [],
+        popupStore: {
+          id: 0,
+          name: apiStory.author_name || 'Anonymous',
+          description: `조회 ${apiStory.view_count} · 좋아요 ${apiStory.like_count}`,
+          bannerImageUrl: apiStory.author_profile || '/placeholder.png',
+          createdAt: new Date(),
+        }
+      },
+      images: apiStory.representative_image ? [{
+        id: 0,
+        storyId: apiStory.story_id,
+        imageUrl: apiStory.representative_image,
+        sortOrder: 0
+      }] : []
+    };
+  };
 
   return (
     <>
-      {isLoading && !isPlaceholderData ? (
+      {isLoading ? (
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[20px] gap-y-[56px] justify-items-center'>
           {Array.from({ length: 9 }).map((_, index) => (
             <StoryCardSkeleton key={index} />
@@ -47,20 +81,21 @@ export default function StoryCardList() {
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[20px] gap-y-[56px] justify-items-center'>
           {stories.map((story) => (
             <StoryCard
-              key={story.id}
-              story={story}
-              onClick={() => {
-                router.push(`/story/${story.id}`);
-              }}
+              key={story.story_id}
+              story={transformToStory(story)}
+              onClick={() => handleStoryClick(story.story_id)}
             />
           ))}
         </div>
       ) : (
-        <div className='text-center'>No Results</div>
+        <div className='text-center py-12'>
+          <p className='text-gray-500'>등록된 스토리가 없습니다.</p>
+        </div>
       )}
 
+      {/* Pagination */}
       {totalPages > 1 && (
-        <div className='flex justify-center py-20'>
+        <div className='mt-8 flex justify-center'>
           <Pagination
             currentPage={page}
             totalPages={totalPages}
@@ -72,20 +107,21 @@ export default function StoryCardList() {
   );
 }
 
-const StoryCardSkeleton = () => (
-  <div className='w-[301px] flex flex-col rounded-[1px] overflow-hidden'>
-    <Skeleton className='w-full aspect-video' />
-    <div className='px-4 pt-4 pb-6 space-y-3'>
-      <Skeleton className='w-2/3 h-5 mb-2' />
-      <Skeleton className='w-full h-4' />
-      <Skeleton className='w-full h-4' />
-    </div>
-    <div className='bg-[#F5F5F5] w-full p-4 flex items-center space-x-4'>
-      <Skeleton className='w-10 h-10 rounded-sm' />
-      <div className='flex flex-col flex-1 space-y-2'>
-        <Skeleton className='w-3/4 h-3' />
-        <Skeleton className='w-1/2 h-3' />
+function StoryCardSkeleton() {
+  return (
+    <div className='w-full max-w-[500px] space-y-4'>
+      <Skeleton className='w-full h-[320px] rounded-lg' />
+      <div className='space-y-2'>
+        <Skeleton className='h-6 w-3/4' />
+        <div className='flex items-center gap-2'>
+          <Skeleton className='h-8 w-8 rounded-full' />
+          <Skeleton className='h-4 w-1/2' />
+        </div>
+        <div className='flex gap-4'>
+          <Skeleton className='h-4 w-20' />
+          <Skeleton className='h-4 w-20' />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+}

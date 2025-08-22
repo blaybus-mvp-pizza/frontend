@@ -1,6 +1,6 @@
 'use client';
 
-import { useStory } from '@/hooks/queries/useStories';
+import { useStoryDetail } from '@/hooks/queries/useStories';
 import { Button } from '@workspace/ui/components/button';
 import { useRouter } from 'next/navigation';
 import { format } from 'timeago.js';
@@ -10,13 +10,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function StoryContent({ id }: { id: string }) {
   const router = useRouter();
-  const { data: story, isLoading, isPlaceholderData } = useStory(Number(id));
+  const { data: story, isLoading } = useStoryDetail(Number(id));
 
-  if (!story || (isLoading && !isPlaceholderData))
+  if (!story || isLoading)
     return <StoryContentSkeleton />;
 
-  const mainImage = story.images?.[0]?.imageUrl || '/placeholder.png';
-  const popupStore = story.product?.popupStore;
+  const mainImage = story.images?.[0] || '/placeholder.png';
+  const popupStore = story.product;
 
   const handleGoBack = () => {
     router.back();
@@ -34,29 +34,31 @@ export default function StoryContent({ id }: { id: string }) {
       <div className='px-4 sm:px-0'>
         <div className='flex flex-col gap-4 mt-4 mb-4'>
           <div className='font-medium text-sm text-[#767676] leading-[160%] tracking-[-0.025em]'>
-            {format(story.createdAt, 'ko')}
+            {format(story.created_at, 'ko')}
           </div>
           <div className='font-semibold text-2xl text-[#111111] leading-[140%] tracking-[-0.025em]'>
             {story.title}
           </div>
         </div>
-        <div className='bg-[#F5F5F5] w-full p-4 flex items-start space-x-4'>
-          <div className='relative w-10 h-10 rounded-sm overflow-hidden shrink-0'>
-            <img
-              src={popupStore.bannerImageUrl || '/placeholder.png'}
-              alt={popupStore.name}
-              className='w-full h-full object-cover rounded-sm'
-            />
+        {popupStore && (
+          <div className='bg-[#F5F5F5] w-full p-4 flex items-start space-x-4'>
+            <div className='relative w-10 h-10 rounded-sm overflow-hidden shrink-0'>
+              <img
+                src={popupStore.representative_image || '/placeholder.png'}
+                alt={popupStore.name}
+                className='w-full h-full object-cover rounded-sm'
+              />
+            </div>
+            <div className='flex flex-col gap-1'>
+              <span className='text-sm font-semibold text-[#111111] line-clamp-1'>
+                {popupStore.popup_store_name || popupStore.name}
+              </span>
+              <span className='text-[13px] font-normal text-[#505050] leading-[150%] tracking-[-0.025em] line-clamp-2'>
+                Popup Store
+              </span>
+            </div>
           </div>
-          <div className='flex flex-col gap-1'>
-            <span className='text-sm font-semibold text-[#111111] line-clamp-1'>
-              {popupStore.name}
-            </span>
-            <span className='text-[13px] font-normal text-[#505050] leading-[150%] tracking-[-0.025em] line-clamp-2'>
-              {popupStore.description}
-            </span>
-          </div>
-        </div>
+        )}
       </div>
       <div className='border-t-2 border-[#111111] my-10'></div>
 

@@ -41,15 +41,11 @@ const generateMockStories = (): Story[] => {
       },
       product: {
         id: Math.floor(Math.random() * 10) + 1,
-        popupStoreId: Math.floor(Math.random() * 5) + 1,
-        category: '패션',
         name: `카누 팝업스토어 에디션 텀블러 (${i}번 상품)`,
-        price: 15000,
-        stock: 1,
-        shippingBaseFee: 2500,
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        images: [],
+        tags: [],
+        labels: [],
+        category: '패션',
         popupStore: {
           id: Math.floor(Math.random() * 5) + 1,
           name: `카누 팝업스토어 에디션 텀블러`,
@@ -57,6 +53,14 @@ const generateMockStories = (): Story[] => {
           bannerImageUrl: `https://picsum.photos/400/200?random=${i + 10}`,
           createdAt: new Date(),
         },
+        // Legacy fields
+        price: 15000,
+        popupStoreId: Math.floor(Math.random() * 5) + 1,
+        stock: 1,
+        shippingBaseFee: 2500,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       images: [
         {

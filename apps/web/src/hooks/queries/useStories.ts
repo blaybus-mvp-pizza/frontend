@@ -1,37 +1,32 @@
-import {
-  storyApi,
-  StoryFilters,
-  PaginatedResponse,
-} from '@/services/api/story';
 import { useQuery } from '@tanstack/react-query';
-import { Story } from '@workspace/ui/types';
+import { storiesApi } from '@/api/endpoints/stories.api';
+import type { Page } from '@/api/types/common.types';
+import type { StoryListItem, StoryMeta } from '@/api/types/story.types';
 
 export const storyKeys = {
   all: ['stories'] as const,
   lists: () => [...storyKeys.all, 'list'] as const,
-  list: (filters?: {}) => [...storyKeys.lists(), filters] as const,
-  paginated: (filters?: StoryFilters) =>
-    [...storyKeys.all, 'paginated', filters] as const,
+  list: (page: number, size: number) => [...storyKeys.lists(), { page, size }] as const,
   details: () => [...storyKeys.all, 'detail'] as const,
   detail: (id: number) => [...storyKeys.details(), id] as const,
 };
 
-export function useStoriesWithPagination(filters: StoryFilters) {
-  return useQuery<PaginatedResponse<Story>>({
-    queryKey: storyKeys.paginated(filters),
-    queryFn: () => storyApi.getStoriesWithPagination(filters),
+export function useStories(page: number = 1, size: number = 9) {
+  return useQuery<Page<StoryListItem>>({
+    queryKey: storyKeys.list(page, size),
+    queryFn: () => storiesApi.getStories(page, size),
     staleTime: 1000 * 60 * 2, // 2 minutes
     gcTime: 1000 * 60 * 5, // 5 minutes
     placeholderData: (previousData) => previousData,
   });
 }
 
-export function useStory(id: number) {
-  return useQuery<Story | null>({
+export function useStoryDetail(id: number) {
+  return useQuery<StoryMeta>({
     queryKey: storyKeys.detail(id),
-    queryFn: () => storyApi.getStoryById(id),
+    queryFn: () => storiesApi.getStoryDetail(id),
     staleTime: 1000 * 60 * 5, // 5 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
+    gcTime: 1000 * 60 * 10, // 10 minutes
     enabled: !!id,
   });
 }
