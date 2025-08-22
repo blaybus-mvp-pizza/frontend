@@ -4,7 +4,7 @@ import { BuyNowActionResult, PlaceBidResult } from '../types/auction-action.type
 export const auctionActionsApi = {
   // Place a bid
   placeBid: async (auctionId: number, amount: number): Promise<PlaceBidResult> => {
-    const response = await apiClient.post(`/auctions/bid`, null, {
+    const response = await apiClient.post(`/auction/bid`, null, {
       params: {
         auction_id: auctionId,
         amount: amount,
@@ -15,7 +15,7 @@ export const auctionActionsApi = {
 
   // Buy now
   buyNow: async (auctionId: number): Promise<BuyNowActionResult> => {
-    const response = await apiClient.post(`/auctions/buy-now`, null, {
+    const response = await apiClient.post(`/auction/buy-now`, null, {
       params: {
         auction_id: auctionId,
       },
