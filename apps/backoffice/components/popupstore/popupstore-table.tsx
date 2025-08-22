@@ -44,7 +44,7 @@ export default function PopUpStoreTable() {
     );
   }
   return (
-    <>
+    <div className='w-full'>
       <div className='flex justify-between items-center'>
         <PopUpStoreFilter
           globalFilter={globalFilter}
@@ -53,6 +53,6 @@ export default function PopUpStoreTable() {
         <PopUpStoreCreateButton />
       </div>
       <DataTable table={table} />
-    </>
+    </div>
   );
 }

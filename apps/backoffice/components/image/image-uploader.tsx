@@ -1,8 +1,7 @@
 "use client";
-
 import { EntityType } from "@/api/image";
 import { useImageUploader } from "@/hooks/use-image-uploader";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { Loader2, X, Image as ImageIcon } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
@@ -21,12 +20,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   onRemove,
   existingImageUrl,
 }) => {
-  const { fileUrl, isLoading, error, handleUpload } = useImageUploader();
+  const { fileUrl, isLoading, error, handleUpload, clearFileUrl } = useImageUploader();
+  const hasReportedRef = useRef(false);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
       if (file) {
+        hasReportedRef.current = false; 
         await handleUpload(file, entity);
       }
     },
@@ -44,21 +45,33 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   });
 
   useEffect(() => {
-    if (fileUrl) {
+    if (fileUrl && !hasReportedRef.current) {
       onUploadSuccess(fileUrl);
+      hasReportedRef.current = true;
+      if (clearFileUrl) {
+        setTimeout(() => clearFileUrl(), 100);
+      }
     }
-  }, [fileUrl, onUploadSuccess]);
+  }, [fileUrl, onUploadSuccess, clearFileUrl]);
 
-  const currentImageUrl = fileUrl || existingImageUrl;
+  useEffect(() => {
+    return () => {
+      if (clearFileUrl) {
+        clearFileUrl();
+      }
+    };
+  }, [clearFileUrl]);
+
+  const currentImageUrl = existingImageUrl || fileUrl;
 
   return (
     <div className='space-y-4'>
       {currentImageUrl ? (
-        <div className='relative w-full max-w-[300px] h-auto mx-auto rounded-lg overflow-hidden border-2 shadow-sm group'>
+        <div className='relative w-full max-w-[200px] max-h-[200px] mx-auto rounded-lg overflow-hidden border-2 shadow-sm group'>
           <img
             src={currentImageUrl}
             alt='업로드된 이미지'
-            className='w-full h-full object-cover'
+            className='w-full h-full object-cover aspect-square'
           />
           <Button
             type='button'

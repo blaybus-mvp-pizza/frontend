@@ -88,7 +88,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const { mutate, isPending } = useCreateOrEditProduct();
 
+  // 이미지 URLs를 관리하는 상태
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  // 폼이 초기화되었는지 추적하는 상태
+  const [isFormInitialized, setIsFormInitialized] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -118,9 +121,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     },
   });
 
+  // 수정 모드일 때 기존 데이터로 폼 초기화
   useEffect(() => {
-    if (isEditMode && productData) {
-      form.reset({
+    if (isEditMode && productData && !isFormInitialized) {
+      const resetValues = {
         name: productData.name,
         summary: productData.summary,
         description: productData.description,
@@ -132,26 +136,32 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         specs: {
           material: productData.specs?.material || "",
           place_of_use: productData.specs?.place_of_use || "",
-          width_cm: productData.specs?.width_cm ?? 0,
-          height_cm: productData.specs?.height_cm ?? 0,
-          tolerance_cm: productData.specs?.tolerance_cm ?? 0,
+          width_cm: productData.specs?.width_cm ?? 10,
+          height_cm: productData.specs?.height_cm ?? 10,
+          tolerance_cm: productData.specs?.tolerance_cm ?? 1,
           edition_info: productData.specs?.edition_info || "",
           condition_note: productData.specs?.condition_note || "",
         },
         store_id: productData.store_id || storeId,
-        shipping_base_fee: productData.shipping_base_fee,
-        shipping_free_threshold: productData.shipping_free_threshold,
+        shipping_base_fee: productData.shipping_base_fee || 0,
+        shipping_free_threshold: productData.shipping_free_threshold || 0,
         shipping_extra_note: productData.shipping_extra_note || "",
         courier_name: productData.courier_name || "",
-      });
+      };
+      
+      form.reset(resetValues);
       setImageUrls(productData.images || []);
+      setIsFormInitialized(true);
+    } else if (!isEditMode && !isFormInitialized) {
+      // 새 상품 생성 모드일 때
+      setIsFormInitialized(true);
     }
-  }, [isEditMode, productData, form]);
+  }, [isEditMode, productData, form, storeId, isFormInitialized]);
 
   const onSubmit = (values: ProductFormValues) => {
     const productToSubmit: ProductRequest = {
       ...values,
-      images: imageUrls,
+      images: imageUrls, // imageUrls 상태를 사용
       shipping_extra_note: values.shipping_extra_note || "",
       courier_name: values.courier_name || "",
       id: isEditMode ? productId : undefined,
@@ -159,15 +169,27 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     mutate(productToSubmit);
   };
 
-  const handleImageUploadSuccess = useCallback((url: string) => {
-    setImageUrls((prevImages) => [...prevImages, url]);
-  }, []);
+  const handleImageUploadSuccess = useCallback(
+    (url: string) => {
+      setImageUrls((prevImages) => {
+        const newImages = [...prevImages, url];
+        form.setValue("images", newImages, { shouldValidate: true });
+        return newImages;
+      });
+    },
+    [form]
+  );
 
-  const handleRemoveImage = useCallback((urlToRemove: string) => {
-    setImageUrls((prevImages) =>
-      prevImages.filter((url) => url !== urlToRemove)
-    );
-  }, []);
+  const handleRemoveImage = useCallback(
+    (urlToRemove: string) => {
+      setImageUrls((prevImages) => {
+        const newImages = prevImages.filter((url) => url !== urlToRemove);
+        form.setValue("images", newImages, { shouldValidate: true });
+        return newImages;
+      });
+    },
+    [form]
+  );
 
   if (isEditMode && isProductLoading) {
     return <div>상품 정보를 불러오는 중...</div>;
@@ -454,8 +476,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 상품 이미지
               </h3>
               <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+                {/* 기존 이미지들 표시 */}
                 {imageUrls.map((imageUrl, index) => (
-                  <div key={index} className='relative w-full h-48'>
+                  <div key={`existing-${index}`} className='relative w-full h-48'>
                     <ImageUploader
                       entity='product'
                       existingImageUrl={imageUrl}
@@ -464,14 +487,22 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     />
                   </div>
                 ))}
+                {/* 새 이미지 업로드 버튼 (최대 6개까지) */}
                 {imageUrls.length < 6 && (
-                  <ImageUploader
-                    entity='product'
-                    onUploadSuccess={handleImageUploadSuccess}
-                  />
+                  <div key="new-upload" className='relative w-full h-48'>
+                    <ImageUploader
+                      entity='product'
+                      onUploadSuccess={handleImageUploadSuccess}
+                    />
+                  </div>
                 )}
               </div>
-              <FormMessage className='mt-2 text-center' />
+              {/* 이미지 관련 에러 메시지 */}
+              {form.formState.errors.images && (
+                <div className="text-sm text-red-500 mt-2 text-center">
+                  {form.formState.errors.images.message}
+                </div>
+              )}
             </section>
 
             <section className='space-y-6'>
@@ -557,8 +588,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           </div>
         </div>
         <div className='pt-6 flex justify-end'>
-          <Button type='submit' className='' disabled={isPending}>
-            {isPending ? "처리 중..." : "저장"}
+          <Button type='submit' disabled={isPending}>
+            {isPending ? "처리 중..." : isEditMode ? "수정" : "저장"}
           </Button>
         </div>
       </form>

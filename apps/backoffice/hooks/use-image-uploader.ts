@@ -1,5 +1,5 @@
 import { EntityType, uploadImage } from "@/api/image";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 interface UploadResponse {
   fileUrl: string;
@@ -11,6 +11,7 @@ interface UseImageUploaderResult {
   isLoading: boolean;
   error: string | null;
   handleUpload: (file: File, entity: EntityType) => Promise<UploadResponse>;
+  clearFileUrl: () => void;
 }
 
 export const useImageUploader = (): UseImageUploaderResult => {
@@ -25,20 +26,29 @@ export const useImageUploader = (): UseImageUploaderResult => {
     setIsLoading(true);
     setError(null);
     setFileUrl(null);
-
+    
     try {
       const response = await uploadImage(file, entity);
       setFileUrl(response.fileUrl);
-
       return response;
     } catch (err) {
       setError(err instanceof Error ? err.message : "알 수 없는 오류");
-
       throw err;
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { fileUrl, isLoading, error, handleUpload };
+  const clearFileUrl = useCallback(() => {
+    setFileUrl(null);
+    setError(null);
+  }, []);
+
+  return { 
+    fileUrl, 
+    isLoading, 
+    error, 
+    handleUpload,
+    clearFileUrl
+  };
 };
