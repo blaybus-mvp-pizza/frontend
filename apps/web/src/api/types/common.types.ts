@@ -61,6 +61,8 @@ export interface ProductFilters {
   price_bucket?: PriceBucket
   price_min?: number
   price_max?: number
+  category?: string
+  query?: string
 }
 
 export interface StoreFilters {

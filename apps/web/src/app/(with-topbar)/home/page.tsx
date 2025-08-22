@@ -4,10 +4,8 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 import { Button } from '@workspace/ui/components/button'
-import { ProductCard } from '@workspace/ui/components/product-card'
 import { ProductSampleList } from '@workspace/ui/components/product/product-sample-list'
 import { Typography } from '@workspace/ui/components/typography'
-import { MapIcon } from 'lucide-react'
 
 import {
   useProductsEndingSoon,
@@ -22,6 +20,7 @@ import {
   Skeleton,
 } from '@/components/ui/skeleton'
 import { PRODUCT_TAGS } from '@/constants/filter.constant'
+import StoreSection from '@/components/home/StoreSection'
 
 export default function HomePage() {
   const router = useRouter()
@@ -172,6 +171,7 @@ export default function HomePage() {
             <div
               className="flex cursor-pointer flex-col items-center gap-1 rounded-lg bg-[#f6f6f6] p-2 transition-colors hover:bg-[#ececec] sm:gap-2 sm:p-3 md:gap-3 md:p-4"
               key={v.name}
+              onClick={() => router.push(`/products?filter=${encodeURIComponent(v.name)}`)}
             >
               <Image
                 src={v.imgSrc}
@@ -250,115 +250,11 @@ export default function HomePage() {
           {recentStoresData.items
             .filter((storeData) => storeData.products && storeData.products.length > 0)
             .map((storeData) => (
-              <div key={`store-${storeData.store.store_id}`} className="mt-20 w-full space-y-2">
-                <div className="mt-8 flex items-center gap-x-2">
-                  <span className="text-brand-mint flex w-fit items-center gap-x-2 bg-black p-1">
-                    <MapIcon />
-                    <Typography className="text-brand-mint font-semibold md:text-xl">
-                      {storeData.store.name}
-                    </Typography>
-                  </span>
-                  <Typography variant={'h6'} className="font-semibold md:text-xl">
-                    {storeData.store.sales_description || '팝업스토어에서 판매중인 아이템'}
-                  </Typography>
-                </div>
-                <div className="flex h-[400px] gap-x-8">
-                  <div className="relative aspect-square h-[397px] w-[442px] shrink-0 overflow-hidden">
-                    <Image
-                      src={storeData.store.image_url!}
-                      alt={`${storeData.store.name} 썸네일`}
-                      quality={100}
-                      fill
-                      className="object-cover"
-                      loading="lazy"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
-                      <Typography variant="h5" className="mb-2 font-bold text-white">
-                        {storeData.store.name}
-                      </Typography>
-                      <Typography variant="body1" className="text-white/90">
-                        {storeData.store.description}
-                      </Typography>
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    {storeData.products.slice(0, 2).map((product) => {
-                      const productData = {
-                        id: product.product_id,
-                        popupStoreId: storeData.store.store_id,
-                        category: '아트/컬렉터블',
-                        name: product.product_name,
-                        summary: product.popup_store_name,
-                        labels: product.labels,
-                        description: '',
-                        price: product.buy_now_price || product.current_highest_bid || 0,
-                        stock: 1,
-                        shippingBaseFee: 3000,
-                        shippingFreeThreshold: 50000,
-                        isActive: true,
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                        images: product.representative_image
-                          ? [
-                              {
-                                id: product.product_id,
-                                productId: product.product_id,
-                                imageUrl: product.representative_image,
-                                sortOrder: 0,
-                              },
-                            ]
-                          : [],
-                        tags: [],
-                        popupStore: {
-                          id: storeData.store.store_id,
-                          name: product.popup_store_name,
-                          createdAt: new Date(),
-                        },
-                      }
-
-                      const auctionData = product.auction_ends_at
-                        ? {
-                            id: product.product_id,
-                            productId: product.product_id,
-                            startPrice: product.current_highest_bid || 0,
-                            minBidPrice: 1000,
-                            buyNowPrice: product.buy_now_price || 0,
-                            depositAmount: 0,
-                            startsAt: new Date(),
-                            endsAt: new Date(product.auction_ends_at),
-                            status:
-                              new Date(product.auction_ends_at) > new Date()
-                                ? ('running' as const)
-                                : ('ended' as const),
-                            createdAt: new Date(),
-                            updatedAt: new Date(),
-                            currentBid: product.current_highest_bid
-                              ? {
-                                  id: 1,
-                                  auctionId: product.product_id,
-                                  userId: 1,
-                                  bidOrder: 1,
-                                  amount: product.current_highest_bid,
-                                  createdAt: new Date(),
-                                }
-                              : undefined,
-                            bidCount: 0,
-                          }
-                        : undefined
-
-                      return (
-                        <ProductCard
-                          key={product.product_id}
-                          product={productData}
-                          auction={auctionData}
-                          showTimeLeft={!!auctionData}
-                          onClick={() => handleProductClick(product.product_id)}
-                        />
-                      )
-                    })}
-                  </div>
-                </div>
-              </div>
+              <StoreSection
+                key={`store-${storeData.store.store_id}`}
+                storeData={storeData}
+                onProductClick={handleProductClick}
+              />
             ))}
         </>
       )}

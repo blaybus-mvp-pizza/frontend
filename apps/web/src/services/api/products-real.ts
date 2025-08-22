@@ -42,6 +42,16 @@ const convertToApiFilters = (filters: ProductFilters): ApiProductFilters => {
     size: filters.pageSize || 16,
   }
 
+  // Add category filter
+  if (filters.category && filters.category !== '전체') {
+    apiFilters.category = filters.category
+  }
+
+  // Add search query
+  if (filters.search) {
+    apiFilters.query = filters.search
+  }
+
   // Convert sort option
   if (filters.sort) {
     switch (filters.sort) {
@@ -129,7 +139,7 @@ const convertApiProductToProduct = (apiProduct: ProductListItem, index: number =
     tags: [],
     labels: apiProduct.labels || [],
     description: `${apiProduct.product_name} - ${apiProduct.popup_store_name}`,
-    category: '아트/컬렉터블',
+    category: apiProduct.category || '아트/컬렉터블',
     popupStore: {
       id: 1,
       name: apiProduct.popup_store_name,

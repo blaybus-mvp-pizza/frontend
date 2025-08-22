@@ -12,6 +12,7 @@ export interface ProductListItem {
   labels: string[] // 상품 라벨 목록 (예: "신규상품", "베스트")
   bidders_count?: number
   is_liked?: boolean
+  category?: string // 카테고리 (예: "가구/리빙", "키친/테이블웨어")
 }
 
 // 상품 스펙 정보
