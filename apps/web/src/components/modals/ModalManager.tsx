@@ -7,7 +7,7 @@ import { Modal, useUIStore } from '@/store/ui.store'
 // Lazy load modal components
 const modalComponents = {
   confirm: lazy(() => import('./modals/ConfirmModal')),
-  bid: lazy(() => import('./modals/BidModal')),
+  bid: lazy(() => import('./modals/BidModal').then(module => ({ default: module.BidModal }))),
   buyNow: lazy(() => import('./modals/BuyNowModal')),
   error: lazy(() => import('./modals/ErrorModal')),
   success: lazy(() => import('./modals/SuccessModal')),
