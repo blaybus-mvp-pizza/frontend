@@ -28,7 +28,7 @@ export function ProductCard({
  if (auction?.endsAt) {
       setTimeLeft(calculateRemainingTime(auction.endsAt));
     }
-    
+
     // Update every minute if showing time
     if (showTimeLeft && auction?.endsAt) {
       const interval = setInterval(() => {
@@ -46,7 +46,7 @@ export function ProductCard({
 
   return (
     <div
-      className={cn("group cursor-pointer bg-card transition-all", className)}
+      className={cn("group cursor-pointer bg-card transition-all space-y-2", className)}
       onClick={onClick}
     >
       {/* 이미지 컨테이너 */}
@@ -74,53 +74,48 @@ export function ProductCard({
       </div>
 
       {/* 상품 정보 */}
-      <div className="p-1 space-y-1">
+      <div className="pl-1 pr-7 space-y-1">
+      <div className="space-y-1">
+
         {/* 팝업스토어 이름 */}
+      
+      
         {(("popupStoreName" in product && product.popupStoreName) ||
           ("popupStore" in product && product.popupStore?.name)) && (
-          <Typography variant="caption" color="muted">
+          <p className="text-[#505050] text-sm leading-[140%] tracking-[-2.5%]">
             {"popupStoreName" in product
               ? product.popupStoreName
               : product.popupStore?.name}
-          </Typography>
+          </p>
         )}
 
         {/* 상품명 */}
-        <Typography variant="body2" weight="semibold" lineClamp={2}>
+        <p className="text-[#111111] font-semibold leading-[140%] line-clamp-2">
           {product.name}
-        </Typography>
-
+        </p>
+        </div>
         {/* 가격 정보 */}
-        <div className="">
+        <div >
           {auction ? (
-            <>
+            <div className="space-y-1">
               {/* 현재 입찰가 */}
 
               <div className="flex items-center gap-x-1">
-                <Typography variant="caption" color="muted">
-                  현재가 :
-                </Typography>
-                <Typography variant="body2" weight="bold">
+                <p className="text-sm text-[#505050] leading-[140%] tracking-[-2.5%]">
+                  현재 입찰가 :
+                </p>
+                <p className="text-[#111111] font-bold leading-[140%]">
                   {auction.currentBid
                     ? `${auction.currentBid.amount.toLocaleString()}원`
                     : `${auction.startPrice.toLocaleString()}원`}
-                </Typography>
+                </p>
               </div>
-
-              {/* 즉시 구매가 */}
               {auction.buyNowPrice && (
-                <Typography variant="caption" color="muted">
+                <p className="text-[#767676] text-xs leading-[140%] tracking-[-2.5%]">
                   즉시 구매가 {auction.buyNowPrice.toLocaleString()}원
-                </Typography>
+                </p>
               )}
-
-              {/* 입찰 수 */}
-              {/* {auction.bidCount !== undefined && auction.bidCount > 0 && (
-                <Typography variant="caption" color="muted">
-                  입찰 {auction.bidCount}건
-                </Typography>
-              )} */}
-            </>
+            </div>
           ) : (
             <Typography variant="body1" weight="bold">
               {(product.price || 0).toLocaleString()}원
