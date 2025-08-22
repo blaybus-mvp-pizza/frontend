@@ -60,7 +60,7 @@ export const useVerifyPhone = () => {
         queryClient.invalidateQueries({ queryKey: myPageKeys.profile() })
         queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
         showSuccess('휴대폰 인증이 완료되었습니다.')
-        router.refresh()
+        router.push('/home')
       } else {
         showError('인증에 실패했습니다.')
       }

@@ -20,6 +20,9 @@ const typographyVariants = cva("font-['Pretendard_Variable']", {
       overline: "text-xs md:text-sm font-medium uppercase tracking-wider",
       label: "text-sm md:text-base font-medium",
       button: "text-xs md:text-sm font-medium",
+      sub: "text-sm font-medium leading-[140%] text-[#767676]",
+      first: "text-xl font-bold leading-[140%] text-[#111111]",
+      second: "text-lg font-semibold tracking-[-0.025em] leading-[150%] text-[#111111]",
     },
     color: {
       default: "text-foreground",
@@ -94,6 +97,9 @@ const variantElementMap: Record<string, keyof React.JSX.IntrinsicElements> = {
   overline: "span",
   label: "label",
   button: "span",
+  sub: "p",
+  first: "p",
+  second: "p",
 };
 
 const Typography = React.forwardRef<HTMLElement, TypographyProps>(
@@ -101,7 +107,6 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
     {
       className,
       variant = "body1",
-      color,
       align,
       weight,
       lineClamp,
@@ -119,13 +124,12 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
       <Component
         className={cn(
           typographyVariants({
-            variant,
-            color,
             align,
             weight,
             lineClamp,
             truncate,
             className,
+            variant,
           })
         )}
         ref={ref}
