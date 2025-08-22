@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { ChevronRight } from 'lucide-react'
 
 interface StoreInfoProps {
@@ -18,11 +19,15 @@ export function StoreInfo({ store }: StoreInfoProps) {
           <h3 className="text-lg font-bold text-[#111111]">{store.name}</h3>
           {store.description && <p className="mt-1 text-sm text-[#505050]">{store.description}</p>}
         </div>
-        <img
-          src={store.image_url || '/placeholder.png'}
-          alt={store.name}
-          className="h-10 w-10 rounded-sm object-cover"
-        />
+        <div className="relative h-10 w-10 overflow-hidden rounded-sm">
+          <Image
+            src={store.image_url || '/placeholder.png'}
+            alt={store.name}
+            fill
+            sizes="40px"
+            className="object-cover"
+          />
+        </div>
       </div>
       <div className="flex items-center justify-between bg-white px-4 py-2">
         <p className="text-sm text-[#111111]">

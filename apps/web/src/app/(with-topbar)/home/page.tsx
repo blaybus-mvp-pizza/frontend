@@ -13,6 +13,7 @@ import {
   useProductsRecommended,
   useRecentStores,
 } from '@/api/hooks/queries/useProducts'
+import StoreSection from '@/components/home/StoreSection'
 import {
   CategoryTagSkeleton,
   PopupStoreSectionSkeleton,
@@ -20,7 +21,6 @@ import {
   Skeleton,
 } from '@/components/ui/skeleton'
 import { PRODUCT_TAGS } from '@/constants/filter.constant'
-import StoreSection from '@/components/home/StoreSection'
 
 export default function HomePage() {
   const router = useRouter()
@@ -28,17 +28,17 @@ export default function HomePage() {
   // Use real API hooks with proper pagination
   const { data: recommendedData, isLoading: recommendedLoading } = useProductsRecommended({
     page: 1,
-    size: 12,
+    size: 4,
   })
 
   const { data: endingSoonData, isLoading: endingSoonLoading } = useProductsEndingSoon({
     page: 1,
-    size: 8,
+    size: 4,
   })
 
   const { data: newProductsData, isLoading: newProductsLoading } = useProductsNew({
     page: 1,
-    size: 8,
+    size: 4,
   })
 
   const { data: recentStoresData, isLoading: recentStoresLoading } = useRecentStores()

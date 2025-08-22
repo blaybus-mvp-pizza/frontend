@@ -7,9 +7,10 @@ import { useParams } from 'next/navigation'
 
 import { Button } from '@workspace/ui/components/button'
 import { Typography } from '@workspace/ui/components/typography'
+import { calculateRemainingTime } from '@workspace/ui/lib/utils'
 import { BellIcon, ClockIcon } from 'lucide-react'
 
-import BidModal from '@/components/modals/modals/BidModal'
+import { BidModal } from '@/components/modals/modals/BidModal'
 import BuyNowModal from '@/components/modals/modals/BuyNowModal'
 // Import modular components
 import { ProductImages } from '@/components/products/detail/ProductImages'
@@ -22,24 +23,6 @@ import { StoreInfo } from '@/components/products/detail/StoreInfo'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useProductDetail } from '@/hooks/queries/useProductDetail'
-
-function calculateRemainingTime(ends_at: string): string {
-  const endTime = new Date(ends_at).getTime()
-  const now = Date.now()
-  const remainingTime = endTime - now
-
-  if (remainingTime <= 0) return '경매 종료'
-
-  const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24))
-  const hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24)
-  const minutes = Math.floor((remainingTime / (1000 * 60)) % 60)
-  const seconds = Math.floor((remainingTime / 1000) % 60)
-
-  if (days > 0) {
-    return `${days}일 ${hours}시간 ${minutes}분`
-  }
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-}
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
@@ -243,11 +226,15 @@ export default function ProductDetailPage() {
                             }`}
                           />
                           <div className="flex flex-1 items-center gap-2">
-                            <img
-                              src={bid.user.profile_image || '/placeholder.png'}
-                              alt="profileImg"
-                              className="h-8 w-8 rounded-full object-cover"
-                            />
+                            <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                              <Image
+                                src={bid.user.profile_image || '/placeholder.png'}
+                                alt="profileImg"
+                                fill
+                                sizes="32px"
+                                className="object-cover"
+                              />
+                            </div>
                             <div className="flex flex-col gap-y-0.5">
                               <Typography
                                 variant="sub"
@@ -328,20 +315,22 @@ export default function ProductDetailPage() {
                 환경 보호의 다음 여정을 홍길동님이 이어주세요
               </Typography>
               <div className="flex items-center gap-3">
-                <img
-                  src="/icons/EARTH_ICON.svg"
-                  alt="Description"
-                  className="h-10 w-10 rounded-full"
-                />
+                <div className="relative h-10 w-10">
+                  <Image
+                    src="/icons/EARTH_ICON.svg"
+                    alt="Earth Icon"
+                    fill
+                    sizes="40px"
+                    className="rounded-full"
+                  />
+                </div>
                 <div className="relative flex items-center gap-1 rounded bg-[#222222] px-3 py-1.5">
                   <div className="absolute -left-1.5 top-1/2 h-0 w-0 -translate-y-1/2 border-b-[6px] border-r-[8px] border-t-[6px] border-b-transparent border-r-[#222222] border-t-transparent"></div>
                   <span className="text-xs font-medium text-white">이 상품이 주인을 찾으면</span>
                   <span className="flex items-center gap-x-1 text-xs font-medium text-[#94D8D4]">
-                    <img
-                      src={'/icons/RECYCLE.svg'}
-                      alt="Earth Icon"
-                      className="inline-block h-2.5 w-2.5"
-                    />
+                    <span className="relative inline-block h-2.5 w-2.5">
+                      <Image src="/icons/RECYCLE.svg" alt="Recycle Icon" fill sizes="10px" />
+                    </span>
                     탄소 2.4kg
                   </span>
                   <span className="text-xs font-medium text-white">가 절감돼요!</span>

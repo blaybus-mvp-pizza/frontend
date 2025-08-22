@@ -9,6 +9,28 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { cn } from '@/utils/cn'
 
+// Base64 encoded shimmer placeholder
+const shimmer = (w: number, h: number) => `
+<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="g">
+      <stop stop-color="#f6f7f8" offset="20%" />
+      <stop stop-color="#edeef1" offset="50%" />
+      <stop stop-color="#f6f7f8" offset="70%" />
+    </linearGradient>
+  </defs>
+  <rect width="${w}" height="${h}" fill="#f6f7f8" />
+  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
+  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
+</svg>`
+
+const toBase64 = (str: string) =>
+  typeof window === 'undefined'
+    ? Buffer.from(str).toString('base64')
+    : window.btoa(str)
+
+const dataUrl = `data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`
+
 interface ProductImagesProps {
   images: string[]
   productName: string
@@ -34,6 +56,9 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
           fill
           className="object-cover"
           priority
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          placeholder="blur"
+          blurDataURL={dataUrl}
         />
 
         {images.length > 1 && (
@@ -81,7 +106,10 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
                 src={image}
                 alt={`${productName} ${index + 1}`}
                 fill
+                sizes="80px"
                 className="object-cover"
+                placeholder="blur"
+                blurDataURL={dataUrl}
               />
             </button>
           ))}

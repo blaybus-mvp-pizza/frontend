@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 
 import { motion } from 'framer-motion'
+import { X } from 'lucide-react'
 
 import { usePlaceBid } from '@/api/hooks/mutations/useAuctionActions'
 import PhoneVerificationModal from '@/components/modals/PhoneVerificationModal'
@@ -16,7 +17,7 @@ interface BidModalProps {
   onConfirm: () => void
 }
 
-const BidModal: React.FC<BidModalProps> = ({
+export const BidModal: React.FC<BidModalProps> = ({
   auctionId,
   productName,
   currentBid,
@@ -24,121 +25,263 @@ const BidModal: React.FC<BidModalProps> = ({
   onClose,
   onConfirm,
 }) => {
-  const [bidAmount, setBidAmount] = useState(currentBid + minBidIncrement)
-  const { 
-    mutate: placeBid, 
+  // 5개의 개별 체크박스 상태 관리
+  const [checkedItems, setCheckedItems] = useState({
+    cancelPolicy: false, // 입찰 후 취소/감액 불가
+    paymentObligation: false, // 낙찰 시 결제 의무
+    auctionRules: false, // 경매 규칙 동의
+    deposit: false, // 입찰보증금 결제 동의
+    autoPayment: false, // 자동 결제 동의
+  })
+
+  const bidAmount = currentBid + minBidIncrement
+
+  const {
+    mutate: placeBid,
     isPending,
     showPhoneVerificationModal,
-    setShowPhoneVerificationModal 
+    setShowPhoneVerificationModal,
   } = usePlaceBid()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  // 개별 체크박스 토글
+  const handleCheck = (key: keyof typeof checkedItems) => {
+    setCheckedItems((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }))
+  }
 
+  // 모든 체크박스가 체크되었는지 확인
+  const isAllChecked = Object.values(checkedItems).every((value) => value === true)
+
+  // 전체 선택/해제
+  const handleCheckAll = () => {
+    const newValue = !isAllChecked
+    setCheckedItems({
+      cancelPolicy: newValue,
+      paymentObligation: newValue,
+      auctionRules: newValue,
+      deposit: newValue,
+      autoPayment: newValue,
+    })
+  }
+
+  const handleSubmit = () => {
     placeBid(
       { auctionId, amount: bidAmount },
       {
         onSuccess: () => {
           onConfirm()
-        }
-      }
+        },
+      },
     )
   }
 
-  const quickBidOptions = [
-    currentBid + minBidIncrement,
-    currentBid + minBidIncrement * 5,
-    currentBid + minBidIncrement * 10,
-  ]
-
   return (
     <>
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
-    >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
-        onClick={(e) => e.stopPropagation()}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex h-svh items-center justify-center bg-black/50 p-4"
+        onClick={onClose}
       >
-        <h2 className="mb-2 text-xl font-bold">입찰하기</h2>
-        <p className="mb-4 text-sm text-gray-600">{productName}</p>
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium">현재 최고 입찰가</label>
-            <div className="text-2xl font-bold text-blue-600">{currentBid.toLocaleString()}원</div>
-          </div>
-
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium">입찰 금액</label>
-            <input
-              type="number"
-              value={bidAmount}
-              onChange={(e) => setBidAmount(Number(e.target.value))}
-              min={currentBid + minBidIncrement}
-              step={minBidIncrement}
-              className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-            <p className="mt-1 text-xs text-gray-500">
-              최소 입찰 단위: {minBidIncrement.toLocaleString()}원
-            </p>
-          </div>
-
-          <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium">빠른 입찰</label>
-            <div className="flex gap-2">
-              {quickBidOptions.map((amount) => (
-                <button
-                  key={amount}
-                  type="button"
-                  onClick={() => setBidAmount(amount)}
-                  className={`flex-1 rounded-lg border px-3 py-2 text-sm transition-colors ${
-                    bidAmount === amount
-                      ? 'border-blue-500 bg-blue-50 text-blue-600'
-                      : 'border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  +{((amount - currentBid) / 1000).toFixed(0)}천원
-                </button>
-              ))}
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="w-full max-w-lg rounded bg-white shadow-xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold">입찰 전 주의사항</h2>
+              <X onClick={onClose} className="h-6 w-6 cursor-pointer" />
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 rounded-xl border border-gray-300 px-4 py-3 font-medium transition-colors hover:bg-gray-50"
-            >
-              취소
-            </button>
-            <button
-              type="submit"
-              disabled={isPending}
-              className="flex-1 rounded-xl bg-blue-500 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {isPending ? '처리중...' : '입찰'}
-            </button>
+          <div className="px-6 py-4">
+            <div className="border-border-light mb-4 flex items-center gap-2 border-b pb-3">
+              <input
+                type="checkbox"
+                id="agreement-all"
+                checked={isAllChecked}
+                onChange={handleCheckAll}
+                className="relative h-5 w-5 cursor-pointer appearance-none border-2 border-gray-300 bg-white checked:border-[#91c4b4] checked:bg-[#91c4b4] focus:outline-none"
+                style={{
+                  backgroundImage: isAllChecked
+                    ? "url(\"data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L6 9.793l7.146-7.147a.5.5 0 0 1 .708.708z'/%3e%3c/svg%3e\")"
+                    : 'none',
+                  backgroundSize: '14px 14px',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                }}
+              />
+              <label htmlFor="agreement-all" className="cursor-pointer font-bold text-[#111111]">
+                모두 확인했습니다.
+              </label>
+            </div>
+
+            <div className="space-y-4 text-sm text-gray-600">
+              {/* 1. 입찰 후 취소/감액 불가 */}
+              <div>
+                <div className="mb-1 flex items-center gap-x-1">
+                  <input
+                    type="checkbox"
+                    id="cancel-policy"
+                    checked={checkedItems.cancelPolicy}
+                    onChange={() => handleCheck('cancelPolicy')}
+                    className="hidden h-4 w-4 cursor-pointer"
+                  />
+                  <label
+                    htmlFor="cancel-policy"
+                    className="flex cursor-pointer items-center gap-x-1"
+                  >
+                    <img
+                      src={checkedItems.cancelPolicy ? '/icons/CHECK.svg' : '/icons/CHECK_GRAY.svg'}
+                    />
+                    <h3 className="font-semibold text-gray-900">입찰 후 취소/감액 불가</h3>
+                  </label>
+                </div>
+                <p className="pl-[1.1rem] text-sm text-[#111111]">
+                  철회나 금액 감액은 불가합니다. 또한 동일 상품에 대해 금액 상향만 가능하며
+                  부정/오입력은 운영자 심사 후에만 예외 처리됩니다.
+                </p>
+              </div>
+
+              {/* 2. 낙찰 시 결제 의무 */}
+              <div>
+                <div className="mb-1 flex items-center gap-x-1">
+                  <input
+                    type="checkbox"
+                    id="payment-obligation"
+                    checked={checkedItems.paymentObligation}
+                    onChange={() => handleCheck('paymentObligation')}
+                    className="hidden h-4 w-4 cursor-pointer"
+                  />
+                  <label
+                    htmlFor="payment-obligation"
+                    className="flex cursor-pointer items-center gap-x-1"
+                  >
+                    <img
+                      src={
+                        checkedItems.paymentObligation
+                          ? '/icons/CHECK.svg'
+                          : '/icons/CHECK_GRAY.svg'
+                      }
+                    />
+                    <h3 className="font-semibold text-gray-900">
+                      낙찰 시 결제 의무 및 미결제 처리
+                    </h3>
+                  </label>
+                </div>
+                <p className="pl-[1.1rem] text-sm text-[#111111]">
+                  낙찰은 구매계약 성립을 의미하며, 안내된 결제 마감(24시간) 내 결제가 필요합니다.
+                  기한 내 미결제 시 차순위 입찰자에게 구매 기회가 넘어가며, 계정에 패널티가 부과될
+                  수 있습니다.
+                </p>
+              </div>
+
+              {/* 3. 경매 규칙 동의 */}
+              <div>
+                <div className="mb-1 flex items-center gap-x-1">
+                  <input
+                    type="checkbox"
+                    id="auction-rules"
+                    checked={checkedItems.auctionRules}
+                    onChange={() => handleCheck('auctionRules')}
+                    className="hidden h-4 w-4 cursor-pointer"
+                  />
+                  <label
+                    htmlFor="auction-rules"
+                    className="flex cursor-pointer items-center gap-x-1"
+                  >
+                    <img
+                      src={checkedItems.auctionRules ? '/icons/CHECK.svg' : '/icons/CHECK_GRAY.svg'}
+                    />
+                    <h3 className="font-semibold text-gray-900">경매 규칙 동의</h3>
+                  </label>
+                </div>
+                <p className="pl-[1.1rem] text-sm text-[#111111]">
+                  본 경매는 최대가 낙찰 방식으로 운영됩니다. 사용자가 입력한 최대가를 기준으로
+                  시스템이 자동 응찰됩니다.
+                </p>
+              </div>
+
+              {/* 4. 입찰보증금 결제 동의 */}
+              <div>
+                <div className="mb-1 flex items-center gap-x-1">
+                  <input
+                    type="checkbox"
+                    id="deposit"
+                    checked={checkedItems.deposit}
+                    onChange={() => handleCheck('deposit')}
+                    className="hidden h-4 w-4 cursor-pointer"
+                  />
+                  <label htmlFor="deposit" className="flex cursor-pointer items-center gap-x-1">
+                    <img
+                      src={checkedItems.deposit ? '/icons/CHECK.svg' : '/icons/CHECK_GRAY.svg'}
+                    />
+                    <h3 className="font-semibold text-gray-900">입찰보증금 결제 동의</h3>
+                  </label>
+                </div>
+                <p className="pl-[1.1rem] text-sm text-[#111111]">
+                  [입찰하기]를 누르면 입찰보증금이 자동 결제됩니다. 보증금은 내 입찰가의 3%를
+                  부과하며, 낙찰 시 최종 결제 금액에서 전액 차감, 낙찰 실패 시 원 결제수단으로
+                  환불됩니다.
+                </p>
+              </div>
+
+              {/* 5. 자동 결제 동의 */}
+              <div>
+                <div className="mb-1 flex items-center gap-x-1">
+                  <input
+                    type="checkbox"
+                    id="auto-payment"
+                    checked={checkedItems.autoPayment}
+                    onChange={() => handleCheck('autoPayment')}
+                    className="hidden h-4 w-4 cursor-pointer"
+                  />
+                  <label
+                    htmlFor="auto-payment"
+                    className="flex cursor-pointer items-center gap-x-1"
+                  >
+                    <img
+                      src={checkedItems.autoPayment ? '/icons/CHECK.svg' : '/icons/CHECK_GRAY.svg'}
+                    />
+                    <h3 className="font-semibold text-gray-900">자동 결제 동의</h3>
+                  </label>
+                </div>
+                <p className="pl-[1.1rem] text-sm text-[#111111]">
+                  내가 입찰한 상품이 낙찰되면 등록된 결제수단으로 즉시 자동 결제됩니다.
+                </p>
+              </div>
+
+              <div className="">
+                <button
+                  onClick={handleSubmit}
+                  disabled={!isAllChecked || isPending}
+                  className={`w-full cursor-pointer px-4 py-3 font-semibold transition-colors ${
+                    !isAllChecked || isPending
+                      ? 'cursor-not-allowed bg-gray-300 text-white'
+                      : 'bg-[#B5F5EB] text-black'
+                  }`}
+                >
+                  {isPending
+                    ? '입찰 중...'
+                    : '입찰하기 (' + (currentBid + minBidIncrement).toLocaleString() + '원)'}
+                </button>
+              </div>
+            </div>
           </div>
-        </form>
+        </motion.div>
       </motion.div>
-    </motion.div>
-    
-    {/* Phone Verification Modal */}
-    <PhoneVerificationModal
-      isOpen={showPhoneVerificationModal}
-      onClose={() => setShowPhoneVerificationModal(false)}
-    />
-  </>
+      {showPhoneVerificationModal && (
+        <PhoneVerificationModal
+          onClose={() => setShowPhoneVerificationModal(false)}
+          isOpen={showPhoneVerificationModal}
+        />
+      )}
+    </>
   )
 }
-
-export default BidModal

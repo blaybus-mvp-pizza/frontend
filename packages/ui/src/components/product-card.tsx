@@ -4,6 +4,7 @@ import { Product, ProductListItem, Auction } from "@workspace/ui/types";
 import { Typography } from "@workspace/ui/components/typography";
 import { cn } from "@workspace/ui/lib/utils";
 import { ClockIcon } from "lucide-react";
+import { calculateRemainingTime } from '@workspace/ui/lib/utils'
 
 interface ProductCardProps {
   product: Product | ProductListItem;
@@ -23,34 +24,15 @@ export function ProductCard({
   const [timeLeft, setTimeLeft] = useState<string | null>(null);
 
   useEffect(() => {
-    // 경매 남은 시간 계산
-    const calculateTimeLeft = () => {
-      if (!auction || !auction.endsAt) return null;
-
-      const now = new Date();
-      const end = new Date(auction.endsAt);
-      const diff = end.getTime() - now.getTime();
-
-      if (diff <= 0) return "종료됨";
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-      if (days > 0) return `${days}일 ${hours}시간`;
-      if (hours > 0) return `${hours}시간 ${minutes}분`;
-
-      return `${minutes}분`;
-    };
     // Initial calculation
-    setTimeLeft(calculateTimeLeft());
-
+ if (auction?.endsAt) {
+      setTimeLeft(calculateRemainingTime(auction.endsAt));
+    }
+    
     // Update every minute if showing time
     if (showTimeLeft && auction?.endsAt) {
       const interval = setInterval(() => {
-        setTimeLeft(calculateTimeLeft());
+        setTimeLeft(calculateRemainingTime(auction.endsAt));
       }, 60000); // Update every minute
 
       return () => clearInterval(interval);
