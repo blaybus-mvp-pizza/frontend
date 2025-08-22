@@ -1,10 +1,11 @@
 'use client'
 
 import Image from 'next/image'
-import { Typography } from '@/components/ui/Typography'
+
+import { ProductCard } from '@workspace/ui/components/product-card'
+import { Typography } from '@workspace/ui/components/typography'
+
 import { MapIcon } from '@/components/icons'
-import ProductCard from '@/components/product/ProductCard'
-import type { Product } from '@/api/types/product.types'
 
 interface StoreData {
   store: {
@@ -63,16 +64,13 @@ export default function StoreSection({ storeData, onProductClick }: StoreSection
             />
           )}
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-4 sm:p-6">
-            <Typography 
-              variant="h5" 
+            <Typography
+              variant="h5"
               className="mb-1 text-lg font-bold text-white sm:mb-2 sm:text-xl lg:text-2xl"
             >
               {storeData.store.name}
             </Typography>
-            <Typography 
-              variant="body1" 
-              className="line-clamp-2 text-sm text-white/90 sm:text-base"
-            >
+            <Typography variant="body1" className="line-clamp-2 text-sm text-white/90 sm:text-base">
               {storeData.store.description}
             </Typography>
           </div>
@@ -145,7 +143,7 @@ export default function StoreSection({ storeData, onProductClick }: StoreSection
               : undefined
 
             return (
-              <div key={product.product_id} className="w-full lg:w-auto">
+              <div key={product.product_id} className="grid w-full grid-cols-2">
                 <ProductCard
                   product={productData}
                   auction={auctionData}

@@ -4,17 +4,23 @@ import { useState } from 'react'
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import { Typography } from '@workspace/ui/components/typography'
 import { Bell, Menu, Search, X } from 'lucide-react'
 
 import { TOP_NAVBAR_MENU } from '@/constants'
+import { useAuthStore } from '@/store/auth.store'
+import { useUnreadNotificationsCount } from '@/api/hooks/queries/useNotifications'
 
 import { AuthBtns } from './AuthBtns'
 
 export function TopNavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const router = useRouter()
+  const { isLoggedIn } = useAuthStore()
+  const { data: unreadCount } = useUnreadNotificationsCount(isLoggedIn)
 
   return (
     <div className="relative">
@@ -76,8 +82,16 @@ export function TopNavBar() {
                 </button>
 
                 {/* 알림 아이콘 */}
-                <button className="p-2">
+                <button 
+                  className="relative p-2"
+                  onClick={() => router.push('/notifications')}
+                >
                   <Bell size={20} className="md:h-6 md:w-6" />
+                  {isLoggedIn && unreadCount && unreadCount.count > 0 && (
+                    <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                      {unreadCount.count > 9 ? '9+' : unreadCount.count}
+                    </span>
+                  )}
                 </button>
 
                 {/* 인증 버튼 */}

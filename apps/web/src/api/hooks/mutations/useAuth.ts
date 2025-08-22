@@ -39,6 +39,11 @@ export const useGoogleCallback = (
     mutationFn: (code: string) => authApi.handleGoogleCallback(code),
 
     onSuccess: async (data) => {
+      // Store token first before making any API calls
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('auth-token', data.access_token)
+      }
+
       // Get user info
       try {
         const user = await usersApi.getMe()
@@ -53,13 +58,17 @@ export const useGoogleCallback = (
       } catch (error) {
         showError('사용자 정보를 가져오는데 실패했습니다.')
         console.error('Failed to get user info:', error)
+        // Clean up on error
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth-token')
+        }
       }
     },
 
     onError: (error: AxiosError) => {
       const errorMessage = (error.response?.data as any)?.message
       showError(errorMessage || '로그인에 실패했습니다.')
-      router.push('/login')
+      router.push('/auth/login')
     },
 
     ...options,

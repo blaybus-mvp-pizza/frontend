@@ -16,6 +16,12 @@ export enum MyItemStatus {
   WINNING_BID_CONFIRMED = 'WINNING_BID_CONFIRMED',
   IN_TRANSIT = 'IN_TRANSIT',
   DELIVERED = 'DELIVERED',
+  // Backend status mappings
+  RUNNING = 'RUNNING',
+  WON_CONFIRMED = 'WON_CONFIRMED',
+  AUCTION_ENDED = 'AUCTION_ENDED',
+  PAUSED = 'PAUSED',
+  SHIPPING = 'SHIPPING',
 }
 
 export const MY_ITEM_STATUS_INFO: { [key in MyItemStatus]: MyItemStatusInfo } = {
@@ -61,5 +67,33 @@ export const MY_ITEM_STATUS_INFO: { [key in MyItemStatus]: MyItemStatusInfo } = 
     header: '배송완료',
     variant: 'subtle',
     description: '상품이 배송되었습니다.',
+  },
+  // Backend status mappings
+  [MyItemStatus.RUNNING]: {
+    header: '경매 진행중',
+    variant: 'default',
+    description: '경매가 진행중입니다.',
+    buttonText: '경매 보러가기',
+  },
+  [MyItemStatus.WON_CONFIRMED]: {
+    header: '낙찰 확정',
+    variant: 'default',
+    description: '경매가 종료되어 배송 준비중입니다.',
+  },
+  [MyItemStatus.AUCTION_ENDED]: {
+    header: '경매 종료',
+    variant: 'subtle',
+    description: '경매가 종료되었습니다.',
+  },
+  [MyItemStatus.PAUSED]: {
+    header: '경매 일시중지',
+    variant: 'error',
+    description: '운영자의 사유로 경매가 일시중지 되었습니다.',
+  },
+  [MyItemStatus.SHIPPING]: {
+    header: '배송중',
+    variant: 'default',
+    description: '상품 배송중입니다.',
+    buttonText: '배송 조회하기',
   },
 }

@@ -1,17 +1,27 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Button } from '@workspace/ui/components/button'
 import { cn } from '@workspace/ui/lib/utils'
 
-import { useUserProfile } from '@/hooks/queries/useMyItems'
+import { useUpdateUserProfile } from '@/api/hooks/mutations/useUserProfile'
+import { useUserProfile } from '@/api/hooks/queries/useMyPage'
 
 import { Skeleton } from '../ui/skeleton'
 import PhoneNumberVerification from './phone-number-verification'
 
 export default function ProfileSection() {
   const { data: user, isLoading, isPlaceholderData } = useUserProfile()
+  const updateProfile = useUpdateUserProfile()
+  const [nickname, setNickname] = useState(user?.nickname || '')
+  const [isEditingNickname, setIsEditingNickname] = useState(false)
+
+  React.useEffect(() => {
+    if (user?.nickname) {
+      setNickname(user.nickname)
+    }
+  }, [user?.nickname])
 
   if (isLoading && !isPlaceholderData) {
     return <ProfileSectionSkeleton />
@@ -19,6 +29,24 @@ export default function ProfileSection() {
 
   if (!user) {
     return <div>사용자 정보를 불러오는데 실패했습니다.</div>
+  }
+
+  const handleNicknameUpdate = () => {
+    if (nickname && nickname !== user.nickname) {
+      updateProfile.mutate(
+        {
+          nickname,
+          phone_number: user.phone_number || null,
+          profile_image_url: user.profile_image_url || null,
+          is_phone_verified: user.is_phone_verified,
+        },
+        {
+          onSuccess: () => {
+            setIsEditingNickname(false)
+          },
+        },
+      )
+    }
   }
 
   return (
@@ -29,7 +57,11 @@ export default function ProfileSection() {
 
       <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-gray-200 p-6">
         <div className="h-14 w-14 overflow-hidden rounded-full">
-          <img src={user.profileImageUrl} alt="profile" className="h-full w-full object-cover" />
+          <img
+            src={user.profile_image_url || '/images/Default_user.webp'}
+            alt="profile"
+            className="h-full w-full object-cover"
+          />
         </div>
         {/* TODO: 이미지 수정 버튼 동작 */}
         <Button className="cursor-pointer rounded-none border border-gray-200 bg-white px-3 text-[12px] font-semibold text-black shadow-none hover:bg-gray-100">
@@ -43,7 +75,42 @@ export default function ProfileSection() {
 
       <div className="flex flex-col gap-2">
         <div className="text-sm font-medium">닉네임</div>
-        <ProfileInput value={user.nickname} disabled={true} readOnly />
+        <div className="flex gap-2">
+          <ProfileInput
+            value={isEditingNickname ? nickname : user.nickname}
+            disabled={!isEditingNickname}
+            readOnly={!isEditingNickname}
+            onChange={(e) => setNickname(e.target.value)}
+            className="flex-1"
+          />
+          {isEditingNickname ? (
+            <div className="flex gap-2">
+              <Button
+                className="h-12 rounded-sm border border-gray-200 bg-white px-4 text-black hover:bg-gray-100"
+                onClick={() => {
+                  setNickname(user.nickname)
+                  setIsEditingNickname(false)
+                }}
+              >
+                취소
+              </Button>
+              <Button
+                className="h-12 rounded-sm border border-black bg-black px-4 text-white hover:bg-gray-800"
+                onClick={handleNicknameUpdate}
+                disabled={updateProfile.isPending}
+              >
+                {updateProfile.isPending ? '저장중...' : '저장'}
+              </Button>
+            </div>
+          ) : (
+            <Button
+              className="h-12 rounded-sm border border-gray-200 bg-white px-4 text-black hover:bg-gray-100"
+              onClick={() => setIsEditingNickname(true)}
+            >
+              수정
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -51,7 +118,7 @@ export default function ProfileSection() {
         <ProfileInput value={user.email} disabled={true} readOnly />
       </div>
 
-      <PhoneNumberVerification userPhoneNumber={user.phoneNumber || ''} />
+      <PhoneNumberVerification userPhoneNumber={user.phone_number || ''} />
     </div>
   )
 }

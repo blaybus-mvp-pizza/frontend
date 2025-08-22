@@ -4,6 +4,8 @@ import { SetStateAction, useEffect, useState } from 'react'
 
 import { Button } from '@workspace/ui/components/button'
 
+import { useSendPhoneVerificationSMS, useVerifyPhone } from '@/api/hooks/mutations/useUserProfile'
+
 import { ProfileInput } from './profile-section'
 
 interface PhoneNumberVerificationProps {
@@ -16,6 +18,9 @@ export default function PhoneNumberVerification({ userPhoneNumber }: PhoneNumber
   const [timeLeft, setTimeLeft] = useState(180)
   const [isTimerActive, setIsTimerActive] = useState(false)
   const [isTimeExpired, setIsTimeExpired] = useState(false)
+  
+  const sendSMS = useSendPhoneVerificationSMS()
+  const verifyPhone = useVerifyPhone()
 
   useEffect(() => {
     let timerId: NodeJS.Timeout | null = null
@@ -44,10 +49,22 @@ export default function PhoneNumberVerification({ userPhoneNumber }: PhoneNumber
   }
 
   const handleSendAuthCode = () => {
-    setIsTimerActive(true)
-    setIsTimeExpired(false)
-    setTimeLeft(180)
-    // TODO: 인증번호 전송 api 호출
+    const rawPhoneNumber = phoneNumber.replace(/[^0-9]/g, '')
+    sendSMS.mutate(rawPhoneNumber, {
+      onSuccess: () => {
+        setIsTimerActive(true)
+        setIsTimeExpired(false)
+        setTimeLeft(180)
+      },
+    })
+  }
+  
+  const handleVerifyCode = () => {
+    const rawPhoneNumber = phoneNumber.replace(/[^0-9]/g, '')
+    verifyPhone.mutate({
+      phone_number: rawPhoneNumber,
+      code6: authCode,
+    })
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,9 +105,9 @@ export default function PhoneNumberVerification({ userPhoneNumber }: PhoneNumber
         <Button
           className="h-12 w-[100px] whitespace-nowrap rounded-sm border border-black bg-white px-4 text-black disabled:border-[#999] disabled:bg-[#999] disabled:text-white"
           onClick={handleSendAuthCode}
-          disabled={isTimerActive && timeLeft > 0}
+          disabled={(isTimerActive && timeLeft > 0) || sendSMS.isPending}
         >
-          {isTimeExpired ? '재전송' : '인증번호 전송'}
+          {sendSMS.isPending ? '전송중...' : isTimeExpired ? '재전송' : '인증번호 전송'}
         </Button>
       </div>
 
@@ -105,9 +122,10 @@ export default function PhoneNumberVerification({ userPhoneNumber }: PhoneNumber
         />
         <Button
           className="text-brand-mint h-12 w-[100px] whitespace-nowrap rounded-sm border border-black bg-black disabled:border-[#999] disabled:bg-[#999] disabled:text-white"
-          disabled={authCode.length !== 6 || timeLeft === 0}
+          disabled={authCode.length !== 6 || timeLeft === 0 || verifyPhone.isPending}
+          onClick={handleVerifyCode}
         >
-          인증완료
+          {verifyPhone.isPending ? '확인중...' : '인증완료'}
         </Button>
       </div>
     </div>

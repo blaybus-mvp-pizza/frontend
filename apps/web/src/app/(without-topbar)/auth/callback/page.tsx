@@ -4,32 +4,56 @@ import { Suspense, useEffect } from 'react'
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import { useGoogleCallback } from '@/api/hooks/mutations/useAuth'
+import { usersApi } from '@/api/endpoints/users.api'
+import { useAuthStore } from '@/store/auth.store'
 import { useUIStore } from '@/store/ui.store'
 
 function GoogleCallbackContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const googleCallback = useGoogleCallback()
-  const { showError } = useUIStore()
+  const { login } = useAuthStore()
+  const { showError, showSuccess } = useUIStore()
 
   useEffect(() => {
-    const code = searchParams.get('code')
-    const error = searchParams.get('error')
+    const handleCallback = async () => {
+      const token = searchParams.get('access_token')
+      const error = searchParams.get('error')
 
-    if (error) {
-      showError('로그인이 취소되었습니다.')
-      router.push('/auth/login')
-      return
+      if (error) {
+        showError(error === 'login_failed' ? '로그인에 실패했습니다.' : error)
+        router.push('/auth/login')
+        return
+      }
+
+      if (token) {
+        // Store token in localStorage first
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('auth-token', token)
+        }
+
+        try {
+          // Get user info
+          const user = await usersApi.getMe()
+          login(token, user)
+          showSuccess('로그인되었습니다!')
+          router.push('/')
+        } catch (error) {
+          showError('사용자 정보를 가져오는데 실패했습니다.')
+          console.error('Failed to get user info:', error)
+          // Clean up on error
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('auth-token')
+          }
+          router.push('/auth/login')
+        }
+      } else {
+        showError('인증 토큰이 없습니다.')
+        router.push('/auth/login')
+      }
     }
 
-    if (code) {
-      googleCallback.mutate(code)
-    } else {
-      showError('인증 코드가 없습니다.')
-      router.push('/auth/login')
-    }
-  }, [searchParams, router, googleCallback, showError])
+    handleCallback()
+  }, [searchParams, router, login, showError, showSuccess])
 
   return (
     <div className="flex min-h-screen items-center justify-center">

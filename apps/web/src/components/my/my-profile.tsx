@@ -3,7 +3,7 @@
 import { Button } from '@workspace/ui/components/button'
 import { ChevronRight } from 'lucide-react'
 
-import { useUserProfile } from '@/hooks/queries/useMyItems'
+import { useUserProfile } from '@/api/hooks/queries/useMyPage'
 import { cn } from '@/utils/cn'
 
 import { Skeleton } from '../ui/skeleton'
@@ -22,7 +22,11 @@ export default function MyProfile({ onEditClick }: UserProfileProps) {
   return (
     <div className={cn('flex h-full items-center gap-3 px-6 py-4', 'bg-background-100')}>
       <div className={cn('h-14 w-14 overflow-hidden rounded-full border', 'border-border-default')}>
-        <img src={user?.profileImageUrl} alt="profile" className="h-full w-full object-cover" />
+        <img
+          src={user?.profile_image_url || '/images/Default_user.webp'}
+          alt="profile"
+          className="h-full w-full object-contain"
+        />
       </div>
       <div className="text-lg font-semibold">{user?.nickname}</div>
       <Button

@@ -4,8 +4,9 @@ import React, { useState } from 'react'
 
 import { motion } from 'framer-motion'
 
-import { useBidMutation } from '@/api/hooks/mutations/useBid'
+import { usePlaceBid } from '@/api/hooks/mutations/useAuctionActions'
 import { useUIStore } from '@/store/ui.store'
+import PhoneVerificationModal from '@/components/modals/PhoneVerificationModal'
 
 interface BidModalProps {
   auctionId: number
@@ -25,24 +26,25 @@ const BidModal: React.FC<BidModalProps> = ({
   onConfirm,
 }) => {
   const [bidAmount, setBidAmount] = useState(currentBid + minBidIncrement)
-  const bidMutation = useBidMutation()
+  const { 
+    mutate: placeBid, 
+    isPending,
+    showPhoneVerificationModal,
+    setShowPhoneVerificationModal 
+  } = usePlaceBid()
   const setLoading = useUIStore((state) => state.setLoading)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    setLoading('bid', true)
-
-    try {
-      await bidMutation.mutateAsync({
-        auction_id: auctionId,
-        amount: bidAmount,
-      })
-
-      onConfirm()
-    } finally {
-      setLoading('bid', false)
-    }
+    placeBid(
+      { auctionId, amount: bidAmount },
+      {
+        onSuccess: () => {
+          onConfirm()
+        }
+      }
+    )
   }
 
   const quickBidOptions = [
@@ -52,6 +54,7 @@ const BidModal: React.FC<BidModalProps> = ({
   ]
 
   return (
+    <>
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -121,15 +124,22 @@ const BidModal: React.FC<BidModalProps> = ({
             </button>
             <button
               type="submit"
-              disabled={bidMutation.isPending}
+              disabled={isPending}
               className="flex-1 rounded-xl bg-blue-500 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {bidMutation.isPending ? '처리중...' : '입찰'}
+              {isPending ? '처리중...' : '입찰'}
             </button>
           </div>
         </form>
       </motion.div>
     </motion.div>
+    
+    {/* Phone Verification Modal */}
+    <PhoneVerificationModal
+      isOpen={showPhoneVerificationModal}
+      onClose={() => setShowPhoneVerificationModal(false)}
+    />
+  </>
   )
 }
 

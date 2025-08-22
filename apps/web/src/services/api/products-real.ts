@@ -208,6 +208,10 @@ export const productApiReal = {
       endpoint = '/products/ending-soon'
     } else if (filters.content === 'new') {
       endpoint = '/products/new'
+    } else if (filters.content === 'upcoming') {
+      endpoint = '/products/upcoming'
+    } else if (filters.content === 'popular') {
+      endpoint = '/products/recommended' // popular uses recommended with sort
     }
 
     const response = await apiClient.get<Page<ProductListItem>>(endpoint, {

@@ -3,16 +3,35 @@
 import React from 'react'
 
 import { motion } from 'framer-motion'
+import { useBuyNow } from '@/api/hooks/mutations/useAuctionActions'
+import PhoneVerificationModal from '@/components/modals/PhoneVerificationModal'
 
 interface BuyNowModalProps {
+  auctionId: number
   productName: string
   price: number
   onClose: () => void
   onConfirm: () => void
 }
 
-const BuyNowModal: React.FC<BuyNowModalProps> = ({ productName, price, onClose, onConfirm }) => {
+const BuyNowModal: React.FC<BuyNowModalProps> = ({ auctionId, productName, price, onClose, onConfirm }) => {
+  const { 
+    mutate: buyNow, 
+    isPending,
+    showPhoneVerificationModal,
+    setShowPhoneVerificationModal 
+  } = useBuyNow()
+
+  const handleBuyNow = () => {
+    buyNow(auctionId, {
+      onSuccess: () => {
+        onConfirm()
+      }
+    })
+  }
+
   return (
+    <>
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -51,14 +70,22 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({ productName, price, onClose, 
           </button>
           <button
             type="button"
-            onClick={onConfirm}
-            className="flex-1 rounded-xl bg-blue-500 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-600"
+            onClick={handleBuyNow}
+            disabled={isPending}
+            className="flex-1 rounded-xl bg-blue-500 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            구매하기
+            {isPending ? '처리중...' : '구매하기'}
           </button>
         </div>
       </motion.div>
     </motion.div>
+    
+    {/* Phone Verification Modal */}
+    <PhoneVerificationModal
+      isOpen={showPhoneVerificationModal}
+      onClose={() => setShowPhoneVerificationModal(false)}
+    />
+    </>
   )
 }
 

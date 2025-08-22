@@ -8,16 +8,16 @@ import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 
-import { useMyItemsWithPagination } from '@/hooks/queries/useMyItems'
-import { ItemFilters } from '@/services/api/my'
-import { Item } from '@/services/api/my'
+import { useMyAuctions } from '@/api/hooks/queries/useMyPage'
+import { MyAuctionFilters } from '@/api/endpoints/my.api'
+import { UserRelatedAuctionItem } from '@/api/types'
 
 import { Pagination } from '../ui/pagination'
 import { Skeleton } from '../ui/skeleton'
-import MyItem from './my-item'
+import MyAuctionItem from './my-auction-item'
 
 interface MyItemListProps {
-  filters: ItemFilters
+  filters: MyAuctionFilters
 }
 
 export default function MyItemList({ filters }: MyItemListProps) {
@@ -29,7 +29,7 @@ export default function MyItemList({ filters }: MyItemListProps) {
     () => ({
       ...filters,
       page,
-      pageSize: 6,
+      size: 6,
     }),
     [filters, page],
   )
@@ -38,7 +38,7 @@ export default function MyItemList({ filters }: MyItemListProps) {
     data: paginatedItems,
     isLoading,
     isPlaceholderData,
-  } = useMyItemsWithPagination(combinedFilters)
+  } = useMyAuctions(combinedFilters)
 
   if (isLoading && !isPlaceholderData) {
     return <MyItemListSkeleton />
@@ -51,16 +51,15 @@ export default function MyItemList({ filters }: MyItemListProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const items = paginatedItems?.data || []
-  const pagination = paginatedItems?.pagination
-  const totalPages = pagination?.totalPages || 1
+  const items = paginatedItems?.items || []
+  const totalPages = Math.ceil((paginatedItems?.total || 0) / (paginatedItems?.size || 1)) || 1
 
   type GroupedItems = {
-    [key: string]: Item[]
+    [key: string]: UserRelatedAuctionItem[]
   }
 
   const groupedItems = items.reduce((acc, item) => {
-    const dateKey = format(new Date(item.date), 'yyyy.MM.dd', {
+    const dateKey = format(new Date(item.my_last_bid_at), 'yyyy.MM.dd', {
       locale: ko,
     })
     if (!acc[dateKey]) {
@@ -87,11 +86,11 @@ export default function MyItemList({ filters }: MyItemListProps) {
             <h2 className="mb-4 ml-4 text-lg font-semibold text-gray-800">{date}</h2>
             <div className="space-y-4">
               {groupedItems[date]?.map((item) => (
-                <MyItem
-                  key={item.id}
+                <MyAuctionItem
+                  key={item.auction_id}
                   item={item}
                   onClick={() => {
-                    router.push(item.link || '')
+                    router.push(`/auctions/${item.auction_id}`)
                   }}
                 />
               ))}

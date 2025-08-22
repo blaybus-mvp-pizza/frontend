@@ -1,7 +1,5 @@
 import { apiClient } from '../client/apiClient'
 import {
-  PhoneVerificationConfirm,
-  PhoneVerificationRequest,
   PhoneVerificationResult,
   SendSMSResult,
   UserRead,
@@ -21,15 +19,22 @@ export const usersApi = {
     return response.data
   },
 
-  // Send phone verification SMS
-  sendPhoneVerificationSMS: async (data: PhoneVerificationRequest): Promise<SendSMSResult> => {
-    const response = await apiClient.post('/users/me/phone-verification-sms', data)
+  // Send phone verification SMS - phone_number as query parameter
+  sendPhoneVerificationSMS: async (phoneNumber: string): Promise<SendSMSResult> => {
+    const response = await apiClient.post('/users/me/phone-verification-sms', null, {
+      params: { phone_number: phoneNumber }
+    })
     return response.data
   },
 
-  // Verify phone with code
-  verifyPhone: async (data: PhoneVerificationConfirm): Promise<PhoneVerificationResult> => {
-    const response = await apiClient.post('/users/me/phone-verification-sms/verify', data)
+  // Verify phone with code - both phone_number and code6 as query parameters
+  verifyPhone: async (phoneNumber: string, code6: string): Promise<PhoneVerificationResult> => {
+    const response = await apiClient.post('/users/me/phone-verification-sms/verify', null, {
+      params: { 
+        phone_number: phoneNumber,
+        code6: code6
+      }
+    })
     return response.data
   },
 

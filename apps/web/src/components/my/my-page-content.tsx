@@ -8,13 +8,14 @@ import MyProfile from '@/components/my/my-profile'
 import MyStats from '@/components/my/my-stats'
 import ProfileTabs from '@/components/my/profile-tabs'
 import Searchbar from '@/components/my/search-bar'
-import { ItemFilters } from '@/services/api/my'
+import { MyAuctionFilters } from '@/api/endpoints/my.api'
 
 export default function MyPageContent() {
   const [isEditing, setIsEditing] = useState(false)
 
-  const [filters, setFilters] = useState<ItemFilters>({
-    search: '',
+  const [filters, setFilters] = useState<MyAuctionFilters>({
+    q: '',
+    period: '1m',
     startDate: undefined,
     endDate: undefined,
   })
@@ -23,8 +24,9 @@ export default function MyPageContent() {
     (startDate: Date | undefined, endDate: Date | undefined) => {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        startDate,
-        endDate,
+        period: startDate && endDate ? 'custom' : '1m',
+        startDate: startDate?.toISOString(),
+        endDate: endDate?.toISOString(),
       }))
     },
     [setFilters],
@@ -34,7 +36,7 @@ export default function MyPageContent() {
     (searchValue: string) => {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        search: searchValue,
+        q: searchValue,
       }))
     },
     [setFilters],

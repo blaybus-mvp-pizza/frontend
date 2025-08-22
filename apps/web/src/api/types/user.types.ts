@@ -12,28 +12,18 @@ export interface UserRead {
 }
 
 export interface UserUpdate {
-  nickname?: string
-  phone_number?: string
-  profile_image_url?: string
+  nickname: string
+  phone_number?: string | null
+  profile_image_url?: string | null
+  is_phone_verified?: boolean  // Backend has default False, so optional in request
 }
 
-export interface PhoneVerificationRequest {
-  phone_number: string
-}
-
-export interface PhoneVerificationConfirm {
-  phone_number: string
-  verification_code: string
-}
-
+// Backend SMS/Verification response types (from backend models.py)
 export interface SendSMSResult {
   success: boolean
-  message: string
   expires_at?: string
 }
 
 export interface PhoneVerificationResult {
   success: boolean
-  message: string
-  is_verified?: boolean
 }

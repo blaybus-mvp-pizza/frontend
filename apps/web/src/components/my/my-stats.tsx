@@ -1,22 +1,22 @@
 'use client'
 
-import { useUserStats } from '@/hooks/queries/useMyItems'
+import { useAuctionDashboard } from '@/api/hooks/queries/useMyPage'
 
 import { Skeleton } from '../ui/skeleton'
 import CountItem from './count-item'
 
 export default function MyStats() {
-  const { data, isLoading } = useUserStats()
+  const { data, isLoading } = useAuctionDashboard()
 
   if (isLoading || !data) {
     return <MyStatsSkeleton />
   }
 
   const userStats = [
-    { label: '경매 진행 상품', count: data.inProgress },
-    { label: '입금 확인 중', count: data.depositing },
-    { label: '배송중인 상품', count: data.inDelivery },
-    { label: '배송완료 상품', count: data.deliveryCompleted },
+    { label: '경매 진행 상품', count: data.running_bid_count },
+    { label: '입금 확인 중', count: data.pre_shipment_count },
+    { label: '배송중인 상품', count: data.shipping_count },
+    { label: '배송완료 상품', count: data.delivered_count },
   ]
 
   return (
