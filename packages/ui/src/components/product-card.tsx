@@ -1,12 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Product, Auction } from "@workspace/ui/types";
+import { Product, ProductListItem, Auction } from "@workspace/ui/types";
 import { Typography } from "@workspace/ui/components/typography";
 import { cn } from "@workspace/ui/lib/utils";
 import { ClockIcon } from "lucide-react";
 
 interface ProductCardProps {
-  product: Product;
+  product: Product | ProductListItem;
   auction?: Auction;
   showTimeLeft?: boolean;
   className?: string;
@@ -16,7 +16,7 @@ interface ProductCardProps {
 export function ProductCard({
   product,
   auction,
-  showTimeLeft = false,
+  showTimeLeft = true,
   className,
   onClick,
 }: ProductCardProps) {
@@ -34,14 +34,16 @@ export function ProductCard({
       if (diff <= 0) return "종료됨";
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const hours = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
       if (days > 0) return `${days}일 ${hours}시간`;
       if (hours > 0) return `${hours}시간 ${minutes}분`;
+
       return `${minutes}분`;
     };
-
     // Initial calculation
     setTimeLeft(calculateTimeLeft());
 
@@ -54,7 +56,11 @@ export function ProductCard({
       return () => clearInterval(interval);
     }
   }, [auction, showTimeLeft]);
-  const mainImage = product.images?.[0]?.imageUrl || "/placeholder.png";
+  // ProductListItem has representativeImage, Product has images array
+  const mainImage =
+    ("representativeImage" in product ? product.representativeImage : null) ||
+    ("images" in product && product.images?.[0]?.imageUrl) ||
+    "/placeholder.png";
 
   return (
     <div
@@ -69,8 +75,7 @@ export function ProductCard({
           className="h-full w-full object-cover transition-transform group-hover:scale-105"
         />
 
-        {/* 남은 시간 표시 */}
-        {showTimeLeft && timeLeft && timeLeft !== "종료됨" && (
+        {showTimeLeft && timeLeft && (
           <div className="absolute bottom-0 bg-black/80 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1">
             <Typography
               variant="caption"
@@ -89,9 +94,12 @@ export function ProductCard({
       {/* 상품 정보 */}
       <div className="p-1 space-y-1">
         {/* 팝업스토어 이름 */}
-        {product.popupStore && (
+        {(("popupStoreName" in product && product.popupStoreName) ||
+          ("popupStore" in product && product.popupStore?.name)) && (
           <Typography variant="caption" color="muted">
-            {product.popupStore.name}
+            {"popupStoreName" in product
+              ? product.popupStoreName
+              : product.popupStore?.name}
           </Typography>
         )}
 
@@ -133,20 +141,20 @@ export function ProductCard({
             </>
           ) : (
             <Typography variant="body1" weight="bold">
-              {product.price.toLocaleString()}원
+              {(product.price || 0).toLocaleString()}원
             </Typography>
           )}
         </div>
 
         {/* 태그 */}
-        {product.tags && product.tags.length > 0 && (
+        {product.labels && product.labels.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {product.tags.slice(0, 3).map((tag) => (
+            {product.labels.slice(0, 3).map((tag) => (
               <span
-                key={tag.id}
+                key={tag}
                 className="rounded border gap-1 border-[#E5E5EC] p-0.5 text-xs text-secondary-foreground"
               >
-                {tag.name}
+                {tag}
               </span>
             ))}
           </div>
