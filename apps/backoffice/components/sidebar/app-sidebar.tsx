@@ -12,6 +12,7 @@ import {
   Megaphone,
   LucideProps,
   Library,
+  Store,
 } from "lucide-react";
 
 import {
@@ -61,7 +62,8 @@ const baseSidebarData: SidebarData = {
       title: "상품/경매 관리",
       url: "#",
       items: [
-        { title: "상품 등록 및 수정", url: "/product", icon: Package },
+        { title: "팝업스토어 및 상품 설정", url: "/popupstore", icon: Store },
+        { title: "전체 상품 목록", url: "/product", icon: Package },
         { title: "경매 설정", url: "/auction", icon: Megaphone },
         { title: "낙찰/유찰 관리", url: "#", icon: ClipboardCheck },
       ],
