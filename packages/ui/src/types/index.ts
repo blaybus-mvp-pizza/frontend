@@ -13,7 +13,7 @@ export interface User {
 export interface AuthProvider {
   id: number;
   userId: number;
-  provider: 'google' | 'kakao' | 'naver';
+  provider: "google" | "kakao" | "naver";
   providerUserId: string;
   email?: string;
   rawProfileJson?: any;
@@ -45,7 +45,7 @@ export interface Address {
 export interface PaymentMethod {
   id: number;
   userId: number;
-  provider: 'tosspay' | 'card' | 'naverpay' | 'kakaopay' | 'virtual';
+  provider: "tosspay" | "card" | "naverpay" | "kakaopay" | "virtual";
   externalKey: string;
   maskedInfo?: string;
   isDefault: boolean;
@@ -63,42 +63,58 @@ export interface PopupStore {
   createdAt: Date;
 }
 
-export interface Tag {
+// 상품 리스트용 간단한 타입 (ProductCard에서 사용)
+export interface ProductListItem {
   id: number;
   name: string;
-}
-
-export interface Product {
-  id: number;
-  popupStoreId: number;
-  category: string;
-  name: string;
-  summary?: string;
-  description?: string;
-  material?: string;
-  placeOfUse?: string;
-  widthCm?: number;
-  heightCm?: number;
-  toleranceCm?: number;
-  editionInfo?: string;
-  conditionNote?: string;
+  popupStoreName: string;
   price: number;
-  stock: number;
-  shippingBaseFee: number;
-  shippingFreeThreshold?: number;
-  shippingExtraNote?: string;
-  courierName?: string;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  images?: ProductImage[];
-  tags?: Tag[];
-  popupStore: PopupStore;
-  auction?: Auction;
-  // Fields from API response
-  auctionEndsAt?: string;
   currentHighestBid?: number;
   buyNowPrice?: number;
+  representativeImage?: string;
+  auctionEndsAt?: string;
+  labels: string[]; // 상품 라벨 ("신규상품", "베스트" 등)
+  biddersCount?: number;
+  isLiked?: boolean;
+  auction?: Auction; // For auction card display
+}
+
+// 상세 페이지용 전체 타입
+export interface Product {
+  id: number;
+  name: string;
+  images: ProductImage[]; // 이미지 리스트
+  tags?: string[]; // 태그 리스트
+  labels?: string[]; // 라벨 리스트
+  title?: string;
+  description?: string;
+  category?: string;
+  popupStore: PopupStore;
+  specs?: {
+    shippingFee: number;
+    biddingUnit: number;
+    depositAmount: number;
+    widthCm?: number;
+    heightCm?: number;
+    depthCm?: number;
+  };
+
+  // Auction related
+  auction?: Auction;
+  currentHighestBid?: number;
+  buyNowPrice?: number;
+  auctionEndsAt?: string;
+
+  // Legacy fields for backward compatibility
+  price: number;
+  popupStoreId?: number;
+  popupStoreName?: string;
+  representativeImage?: string;
+  stock?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  isActive?: boolean;
+  shippingBaseFee?: number;
 }
 
 export interface ProductImage {
@@ -123,7 +139,7 @@ export interface Auction {
   depositAmount: number;
   startsAt: Date;
   endsAt: Date;
-  status: 'scheduled' | 'running' | 'ended' | 'cancelled';
+  status: "scheduled" | "running" | "ended" | "cancelled";
   createdAt: Date;
   updatedAt: Date;
   product?: Product;
@@ -137,7 +153,7 @@ export interface AuctionDeposit {
   userId: number;
   paymentId?: number;
   amount: number;
-  status: 'PENDING' | 'PAID' | 'REFUNDED' | 'FAILED';
+  status: "PENDING" | "PAID" | "REFUNDED" | "FAILED";
   createdAt: Date;
 }
 
@@ -157,7 +173,7 @@ export interface AuctionOffer {
   bidId: number;
   userId: number;
   rankOrder: number;
-  status: 'offered' | 'pending' | 'cancel';
+  status: "offered" | "pending" | "cancel";
   offeredAt: Date;
   expiresAt: Date;
   orderId?: number;
@@ -171,12 +187,12 @@ export interface Order {
   userId: number;
   addressId?: number;
   status:
-    | 'pending'
-    | 'paid'
-    | 'cancelled'
-    | 'shipped'
-    | 'delivered'
-    | 'refunded';
+    | "pending"
+    | "paid"
+    | "cancelled"
+    | "shipped"
+    | "delivered"
+    | "refunded";
   totalAmount: number;
   shippingFee: number;
   createdAt: Date;
@@ -201,10 +217,10 @@ export interface Payment {
   id: number;
   orderId?: number;
   userId: number;
-  provider: 'tosspay' | 'kakaopay' | 'naverpay' | 'card' | 'virtual';
+  provider: "tosspay" | "kakaopay" | "naverpay" | "card" | "virtual";
   externalTid?: string;
   amount: number;
-  status: 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED' | 'PARTIAL_REFUNDED';
+  status: "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "PARTIAL_REFUNDED";
   requestedAt: Date;
   paidAt?: Date;
   failReason?: string;
@@ -223,7 +239,7 @@ export interface Shipment {
   orderId: number;
   courierName: string;
   trackingNumber: string;
-  status: 'PREPARING' | 'IN_TRANSIT' | 'DELIVERED' | 'RETURNED';
+  status: "PREPARING" | "IN_TRANSIT" | "DELIVERED" | "RETURNED";
   shippedAt?: Date;
   deliveredAt?: Date;
 }
@@ -253,13 +269,13 @@ export interface StoryImage {
 export interface Notification {
   id: number;
   userId?: number;
-  channel: 'EMAIL' | 'SMS' | 'PUSH';
+  channel: "EMAIL" | "SMS" | "PUSH";
   templateCode?: string;
   title?: string;
   body?: string;
   metadataJson?: any;
   sentAt: Date;
-  status: 'QUEUED' | 'SENT' | 'FAILED';
+  status: "QUEUED" | "SENT" | "FAILED";
 }
 
 // API Response Types
@@ -283,14 +299,14 @@ export interface SignUpRequest {
   email?: string;
   nickname?: string;
   phoneNumber?: string;
-  provider?: 'google' | 'kakao' | 'naver';
+  provider?: "google" | "kakao" | "naver";
   providerUserId?: string;
 }
 
 export interface LoginRequest {
   email?: string;
   password?: string;
-  provider?: 'google' | 'kakao' | 'naver';
+  provider?: "google" | "kakao" | "naver";
   providerToken?: string;
 }
 
@@ -309,10 +325,10 @@ export interface CreateOrderRequest {
 }
 
 // Utility Types
-export type OrderStatus = Order['status'];
-export type PaymentStatus = Payment['status'];
-export type AuctionStatus = Auction['status'];
-export type PaymentProvider = Payment['provider'];
-export type AuthProviderType = AuthProvider['provider'];
-export type ShipmentStatus = Shipment['status'];
-export type NotificationChannel = Notification['channel'];
+export type OrderStatus = Order["status"];
+export type PaymentStatus = Payment["status"];
+export type AuctionStatus = Auction["status"];
+export type PaymentProvider = Payment["provider"];
+export type AuthProviderType = AuthProvider["provider"];
+export type ShipmentStatus = Shipment["status"];
+export type NotificationChannel = Notification["channel"];
