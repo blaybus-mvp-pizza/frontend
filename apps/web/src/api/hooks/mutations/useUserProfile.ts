@@ -1,10 +1,12 @@
+import { useRouter } from 'next/navigation'
+
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { usersApi } from '@/api/endpoints/users.api'
-import { UserUpdate, UserRead, SendSMSResult, PhoneVerificationResult } from '@/api/types'
-import { useUIStore } from '@/store/ui.store'
 import { myPageKeys } from '@/api/hooks/queries/useMyPage'
 import { queryKeys } from '@/api/queryKeys'
-import { useRouter } from 'next/navigation'
+import { PhoneVerificationResult, SendSMSResult, UserRead, UserUpdate } from '@/api/types'
+import { useUIStore } from '@/store/ui.store'
 
 // Update user profile
 export const useUpdateUserProfile = () => {
@@ -47,20 +49,36 @@ export const useSendPhoneVerificationSMS = () => {
 export const useVerifyPhone = () => {
   const queryClient = useQueryClient()
   const { showSuccess, showError } = useUIStore()
-  const router = useRouter();
-  return useMutation<
-    PhoneVerificationResult,
-    Error,
-    { phone_number: string; code6: string }
-  >({
+  const router = useRouter()
+  
+  return useMutation<PhoneVerificationResult, Error, { phone_number: string; code6: string }>({
     mutationFn: ({ phone_number, code6 }) => usersApi.verifyPhone(phone_number, code6),
-    onSuccess: (data) => {
+
+    onSuccess: async (data, variables) => {
       if (data.success) {
-        // Invalidate both myPage profile and current user queries
-        queryClient.invalidateQueries({ queryKey: myPageKeys.profile() })
-        queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
-        showSuccess('휴대폰 인증이 완료되었습니다.')
-        router.push('/home')
+        // After successful verification, update the user profile with phone_number and is_phone_verified
+        try {
+          // Get current user data to preserve other fields
+          const currentUser = queryClient.getQueryData<UserRead>(myPageKeys.profile())
+          
+          // Update user profile with phone number and verification status
+          await usersApi.updateMe({
+            nickname: currentUser?.nickname || '',
+            phone_number: variables.phone_number,
+            is_phone_verified: true,
+            profile_image_url: currentUser?.profile_image_url
+          })
+          
+          // Invalidate both myPage profile and current user queries
+          queryClient.invalidateQueries({ queryKey: myPageKeys.profile() })
+          queryClient.invalidateQueries({ queryKey: queryKeys.users.me() })
+          
+          showSuccess('휴대폰 인증이 완료되었습니다.')
+          router.push('/home')
+        } catch (error) {
+          console.error('Failed to update profile after verification:', error)
+          showError('인증은 성공했지만 프로필 업데이트에 실패했습니다.')
+        }
       } else {
         showError('인증에 실패했습니다.')
       }

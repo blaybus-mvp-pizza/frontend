@@ -348,6 +348,8 @@ export default function ProductDetailPage() {
           auctionId={auction.auction_id}
           productName={product.name}
           price={auction.buy_now_price || 0}
+          productImage={product.images?.[0]}
+          storeName={product.store?.name}
           onClose={() => setShowBuyNowModal(false)}
           onConfirm={() => {
             setShowBuyNowModal(false)
