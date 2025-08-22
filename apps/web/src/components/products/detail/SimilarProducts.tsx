@@ -22,7 +22,7 @@ export function SimilarProducts({ items }: SimilarProductsProps) {
 
   return (
     <div className="border-border-light mt-10 space-y-4 border-t pt-4">
-      <p className="text-xl font-bold text-[#111111]">비슷한 상품</p>
+      <p className="text-text-primary">비슷한 상품</p>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
         {items.map((item) => {
           // Transform API response to Product and Auction objects

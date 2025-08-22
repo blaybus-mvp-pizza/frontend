@@ -12,21 +12,14 @@ import { Bell, Check, ChevronLeft } from 'lucide-react'
 import { useMarkNotificationsAsRead, useNotifications } from '@/api/hooks/queries/useNotifications'
 import { NotificationItem } from '@/api/types'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useAuthStore } from '@/store/auth.store'
+import { useRequireAuth } from '@/hooks/useAuth'
 import { cn } from '@/utils/cn'
 
 export default function NotificationsPage() {
   const router = useRouter()
-  const { isAuthenticated } = useAuthStore()
+  const { isAuthenticated, isLoading: authLoading } = useRequireAuth()
   const { data, isLoading } = useNotifications(50, isAuthenticated)
   const markAsRead = useMarkNotificationsAsRead()
-
-  // Redirect if not logged in
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/auth/login')
-    }
-  }, [isAuthenticated, router])
 
   // Auto-mark unread notifications as read when viewing
   useEffect(() => {
@@ -57,7 +50,7 @@ export default function NotificationsPage() {
     }
   }
 
-  if (isLoading) {
+  if (isLoading || authLoading) {
     return <NotificationPageSkeleton />
   }
 

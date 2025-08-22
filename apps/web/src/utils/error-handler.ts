@@ -79,20 +79,27 @@ export class ErrorHandler {
 
     // Handle authentication errors
     if (status === 401) {
-      logout()
-      openModal({
-        type: 'confirm',
-        props: {
-          title: '로그인 필요',
-          message: '세션이 만료되었습니다. 다시 로그인해주세요.',
-          confirmText: '로그인',
-          onConfirm: () => {
-            if (typeof window !== 'undefined') {
-              window.location.href = '/auth/login'
-            }
+      // Check if it's a login attempt or already on login page
+      const isLoginPage = typeof window !== 'undefined' && window.location.pathname.includes('/auth/login')
+      const isLoginAttempt = error.config?.url?.includes('/auth/login') || error.config?.url?.includes('/auth/signup')
+      
+      if (!isLoginPage && !isLoginAttempt) {
+        // Only logout and redirect if not already on login page or attempting to login
+        logout()
+        openModal({
+          type: 'confirm',
+          props: {
+            title: '로그인 필요',
+            message: '세션이 만료되었습니다. 다시 로그인해주세요.',
+            confirmText: '로그인',
+            onConfirm: () => {
+              if (typeof window !== 'undefined') {
+                window.location.href = '/auth/login'
+              }
+            },
           },
-        },
-      })
+        })
+      }
     }
 
     // Handle other errors

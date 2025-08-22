@@ -9,6 +9,7 @@ interface AuthState {
   token: string | null
   isAuthenticated: boolean
   isLoading: boolean
+  isHydrated: boolean
 
   // Actions
   login: (token: string, user: UserRead) => void
@@ -16,6 +17,7 @@ interface AuthState {
   updateUser: (user: Partial<UserRead>) => void
   setLoading: (loading: boolean) => void
   setToken: (token: string) => void
+  setHydrated: () => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -26,6 +28,7 @@ export const useAuthStore = create<AuthState>()(
         token: null,
         isAuthenticated: false,
         isLoading: false,
+        isHydrated: false,
 
         login: (token, user) => {
           // Store token in localStorage for axios interceptor
@@ -88,6 +91,8 @@ export const useAuthStore = create<AuthState>()(
           }
           set({ token, isAuthenticated: true }, false, 'auth/setToken')
         },
+
+        setHydrated: () => set({ isHydrated: true }, false, 'auth/setHydrated'),
       }),
       {
         name: 'auth-storage',
@@ -97,6 +102,9 @@ export const useAuthStore = create<AuthState>()(
           user: state.user,
           isAuthenticated: state.isAuthenticated,
         }),
+        onRehydrateStorage: () => (state) => {
+          state?.setHydrated()
+        },
       },
     ),
     {

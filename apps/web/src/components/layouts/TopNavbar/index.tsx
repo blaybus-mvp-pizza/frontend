@@ -19,8 +19,8 @@ export function TopNavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const router = useRouter()
-  const { isAuthenticated } = useAuthStore()
-  const { data: unreadCount } = useUnreadNotificationsCount(isAuthenticated)
+  const { isAuthenticated, isHydrated } = useAuthStore()
+  const { data: unreadCount } = useUnreadNotificationsCount(isAuthenticated && isHydrated)
 
   return (
     <div className="relative">

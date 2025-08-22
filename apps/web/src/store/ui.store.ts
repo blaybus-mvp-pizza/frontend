@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
+import { toast } from 'sonner'
 
 export type ModalType =
   | 'confirm'
@@ -18,12 +19,6 @@ export interface Modal {
   onConfirm?: () => void
 }
 
-export interface Toast {
-  id: string
-  type: 'success' | 'error' | 'warning' | 'info'
-  message: string
-  duration?: number
-}
 
 interface UIState {
   // Modal state
@@ -32,12 +27,7 @@ interface UIState {
   closeModal: (id: string) => void
   closeAllModals: () => void
 
-  // Toast notifications
-  toasts: Toast[]
-  showToast: (toast: Omit<Toast, 'id'>) => void
-  removeToast: (id: string) => void
-
-  // Convenience methods
+  // Toast notifications (using sonner)
   showError: (message: string) => void
   showSuccess: (message: string) => void
   showWarning: (message: string) => void
@@ -57,7 +47,6 @@ export const useUIStore = create<UIState>()(
   devtools(
     (set, get) => ({
       modals: [],
-      toasts: [],
       loadingStates: new Map(),
       globalError: null,
 
@@ -87,48 +76,27 @@ export const useUIStore = create<UIState>()(
         set({ modals: [] }, false, 'ui/closeAllModals')
       },
 
-      showToast: (toast) => {
-        const id = `toast-${Date.now()}`
-        const newToast = { ...toast, id }
-
-        set(
-          (state) => ({
-            toasts: [...state.toasts, newToast],
-          }),
-          false,
-          'ui/showToast',
-        )
-
-        // Auto remove after duration
-        setTimeout(() => {
-          get().removeToast(id)
-        }, toast.duration || 5000)
-      },
-
-      removeToast: (id) => {
-        set(
-          (state) => ({
-            toasts: state.toasts.filter((t) => t.id !== id),
-          }),
-          false,
-          'ui/removeToast',
-        )
-      },
-
       showError: (message) => {
-        get().showToast({ type: 'error', message })
+        toast.error(message)
       },
 
       showSuccess: (message) => {
-        get().showToast({ type: 'success', message })
+        toast.success(message)
       },
 
       showWarning: (message) => {
-        get().showToast({ type: 'warning', message })
+        toast(message, {
+          icon: '⚠️',
+          style: {
+            background: '#FEF3C7',
+            color: '#92400E',
+            border: '1px solid #FDE68A',
+          },
+        })
       },
 
       showInfo: (message) => {
-        get().showToast({ type: 'info', message })
+        toast.info(message)
       },
 
       setLoading: (key, isLoading) => {

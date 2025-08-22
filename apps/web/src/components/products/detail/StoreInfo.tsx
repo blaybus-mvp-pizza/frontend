@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+
 import { ChevronRight } from 'lucide-react'
 
 interface StoreInfoProps {
@@ -16,8 +17,10 @@ export function StoreInfo({ store }: StoreInfoProps) {
     <div className="space-y-3 bg-[#F6F6F6] p-4">
       <div className="flex items-start gap-4">
         <div className="flex flex-1 flex-col">
-          <h3 className="text-lg font-bold text-[#111111]">{store.name}</h3>
-          {store.description && <p className="mt-1 text-sm text-[#505050]">{store.description}</p>}
+          <h3 className="text-text-primary text-lg font-bold">{store.name}</h3>
+          {store.description && (
+            <p className="text-text-secondary mt-1 text-sm">{store.description}</p>
+          )}
         </div>
         <div className="relative h-10 w-10 overflow-hidden rounded-sm">
           <Image
@@ -30,7 +33,7 @@ export function StoreInfo({ store }: StoreInfoProps) {
         </div>
       </div>
       <div className="flex items-center justify-between bg-white px-4 py-2">
-        <p className="text-sm text-[#111111]">
+        <p className="text-text-primary text-sm">
           이 상품과 <span className="font-semibold">함께 판매하는 상품이 있어요!</span>
         </p>
         <ChevronRight className="h-5 w-5 text-gray-400" />

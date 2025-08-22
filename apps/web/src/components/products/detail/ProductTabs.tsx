@@ -10,26 +10,29 @@ export function ProductTabs({ details, shipping, returns }: ProductTabsProps) {
   return (
     <div>
       <div className="border-border-light border-t pb-4 pt-8">
-        <p className="text-xl font-semibold text-[#111111]">상품상세</p>
+        <p className="text-text-primary text-xl font-semibold">상품상세</p>
         <div className="mt-4 border-t border-black bg-white">
           {details || (
-            <table className="w-full border-collapse text-sm text-[#505050]">
+            <table className="text-text-secondary w-full border-t text-sm">
               <tbody>
                 <tr className="border-b border-[#F8F8F8]">
-                  <td className="w-32 bg-gray-50 px-6 py-4 text-sm font-medium text-[#505050]">
+                  <td className="text-text-secondary w-32 bg-gray-50 px-6 py-4 text-sm font-medium">
                     제품명
                   </td>
                   <td className="px-6 py-4">카누 탑핑스토어 원두 에디션 커피이신</td>
                 </tr>
                 <tr className="border-b border-[#F8F8F8]">
-                  <td className="bg-gray-50 px-6 py-4 text-sm font-medium text-[#505050]">재질</td>
+                  <td className="text-text-secondary bg-gray-50 px-6 py-4 text-sm font-medium">
+                    재질
+                  </td>
                   <td className="px-6 py-4">스테인리스</td>
                 </tr>
+                text-text-secondary
                 <tr className="border-b border-[#F8F8F8]">
                   <td className="bg-gray-50 px-6 py-4 text-sm font-medium text-[#505050]">
                     사용위치
                   </td>
-                  <td className="px-6 py-4">거실</td>
+                  <td className="px-6 py-4">거실</td>text-text-secondary
                 </tr>
                 <tr className="border-b border-[#F8F8F8]">
                   <td className="bg-gray-50 px-6 py-4 text-sm font-medium text-[#505050]">
@@ -56,7 +59,7 @@ export function ProductTabs({ details, shipping, returns }: ProductTabsProps) {
       </div>
 
       <div className="py-4">
-        <p className="text-xl font-semibold text-[#111111]">배송안내</p>
+        <p className="text-text-primary text-xl font-semibold">배송안내</p>
         <div className="mt-4 border-t border-black bg-white py-6">
           {shipping || (
             <div className="space-y-4">
@@ -90,7 +93,7 @@ export function ProductTabs({ details, shipping, returns }: ProductTabsProps) {
       </div>
 
       <div className="py-4">
-        <p className="text-xl font-semibold text-[#111111]">교환/반품 안내</p>
+        <p className="text-text-primary text-xl font-semibold">교환/반품 안내</p>
         <div className="mt-4 border-t border-black bg-white py-6">
           {returns || (
             <div className="space-y-4">

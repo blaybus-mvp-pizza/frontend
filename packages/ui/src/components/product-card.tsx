@@ -82,7 +82,7 @@ export function ProductCard({
       
         {(("popupStoreName" in product && product.popupStoreName) ||
           ("popupStore" in product && product.popupStore?.name)) && (
-          <p className="text-[#505050] text-sm leading-[140%] tracking-[-2.5%]">
+          <p className="text-text-secondary text-sm leading-[140%] tracking-[-2.5%]">
             {"popupStoreName" in product
               ? product.popupStoreName
               : product.popupStore?.name}
@@ -90,7 +90,7 @@ export function ProductCard({
         )}
 
         {/* 상품명 */}
-        <p className="text-[#111111] font-semibold leading-[140%] line-clamp-2">
+        <p className="text-text-primary font-semibold leading-[140%] line-clamp-2">
           {product.name}
         </p>
         </div>
@@ -101,17 +101,17 @@ export function ProductCard({
               {/* 현재 입찰가 */}
 
               <div className="flex items-center gap-x-1">
-                <p className="text-sm text-[#505050] leading-[140%] tracking-[-2.5%]">
+                <p className="text-sm text-text-secondary leading-[140%] tracking-[-2.5%]">
                   현재 입찰가 :
                 </p>
-                <p className="text-[#111111] font-bold leading-[140%]">
+                <p className="text-text-primary font-bold leading-[140%]">
                   {auction.currentBid
                     ? `${auction.currentBid.amount.toLocaleString()}원`
                     : `${auction.startPrice.toLocaleString()}원`}
                 </p>
               </div>
               {auction.buyNowPrice && (
-                <p className="text-[#767676] text-xs leading-[140%] tracking-[-2.5%]">
+                <p className="text-text-tertiary text-xs leading-[140%] tracking-[-2.5%]">
                   즉시 구매가 {auction.buyNowPrice.toLocaleString()}원
                 </p>
               )}

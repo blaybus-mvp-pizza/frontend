@@ -40,7 +40,7 @@ export function ProductSampleList({
         {showViewAll && (
           <Typography
             variant="caption"
-            className="text-[#767676] cursor-pointer hover:text-foreground transition-colors"
+            className="text-text-tertiary cursor-pointer hover:text-foreground transition-colors"
             onClick={onViewAllClick}
           >
             전체보기

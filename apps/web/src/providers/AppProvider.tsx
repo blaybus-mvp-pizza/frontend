@@ -4,7 +4,6 @@ import React, { useEffect } from 'react'
 
 import ErrorBoundary from '@/components/error/ErrorBoundary'
 import { ModalProvider } from '@/components/modals/ModalProvider'
-import { ToastContainer } from '@/components/toast/ToastContainer'
 import { useCurrentUser } from '@/api/hooks/queries/useUser'
 import { useAuthStore } from '@/store/auth.store'
 
@@ -33,7 +32,6 @@ export function AppProvider({ children }: AppProviderProps) {
         <AuthRefreshProvider>
           <ModalProvider>
             {children}
-            <ToastContainer />
           </ModalProvider>
         </AuthRefreshProvider>
       </QueryProvider>

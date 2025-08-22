@@ -153,6 +153,7 @@ export default function ProductDetailPage() {
           <StoreInfo store={product.store} />
 
           <PurchaseOptions
+            status={auction?.status}
             buyNowPrice={auction?.buy_now_price}
             onBuyNow={() => setShowBuyNowModal(true)}
           />
@@ -216,34 +217,34 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="col-span-2 grid grid-cols-2 gap-3 rounded-sm bg-[#F6F6F6] p-4">
                   <div className="flex items-center gap-2">
-                    <Typography variant={'sub'} className="text-[#767676]">
+                    <Typography variant={'sub'} className="text-text-tertiary">
                       경매 시작일
                     </Typography>
-                    <Typography variant={'sub'} className="text-[#111111]">
+                    <Typography variant={'sub'} className="text-text-primary">
                       {auction ? formatDate(auction.starts_at) : '-'}
                     </Typography>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Typography variant={'sub'} className="text-[#767676]">
+                    <Typography variant={'sub'} className="text-text-tertiaryiary">
                       경매 종료일
                     </Typography>
-                    <Typography variant={'sub'} className="text-[#111111]">
+                    <Typography variant={'sub'} className="text-text-primary">
                       {auction ? formatDate(auction.ends_at) : '-'}
                     </Typography>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Typography variant={'sub'} className="text-[#767676]">
+                    <Typography variant={'sub'} className="text-text-tertiaryiary">
                       시작가
                     </Typography>
-                    <Typography variant={'sub'} className="text-[#111111]">
+                    <Typography variant={'sub'} className="text-text-primary">
                       {(auction?.start_price || 0).toLocaleString()}원
                     </Typography>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Typography variant={'sub'} className="text-[#767676]">
+                    <Typography variant={'sub'} className="text-text-tertiary">
                       경매 예약금
                     </Typography>
-                    <Typography variant={'sub'} className="text-[#111111]">
+                    <Typography variant={'sub'} className="text-text-primary">
                       {(auction?.deposit_amount || 0).toLocaleString()}원
                     </Typography>
                   </div>
@@ -283,14 +284,18 @@ export default function ProductDetailPage() {
                             <div className="flex flex-col gap-y-0.5">
                               <Typography
                                 variant="sub"
-                                className={isHighestBidder ? 'text-[#111111]' : 'text-[#767676]'}
+                                className={
+                                  isHighestBidder ? 'text-text-primary' : 'text-text-tertiary'
+                                }
                                 weight={'semibold'}
                               >
                                 {bid.user.name || `사용자 ${bid.user.id}`}
                               </Typography>
                               <Typography
                                 variant="sub"
-                                className={isHighestBidder ? 'text-[#111111]' : 'text-[#767676]'}
+                                className={
+                                  isHighestBidder ? 'text-text-primary' : 'text-text-tertiary'
+                                }
                               >
                                 {formatDateTime(bid.bid_at)}
                               </Typography>
@@ -363,10 +368,10 @@ export default function ProductDetailPage() {
           </div>
           <div className="flex flex-col gap-3 rounded bg-[#F6F6F6] p-5">
             <div className="flex flex-col gap-[3px]">
-              <Typography variant={'first'} weight={'bold'} className="text-lg text-[#111111]">
+              <Typography variant={'first'} weight={'bold'} className="text-text-primary text-lg">
                 이 상품 낙찰 시 세상에 남기는 작은 변화
               </Typography>
-              <Typography variant={'sub'} weight={'medium'} className="text-[#505050]">
+              <Typography variant={'sub'} weight={'medium'} className="text-text-secondary">
                 환경 보호의 다음 여정을 홍길동님이 이어주세요
               </Typography>
               <div className="flex items-center gap-3">

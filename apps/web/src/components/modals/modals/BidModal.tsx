@@ -117,7 +117,10 @@ export const BidModal: React.FC<BidModalProps> = ({
                   backgroundRepeat: 'no-repeat',
                 }}
               />
-              <label htmlFor="agreement-all" className="cursor-pointer font-bold text-[#111111]">
+              <label
+                htmlFor="agreement-all"
+                className="text-text-primary cursor-pointer font-bold"
+              >
                 모두 확인했습니다.
               </label>
             </div>
@@ -140,10 +143,10 @@ export const BidModal: React.FC<BidModalProps> = ({
                     <img
                       src={checkedItems.cancelPolicy ? '/icons/CHECK.svg' : '/icons/CHECK_GRAY.svg'}
                     />
-                    <h3 className="font-semibold text-gray-900">입찰 후 취소/감액 불가</h3>
+                    <h3 className="font-semibold text-text-primary">입찰 후 취소/감액 불가</h3>
                   </label>
                 </div>
-                <p className="pl-[1.1rem] text-sm text-[#111111]">
+                <p className="pl-[1.1rem] text-sm text-text-primary">
                   철회나 금액 감액은 불가합니다. 또한 동일 상품에 대해 금액 상향만 가능하며
                   부정/오입력은 운영자 심사 후에만 예외 처리됩니다.
                 </p>
@@ -172,10 +175,10 @@ export const BidModal: React.FC<BidModalProps> = ({
                     />
                     <h3 className="font-semibold text-gray-900">
                       낙찰 시 결제 의무 및 미결제 처리
-                    </h3>
+                    </h3>text-text-primary
                   </label>
                 </div>
-                <p className="pl-[1.1rem] text-sm text-[#111111]">
+                <p className="pl-[1.1rem] text-sm text-text-primary">
                   낙찰은 구매계약 성립을 의미하며, 안내된 결제 마감(24시간) 내 결제가 필요합니다.
                   기한 내 미결제 시 차순위 입찰자에게 구매 기회가 넘어가며, 계정에 패널티가 부과될
                   수 있습니다.
@@ -199,10 +202,10 @@ export const BidModal: React.FC<BidModalProps> = ({
                     <img
                       src={checkedItems.auctionRules ? '/icons/CHECK.svg' : '/icons/CHECK_GRAY.svg'}
                     />
-                    <h3 className="font-semibold text-gray-900">경매 규칙 동의</h3>
+                    <h3 className="font-semibold text-text-primary">경매 규칙 동의</h3>
                   </label>
                 </div>
-                <p className="pl-[1.1rem] text-sm text-[#111111]">
+                <p className="pl-[1.1rem] text-sm text-text-primary">
                   본 경매는 최대가 낙찰 방식으로 운영됩니다. 사용자가 입력한 최대가를 기준으로
                   시스템이 자동 응찰됩니다.
                 </p>
@@ -225,7 +228,7 @@ export const BidModal: React.FC<BidModalProps> = ({
                     <h3 className="font-semibold text-gray-900">입찰보증금 결제 동의</h3>
                   </label>
                 </div>
-                <p className="pl-[1.1rem] text-sm text-[#111111]">
+                <p className="pl-[1.1rem] text-sm text-text-primary">
                   [입찰하기]를 누르면 입찰보증금이 자동 결제됩니다. 보증금은 내 입찰가의 3%를
                   부과하며, 낙찰 시 최종 결제 금액에서 전액 차감, 낙찰 실패 시 원 결제수단으로
                   환불됩니다.
@@ -252,7 +255,7 @@ export const BidModal: React.FC<BidModalProps> = ({
                     <h3 className="font-semibold text-gray-900">자동 결제 동의</h3>
                   </label>
                 </div>
-                <p className="pl-[1.1rem] text-sm text-[#111111]">
+                <p className="pl-[1.1rem] text-sm text-text-primary">
                   내가 입찰한 상품이 낙찰되면 등록된 결제수단으로 즉시 자동 결제됩니다.
                 </p>
               </div>

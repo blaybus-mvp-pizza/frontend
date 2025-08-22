@@ -35,10 +35,10 @@ export default function StoryContent({ id }: { id: string }) {
       </div>
       <div className="px-4 sm:px-0">
         <div className="mb-4 mt-4 flex flex-col gap-4">
-          <div className="text-sm font-medium leading-[160%] tracking-[-0.025em] text-[#767676]">
+          <div className="text-text-tertiary text-sm font-medium leading-[160%] tracking-[-0.025em]">
             {format(story.created_at, 'ko')}
           </div>
-          <div className="text-2xl font-semibold leading-[140%] tracking-[-0.025em] text-[#111111]">
+          <div className="text-text-primary text-2xl font-semibold leading-[140%] tracking-[-0.025em]">
             {story.title}
           </div>
         </div>
@@ -52,10 +52,10 @@ export default function StoryContent({ id }: { id: string }) {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <span className="line-clamp-1 text-sm font-semibold text-[#111111]">
+              <span className="text-text-primary line-clamp-1 text-sm font-semibold">
                 {popupStore.name}
               </span>
-              <span className="line-clamp-2 text-[13px] font-normal leading-[150%] tracking-[-0.025em] text-[#505050]">
+              <span className="text-text-secondary line-clamp-2 text-[13px] font-normal leading-[150%] tracking-[-0.025em]">
                 {popupStore.summary}
               </span>
             </div>

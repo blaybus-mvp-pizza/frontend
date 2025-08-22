@@ -14,10 +14,28 @@ export const apiClient: AxiosInstance = axios.create({
 // Request interceptor for auth token
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('auth-token') : null
-    console.log('====interceptor token===', token)
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`
+    if (typeof window !== 'undefined') {
+      // Try to get token from auth store first (if hydrated)
+      const authStorage = localStorage.getItem('auth-storage')
+      let token = null
+      
+      if (authStorage) {
+        try {
+          const parsed = JSON.parse(authStorage)
+          token = parsed?.state?.token
+        } catch (e) {
+          console.error('Failed to parse auth storage:', e)
+        }
+      }
+      
+      // Fallback to direct localStorage token
+      if (!token) {
+        token = localStorage.getItem('auth-token')
+      }
+      
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
     }
 
     // Add request timestamp for performance monitoring
@@ -55,11 +73,9 @@ apiClient.interceptors.response.use(
 
       switch (status) {
         case 401:
-          // Token expired or invalid - handle in auth store
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('auth-token')
-            // Redirect will be handled by auth store
-          }
+          // Token expired or invalid - handle in error handler
+          // Don't remove token here, let error handler decide
+          console.warn('401 Unauthorized:', data?.message || 'Authentication failed')
           break
 
         case 403:

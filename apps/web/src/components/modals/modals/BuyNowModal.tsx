@@ -92,11 +92,11 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
                 </div>
               )}
               <div className="flex-1">
-                <Typography variant="second" weight="semibold" className="mb-1 text-[#111111]">
+                <Typography variant="second" weight="semibold" className="text-text-primary mb-1">
                   {productName}
                 </Typography>
                 {storeName && (
-                  <Typography variant="sub" className="text-[#767676]">
+                  <Typography variant="sub" className="text-text-tertiary">
                     {storeName}
                   </Typography>
                 )}
@@ -107,14 +107,14 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
             <div className="mb-6 rounded-lg border border-[#A3DDD4] bg-[#F8FEFD] p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <Typography variant="sub" className="mb-1 text-[#505050]">
+                  <Typography variant="sub" className="mb-1 text-text-secondary">
                     즉시 구매가격
                   </Typography>
                   <div className="flex items-baseline gap-1">
-                    <Typography variant="first" weight="bold" className="text-[#111111]">
+                    <Typography variant="first" weight="bold" className="text-text-primary">
                       {price.toLocaleString()}
                     </Typography>
-                    <Typography variant="first" className="text-[#111111]">
+                    <Typography variant="first" className="text-text-primary">
                       원
                     </Typography>
                   </div>
@@ -124,10 +124,14 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
 
             <div className="mb-6 space-y-3">
               <div className="flex flex-1 flex-col">
-                <Typography variant="sub" weight="semibold" className="text-[#111111]">
+                <Typography
+                  variant="sub"
+                  weight="semibold"
+                  className="text-text-primary"
+                >
                   즉시 구매 혜택
                 </Typography>
-                <Typography variant="sub" className="text-[#505050]">
+                <Typography variant="sub" className="text-text-secondary">
                   경매 종료를 기다리지 않고 바로 구매하실 수 있습니다
                 </Typography>
               </div>
@@ -136,7 +140,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
                 <Typography variant="sub" weight="semibold" className="text-[#111111]">
                   구매 확정 안내
                 </Typography>
-                <Typography variant="sub" className="text-[#505050]">
+                <Typography variant="sub" className="text-text-secondary">
                   구매 확정 후에는 취소가 불가능합니다
                 </Typography>
               </div>
@@ -152,7 +156,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
                 <Typography
                   variant="second"
                   weight="medium"
-                  className="text-center text-base text-[#767676]"
+                  className="text-center text-base text-text-tertiary"
                 >
                   취소
                 </Typography>
@@ -162,7 +166,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
                 onClick={handleBuyNow}
                 disabled={isPending}
                 className="flex-1 rounded-sm bg-[#B5F5EB] px-4 py-3 transition-colors hover:bg-[#9FF3E8] disabled:cursor-not-allowed disabled:opacity-50"
-              >
+              >text-text-primary
                 <Typography
                   variant="second"
                   weight="bold"

@@ -31,7 +31,7 @@ export default function ProfileTabs() {
           <TabsTrigger
             key={tab.value}
             value={tab.value}
-            className='relative w-full border-none text-[16px] font-semibold text-[#767676] shadow-none data-[state=active]:font-bold data-[state=active]:text-black data-[state=active]:after:absolute data-[state=active]:after:bottom-[-1px] data-[state=active]:after:left-0 data-[state=active]:after:h-[1px] data-[state=active]:after:w-full data-[state=active]:after:bg-black data-[state=active]:after:content-[""]'
+            className='text-text-tertiary relative w-full border-none text-[16px] font-semibold shadow-none data-[state=active]:font-bold data-[state=active]:text-black data-[state=active]:after:absolute data-[state=active]:after:bottom-[-1px] data-[state=active]:after:left-0 data-[state=active]:after:h-[1px] data-[state=active]:after:w-full data-[state=active]:after:bg-black data-[state=active]:after:content-[""]'
             disabled={tab.disabled}
           >
             {tab.label}

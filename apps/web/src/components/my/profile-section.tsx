@@ -51,7 +51,7 @@ export default function ProfileSection() {
 
   return (
     <div className="mb-20 flex w-full flex-col gap-4">
-      <div className="text-left text-lg font-semibold leading-[140%] tracking-[0%] text-[#111111]">
+      <div className="text-text-primary text-left text-lg font-semibold leading-[140%] tracking-[0%]">
         프로필 수정
       </div>
 
@@ -118,8 +118,8 @@ export default function ProfileSection() {
         <ProfileInput value={user.email} disabled={true} readOnly />
       </div>
 
-      <PhoneNumberVerification 
-        userPhoneNumber={user.phone_number || ''} 
+      <PhoneNumberVerification
+        userPhoneNumber={user.phone_number || ''}
         isPhoneVerified={user.is_phone_verified}
       />
     </div>
@@ -151,7 +151,7 @@ export const ProfileInput = React.forwardRef<HTMLInputElement, profileInputProps
 
 const ProfileSectionSkeleton = () => (
   <div className="mb-20 flex w-full flex-col gap-4">
-    <div className="text-left text-lg font-semibold leading-[140%] tracking-[0%] text-[#111111]">
+    <div className="text-text-primary text-left text-lg font-semibold leading-[140%] tracking-[0%]">
       프로필 수정
     </div>
 
