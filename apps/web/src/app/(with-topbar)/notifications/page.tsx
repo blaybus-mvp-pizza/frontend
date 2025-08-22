@@ -129,7 +129,7 @@ function NotificationCard({
   return (
     <div
       className={cn(
-        'cursor-pointer p-4 transition-colors hover:bg-gray-50',
+        'w-full cursor-pointer p-4 transition-colors hover:bg-gray-50',
         !isRead && 'bg-blue-50/30',
       )}
     >

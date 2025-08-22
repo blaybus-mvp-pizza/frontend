@@ -88,7 +88,7 @@ export class ErrorHandler {
           confirmText: '로그인',
           onConfirm: () => {
             if (typeof window !== 'undefined') {
-              window.location.href = '/login'
+              window.location.href = '/auth/login'
             }
           },
         },
