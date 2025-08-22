@@ -1,11 +1,11 @@
 // Auction action types
 
-export interface BidResult {
+export interface PlaceBidResult {
   bid_id: number
   amount: number
 }
 
-export interface BuyNowResult {
+export interface BuyNowActionResult {
   status: string
   payment_id?: number
 }

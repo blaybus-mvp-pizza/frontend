@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { auctionActionsApi } from '@/api/endpoints/auction-actions.api'
-import { BidResult, BuyNowResult } from '@/api/types'
+import { PlaceBidResult, BuyNowActionResult } from '@/api/types/auction-action.types'
 import { useUIStore } from '@/store/ui.store'
 import { useAuthStore } from '@/store/auth.store'
 import { useUserProfile } from '@/api/hooks/queries/useMyPage'
@@ -11,14 +11,14 @@ import { useState } from 'react'
 export const usePlaceBid = () => {
   const queryClient = useQueryClient()
   const { showSuccess, showError } = useUIStore()
-  const { isLoggedIn } = useAuthStore()
+  const { isAuthenticated } = useAuthStore()
   const { data: user } = useUserProfile()
   const [showPhoneVerificationModal, setShowPhoneVerificationModal] = useState(false)
 
-  const mutation = useMutation<BidResult, Error, { auctionId: number; amount: number }>({
+  const mutation = useMutation<PlaceBidResult, Error, { auctionId: number; amount: number }>({
     mutationFn: ({ auctionId, amount }) => {
       // Check if logged in
-      if (!isLoggedIn) {
+      if (!isAuthenticated) {
         throw new Error('LOGIN_REQUIRED')
       }
       
@@ -59,14 +59,14 @@ export const useBuyNow = () => {
   const queryClient = useQueryClient()
   const router = useRouter()
   const { showSuccess, showError } = useUIStore()
-  const { isLoggedIn } = useAuthStore()
+  const { isAuthenticated } = useAuthStore()
   const { data: user } = useUserProfile()
   const [showPhoneVerificationModal, setShowPhoneVerificationModal] = useState(false)
 
-  const mutation = useMutation<BuyNowResult, Error, number>({
+  const mutation = useMutation<BuyNowActionResult, Error, number>({
     mutationFn: (auctionId: number) => {
       // Check if logged in
-      if (!isLoggedIn) {
+      if (!isAuthenticated) {
         throw new Error('LOGIN_REQUIRED')
       }
       

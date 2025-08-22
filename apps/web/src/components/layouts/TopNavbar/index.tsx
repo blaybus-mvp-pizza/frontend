@@ -19,8 +19,8 @@ export function TopNavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const router = useRouter()
-  const { isLoggedIn } = useAuthStore()
-  const { data: unreadCount } = useUnreadNotificationsCount(isLoggedIn)
+  const { isAuthenticated } = useAuthStore()
+  const { data: unreadCount } = useUnreadNotificationsCount(isAuthenticated)
 
   return (
     <div className="relative">
@@ -87,7 +87,7 @@ export function TopNavBar() {
                   onClick={() => router.push('/notifications')}
                 >
                   <Bell size={20} className="md:h-6 md:w-6" />
-                  {isLoggedIn && unreadCount && unreadCount.count > 0 && (
+                  {isAuthenticated && unreadCount && unreadCount.count > 0 && (
                     <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
                       {unreadCount.count > 9 ? '9+' : unreadCount.count}
                     </span>

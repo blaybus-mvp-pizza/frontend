@@ -15,16 +15,16 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function NotificationsPage() {
   const router = useRouter()
-  const { isLoggedIn } = useAuthStore()
-  const { data, isLoading } = useNotifications(50, isLoggedIn)
+  const { isAuthenticated } = useAuthStore()
+  const { data, isLoading } = useNotifications(50, isAuthenticated)
   const markAsRead = useMarkNotificationsAsRead()
   
   // Redirect if not logged in
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isAuthenticated) {
       router.push('/auth/login')
     }
-  }, [isLoggedIn, router])
+  }, [isAuthenticated, router])
 
   // Auto-mark unread notifications as read when viewing
   useEffect(() => {

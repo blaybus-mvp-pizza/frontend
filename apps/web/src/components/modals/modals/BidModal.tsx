@@ -5,7 +5,6 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 
 import { usePlaceBid } from '@/api/hooks/mutations/useAuctionActions'
-import { useUIStore } from '@/store/ui.store'
 import PhoneVerificationModal from '@/components/modals/PhoneVerificationModal'
 
 interface BidModalProps {
@@ -32,7 +31,6 @@ const BidModal: React.FC<BidModalProps> = ({
     showPhoneVerificationModal,
     setShowPhoneVerificationModal 
   } = usePlaceBid()
-  const setLoading = useUIStore((state) => state.setLoading)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

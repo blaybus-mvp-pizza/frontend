@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useParams } from 'next/navigation'
 
 import { Button } from '@workspace/ui/components/button'
@@ -16,10 +17,14 @@ import { StoreInfo } from '@/components/products/detail/StoreInfo'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useProductDetail } from '@/hooks/queries/useProductDetail'
+import BuyNowModal from '@/components/modals/modals/BuyNowModal'
+import BidModal from '@/components/modals/modals/BidModal'
 
 export default function ProductDetailPage() {
   const params = useParams()
   const productId = Number(params.id)
+  const [showBuyNowModal, setShowBuyNowModal] = useState(false)
+  const [showBidModal, setShowBidModal] = useState(false)
 
   const { product, auction, similar, isLoading } = useProductDetail(productId)
 
@@ -79,9 +84,41 @@ export default function ProductDetailPage() {
 
           <StoreInfo store={product.store} />
 
+          {/* Auction Status */}
+          {auction && auction.status === 'RUNNING' && (
+            <div className="space-y-4 rounded-lg border border-gray-200 p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">현재 최고 입찰가</p>
+                  <p className="text-2xl font-bold">
+                    {(auction.current_highest_bid || auction.start_price || 0).toLocaleString()}원
+                  </p>
+                </div>
+                <Button
+                  onClick={() => setShowBidModal(true)}
+                  className="bg-blue-500 px-6 py-3 text-white hover:bg-blue-600"
+                >
+                  입찰하기
+                </Button>
+              </div>
+              
+              {auction.bidder_count > 0 && (
+                <p className="text-sm text-gray-600">
+                  {auction.bidder_count}명이 입찰 중
+                </p>
+              )}
+              
+              {auction.ends_at && (
+                <p className="text-sm text-gray-600">
+                  경매 종료: {new Date(auction.ends_at).toLocaleString()}
+                </p>
+              )}
+            </div>
+          )}
+
           <PurchaseOptions
             buyNowPrice={auction?.buy_now_price}
-            onBuyNow={() => console.log('Buy now clicked')}
+            onBuyNow={() => setShowBuyNowModal(true)}
           />
 
           <div className="h-[600px] w-full bg-black"></div>
@@ -89,6 +126,34 @@ export default function ProductDetailPage() {
       </div>
 
       <SimilarProducts items={similar?.items || []} />
+
+      {/* Modals */}
+      {showBuyNowModal && auction && (
+        <BuyNowModal
+          auctionId={auction.auction_id}
+          productName={product.name}
+          price={auction.buy_now_price || 0}
+          onClose={() => setShowBuyNowModal(false)}
+          onConfirm={() => {
+            setShowBuyNowModal(false)
+            // Optionally refresh product data
+          }}
+        />
+      )}
+
+      {showBidModal && auction && (
+        <BidModal
+          auctionId={auction.auction_id}
+          productName={product.name}
+          currentBid={auction.current_highest_bid || auction.start_price || 0}
+          minBidIncrement={auction.bid_steps?.[0] || 1000}
+          onClose={() => setShowBidModal(false)}
+          onConfirm={() => {
+            setShowBidModal(false)
+            // Optionally refresh product data
+          }}
+        />
+      )}
     </div>
   )
 }

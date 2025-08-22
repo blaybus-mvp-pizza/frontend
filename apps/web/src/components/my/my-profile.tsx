@@ -21,14 +21,19 @@ export default function MyProfile({ onEditClick }: UserProfileProps) {
 
   return (
     <div className={cn('flex h-full items-center gap-3 px-6 py-4', 'bg-background-100')}>
-      <div className={cn('h-14 w-14 overflow-hidden rounded-full border', 'border-border-default')}>
+      <div
+        className={cn(
+          'h-12 w-12 shrink-0 overflow-hidden rounded-full border p-1 p-2',
+          'border-border-default',
+        )}
+      >
         <img
           src={user?.profile_image_url || '/images/Default_user.webp'}
           alt="profile"
-          className="h-full w-full object-contain"
+          className="h-full w-full object-cover"
         />
       </div>
-      <div className="text-lg font-semibold">{user?.nickname}</div>
+      <div className="line-clamp-1 text-lg font-semibold">{user?.nickname}</div>
       <Button
         onClick={onEditClick}
         className={cn(
