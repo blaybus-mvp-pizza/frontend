@@ -34,7 +34,7 @@ export const useUnreadNotificationsCount = (enabled: boolean = true) => {
 }
 
 // Mark notifications as read
-export const useMarkNotificationsAsRead = () => {
+export const useMarkNotificationsAsRead = (showToast: boolean = true) => {
   const queryClient = useQueryClient()
   const { showSuccess, showError } = useUIStore()
 
@@ -43,7 +43,9 @@ export const useMarkNotificationsAsRead = () => {
     onSuccess: () => {
       // Invalidate both list and count queries
       queryClient.invalidateQueries({ queryKey: notificationKeys.all })
-      showSuccess('알림을 읽음 처리했습니다.')
+      if (showToast) {
+        showSuccess('알림을 읽음 처리했습니다.')
+      }
     },
     onError: () => {
       showError('알림 읽음 처리에 실패했습니다.')

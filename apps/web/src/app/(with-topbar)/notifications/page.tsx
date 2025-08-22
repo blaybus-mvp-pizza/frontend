@@ -1,13 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
-
 import { useRouter } from 'next/navigation'
 
 import { Button } from '@workspace/ui/components/button'
 import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
-import { Bell, Check, ChevronLeft } from 'lucide-react'
+import { Bell, ChevronLeft } from 'lucide-react'
 
 import { useMarkNotificationsAsRead, useNotifications } from '@/api/hooks/queries/useNotifications'
 import { NotificationItem } from '@/api/types'
@@ -19,18 +17,8 @@ export default function NotificationsPage() {
   const router = useRouter()
   const { isAuthenticated, isLoading: authLoading } = useRequireAuth()
   const { data, isLoading } = useNotifications(50, isAuthenticated)
-  const markAsRead = useMarkNotificationsAsRead()
-
-  // Auto-mark unread notifications as read when viewing
-  useEffect(() => {
-    if (data?.items) {
-      const unreadIds = data.items.filter((item) => item.status === 'SENT').map((item) => item.id)
-
-      if (unreadIds.length > 0) {
-        markAsRead.mutate(unreadIds)
-      }
-    }
-  }, [data?.items])
+  const markAsRead = useMarkNotificationsAsRead(true) // Show toast for bulk actions
+  const markAsReadSilent = useMarkNotificationsAsRead(false) // No toast for individual clicks
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -101,6 +89,7 @@ export default function NotificationsPage() {
                 key={notification.id}
                 notification={notification}
                 formatDate={formatDate}
+                onMarkAsRead={markAsReadSilent}
               />
             ))}
           </div>
@@ -113,11 +102,27 @@ export default function NotificationsPage() {
 function NotificationCard({
   notification,
   formatDate,
+  onMarkAsRead,
 }: {
   notification: NotificationItem
   formatDate: (date: string) => string
+  onMarkAsRead: ReturnType<typeof useMarkNotificationsAsRead>
 }) {
   const isRead = notification.status === 'READ'
+
+  const handleClick = () => {
+    // Mark as read if it's unread
+    if (!isRead) {
+      onMarkAsRead.mutate([notification.id], {
+        onSuccess: () => {
+          // Optionally handle success (the mutation already shows a toast)
+        },
+      })
+    }
+    
+    // Navigate to relevant page based on notification type/data if needed
+    // For now, just mark as read
+  }
 
   return (
     <div
@@ -125,6 +130,7 @@ function NotificationCard({
         'w-full cursor-pointer p-4 transition-colors hover:bg-gray-50',
         !isRead && 'bg-blue-50/30',
       )}
+      onClick={handleClick}
     >
       <div className="flex gap-3">
         {notification.image_url ? (
