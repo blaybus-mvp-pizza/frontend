@@ -118,7 +118,10 @@ export default function ProfileSection() {
         <ProfileInput value={user.email} disabled={true} readOnly />
       </div>
 
-      <PhoneNumberVerification userPhoneNumber={user.phone_number || ''} />
+      <PhoneNumberVerification 
+        userPhoneNumber={user.phone_number || ''} 
+        isPhoneVerified={user.is_phone_verified}
+      />
     </div>
   )
 }

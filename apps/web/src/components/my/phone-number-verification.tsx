@@ -11,9 +11,10 @@ import { useRouter } from 'next/navigation'
 
 interface PhoneNumberVerificationProps {
   userPhoneNumber: string
+  isPhoneVerified: boolean
 }
 
-export default function PhoneNumberVerification({ userPhoneNumber }: PhoneNumberVerificationProps) {
+export default function PhoneNumberVerification({ userPhoneNumber, isPhoneVerified }: PhoneNumberVerificationProps) {
   const [phoneNumber, setPhoneNumber] = useState(userPhoneNumber)
   const [authCode, setAuthCode] = useState('')
   const [timeLeft, setTimeLeft] = useState(180)
@@ -79,6 +80,50 @@ export default function PhoneNumberVerification({ userPhoneNumber }: PhoneNumber
       formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(3, 7)}-${rawValue.slice(7, 11)}`
     }
     setPhoneNumber(formattedValue)
+  }
+
+  // Format phone number for display
+  const formatPhoneNumber = (phone: string) => {
+    const rawPhone = phone.replace(/[^0-9]/g, '')
+    if (rawPhone.length === 11) {
+      return `${rawPhone.slice(0, 3)}-${rawPhone.slice(3, 7)}-${rawPhone.slice(7, 11)}`
+    } else if (rawPhone.length === 10) {
+      return `${rawPhone.slice(0, 3)}-${rawPhone.slice(3, 6)}-${rawPhone.slice(6, 10)}`
+    }
+    return phone
+  }
+
+  // If phone is already verified, show verified status
+  if (isPhoneVerified && userPhoneNumber) {
+    return (
+      <div className="mt-1 flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <div className="text-sm font-medium">연락처</div>
+          <div className="flex items-center gap-1">
+            <svg 
+              className="h-4 w-4 text-green-500" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" 
+              />
+            </svg>
+            <span className="text-xs text-green-500 font-medium">인증 완료</span>
+          </div>
+        </div>
+        <ProfileInput
+          value={formatPhoneNumber(userPhoneNumber)}
+          disabled={true}
+          readOnly
+          className="bg-gray-50"
+        />
+      </div>
+    )
   }
 
   return (

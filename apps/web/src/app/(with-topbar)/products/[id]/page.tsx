@@ -166,7 +166,11 @@ export default function ProductDetailPage() {
                     </Typography>
                   </div>
                   <Typography variant={'sub'}>
-                    입찰 단위 {(auction?.bid_steps?.[0] || 1000).toLocaleString()}원
+                    입찰 단위{' '}
+                    {(
+                      (auction?.bid_steps?.[1] ?? 0) - (auction?.bid_steps?.[0] ?? 0) || 1000
+                    ).toLocaleString()}
+                    원
                   </Typography>
                 </div>
                 <div className="col-span-2 grid grid-cols-2 gap-3 rounded-sm bg-[#F6F6F6] p-4">
@@ -285,7 +289,10 @@ export default function ProductDetailPage() {
                           입찰하기{' '}
                           {(
                             (auction.current_highest_bid || auction.start_price || 0) +
-                            (auction.bid_steps?.[0] || 1000)
+                              (auction?.bid_steps?.[1] ?? 0) -
+                              (auction?.bid_steps?.[0] ?? 0) ||
+                            1000 ||
+                            1000
                           ).toLocaleString()}
                           원
                         </p>
@@ -363,7 +370,9 @@ export default function ProductDetailPage() {
           auctionId={auction.auction_id}
           productName={product.name}
           currentBid={auction.current_highest_bid || auction.start_price || 0}
-          minBidIncrement={auction.bid_steps?.[0] || 1000}
+          minBidIncrement={
+            (auction?.bid_steps?.[1] ?? 0) - (auction?.bid_steps?.[0] ?? 0) || 1000 || 1000
+          }
           onClose={() => setShowBidModal(false)}
           onConfirm={() => {
             setShowBidModal(false)
