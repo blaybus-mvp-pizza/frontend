@@ -93,7 +93,7 @@ export default function ProductDetailSection({ id }: { id: string }) {
                 </span>
               </p>
               <p className='text-sm text-gray-500 mt-1'>
-                경매:{" "}
+                경매 ID:{" "}
                 <span className='font-mono text-gray-700'>
                   {" "}
                   {product.auction_id || "없음"}

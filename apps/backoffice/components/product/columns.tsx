@@ -76,10 +76,9 @@ export const createColumns = ({
   },
   {
     accessorKey: "status",
-    header: "판매상태",
+    header: "상태",
     cell: ({ row }) => {
-      const status = row.original.status as TProductStatus;
-      const isSold = status === "SOLD";
+      const isSold = row.original.status === "SOLD";
       return (
         <Badge
           className={`px-2.5 py-1 ${isSold ? "bg-gray-200 text-gray-800" : "bg-green-100 text-green-600"}`}

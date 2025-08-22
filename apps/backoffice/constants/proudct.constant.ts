@@ -1,5 +1,5 @@
 export const categoryMap: Record<string, string> = {
-  ALL: "ALL",
+  ALL: "전체",
   "가구/리빙": "가구/리빙",
   "키친/테이블웨어": "키친/테이블웨어",
   "디지털/가전": "디지털/가전",

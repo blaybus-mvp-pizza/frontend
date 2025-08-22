@@ -18,6 +18,8 @@ export interface ProductItem {
   updated_at: string;
   status: TProductStatus;
   auction_id?: number;
+  is_active: boolean;
+  is_sold: boolean;
 }
 
 export interface ProductListResponse {

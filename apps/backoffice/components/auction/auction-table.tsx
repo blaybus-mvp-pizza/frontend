@@ -13,10 +13,8 @@ import { useAuctionList } from "@/hooks/use-auctions";
 import { AuctionItem } from "@/api/auction/type";
 import AuctionFilter from "./auction-filter";
 import { DataTable } from "./data-table";
-import { Button } from "@workspace/ui/components/button";
-import AuctionFormModal from "./auction-form-modal";
-
-type FormMode = "create" | "edit" | "view";
+import AuctionFormModal, { FormMode } from "./auction-form-modal";
+import { Pagination, PaginationInfo } from '../common/pagination';
 
 export default function AuctionTable() {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -28,14 +26,19 @@ export default function AuctionTable() {
     number | undefined
   >(undefined);
 
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(10);
+
   const { data, isLoading } = useAuctionList({
-    page: 1,
-    size: 20,
+    page: page,
+    size: size,
     q: globalFilter,
   });
 
   const auctions: AuctionItem[] = data?.items || [];
-
+  const totalItems = data?.total || 0;
+  const totalPages = Math.ceil(totalItems / size);
+  
   const handleOpenModal = (mode: FormMode, auctionId?: number) => {
     setModalMode(mode);
     setSelectedAuctionId(auctionId);
@@ -68,18 +71,33 @@ export default function AuctionTable() {
       </div>
     );
   }
+
   return (
     <>
-      <div className='flex justify-between items-center'>
-        <AuctionFilter
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          columnFilters={columnFilters}
-          setColumnFilters={setColumnFilters}
-        />
-        <Button onClick={() => handleOpenModal("create")}>경매 등록</Button>
-      </div>
+      <AuctionFilter
+        globalFilter={globalFilter}
+        setGlobalFilter={setGlobalFilter}
+        columnFilters={columnFilters}
+        setColumnFilters={setColumnFilters}
+      />
+      
       <DataTable table={table} />
+      
+      <div className='flex justify-end py-3'>
+        <PaginationInfo
+          currentPage={page}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          itemsPerPage={size}
+        />
+        </div>
+        <div className='flex justify-center'>
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
+      </div>
 
       <AuctionFormModal
         isOpen={isModalOpen}

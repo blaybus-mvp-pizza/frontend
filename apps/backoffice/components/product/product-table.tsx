@@ -1,9 +1,7 @@
 "use client";
 
 import {
-  ColumnFiltersState,
   getCoreRowModel,
-  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { createColumns } from "@/components/product/columns";
@@ -15,15 +13,25 @@ import ProductExcelDownloadButton from "./product-excel-download-button";
 import { useProductList } from "@/hooks/use-products";
 import { ProductItem } from "@/api/product/type";
 import AuctionFormModal from "../auction/auction-form-modal";
+import { Pagination, PaginationInfo } from '../common/pagination';
+import { useDebounce } from '@/hooks/use-debounce';
 
 export default function ProductTable() {
   const [globalFilter, setGlobalFilter] = useState("");
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const debouncedGlobalFilter = useDebounce(globalFilter, 500);
+
+  const [category, setCategory] = useState("ALL");
+  const [status, setStatus] = useState("ALL");
+
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(8);
 
   const { data, isLoading } = useProductList({
-    page: 1,
-    size: 100,
-    q: globalFilter,
+    page: page,
+    size: size,
+    q: debouncedGlobalFilter,
+    category: category !== "ALL" ? category : undefined,
+    status: status !== "ALL" ? status : undefined,
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,19 +54,16 @@ export default function ProductTable() {
   });
 
   const products: ProductItem[] = data?.items || [];
+  const totalItems = data?.total || 0;
+  const totalPages = Math.ceil(totalItems / size);
 
   const table = useReactTable({
     data: products || [],
     columns,
-    state: {
-      globalFilter,
-      columnFilters,
-    },
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
   });
 
-  if (isLoading) {
+  if (isLoading && !data) {
     return (
       <div className='space-y-4'>
         <Skeleton className='h-[400px] w-full' />
@@ -72,12 +77,30 @@ export default function ProductTable() {
         <ProductFilter
           globalFilter={globalFilter}
           setGlobalFilter={setGlobalFilter}
-          columnFilters={columnFilters}
-          setColumnFilters={setColumnFilters}
+          category={category}
+          setCategory={setCategory}
+          status={status}
+          setStatus={setStatus}
         />
         <ProductExcelDownloadButton />
       </div>
       <DataTable table={table} />
+
+      <div className='flex justify-end py-3'>
+        <PaginationInfo
+          currentPage={page}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          itemsPerPage={size}
+        />
+        </div>
+        <div className='flex justify-center'>
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
+      </div>
 
       <AuctionFormModal
         isOpen={isModalOpen}

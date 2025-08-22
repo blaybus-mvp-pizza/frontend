@@ -23,6 +23,7 @@ export const useProductList = (
     status: (params.status || "ALL") as TProductStatus,
     category: params.category || "ALL",
     q: params.q,
+    store_id: params.store_id,
   };
   return useQuery<ProductListResponse, Error>({
     queryKey: ["productList", apiParams],

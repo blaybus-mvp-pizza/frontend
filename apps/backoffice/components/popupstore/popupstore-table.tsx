@@ -12,13 +12,20 @@ import { useState } from "react";
 import PopUpStoreCreateButton from "./popupstore-create-button";
 import { PopUpStoreFilter } from "./popupstore-filter";
 import { usePopupStoreList } from '@/hooks/use-popupstore';
+import { Pagination, PaginationInfo } from '../common/pagination';
 
 export default function PopUpStoreTable() {
   const [globalFilter, setGlobalFilter] = useState("");
-  const [params, setParams] = useState({ page: 1, size: 20 });
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(8);
 
-  const { data, isLoading } = usePopupStoreList(params);
+  const { data, isLoading } = usePopupStoreList({
+    page: page,
+    size: size,
+  });
   const popupstores = data?.items || [];
+  const totalItems = data?.total || 0;
+  const totalPages = Math.ceil(totalItems / size);
 
   const table = useReactTable({
     data: popupstores,
@@ -47,6 +54,21 @@ export default function PopUpStoreTable() {
         <PopUpStoreCreateButton />
       </div>
       <DataTable table={table} />
+      <div className='flex justify-end py-3'>
+        <PaginationInfo
+          currentPage={page}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          itemsPerPage={size}
+        />
+        </div>
+        <div className='flex justify-center'>
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
+      </div>
     </div>
   );
 }
