@@ -46,17 +46,17 @@ export default function StoryContent({ id }: { id: string }) {
           <div className="flex w-full items-start space-x-4 bg-[#F5F5F5] p-4">
             <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-sm">
               <img
-                src={popupStore.representative_image || '/placeholder.png'}
+                src={popupStore.image || '/placeholder.png'}
                 alt={popupStore.name}
                 className="h-full w-full rounded-sm object-cover"
               />
             </div>
             <div className="flex flex-col gap-1">
               <span className="line-clamp-1 text-sm font-semibold text-[#111111]">
-                {popupStore.popup_store_name || popupStore.name}
+                {popupStore.name}
               </span>
               <span className="line-clamp-2 text-[13px] font-normal leading-[150%] tracking-[-0.025em] text-[#505050]">
-                Popup Store
+                {popupStore.summary}
               </span>
             </div>
           </div>

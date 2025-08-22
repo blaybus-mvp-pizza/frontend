@@ -16,7 +16,6 @@ export default function StoryCardList() {
   const page = parseInt(searchParams.get('page') || String(1))
 
   const { data, isLoading } = useStories(page, 9)
-
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set('page', newPage.toString())
@@ -35,43 +34,16 @@ export default function StoryCardList() {
   // Transform API data to Story format expected by StoryCard
   const transformToStory = (apiStory: any) => {
     return {
-      id: apiStory.story_id,
-      userId: 0, // Not provided by API
-      productId: 0, // Not provided by API
+      story_id: apiStory.story_id,
+      content: apiStory.content,
       title: apiStory.title,
-      content: '', // Not provided in list API
-      createdAt: new Date(apiStory.created_at),
-      updatedAt: new Date(apiStory.created_at),
       product: {
-        id: 0,
-        popupStoreId: 0,
-        category: '',
-        name: '',
-        price: 0,
-        stock: 0,
-        shippingBaseFee: 0,
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        images: [],
-        popupStore: {
-          id: 0,
-          name: apiStory.author_name || 'Anonymous',
-          description: `조회 ${apiStory.view_count} · 좋아요 ${apiStory.like_count}`,
-          bannerImageUrl: apiStory.author_profile || '/placeholder.png',
-          createdAt: new Date(),
-        },
+        id: apiStory.product.id,
+        name: apiStory.product.name,
+        summary: apiStory.product.summary,
+        image: apiStory.representative_image,
       },
-      images: apiStory.representative_image
-        ? [
-            {
-              id: 0,
-              storyId: apiStory.story_id,
-              imageUrl: apiStory.representative_image,
-              sortOrder: 0,
-            },
-          ]
-        : [],
+      representative_image: apiStory.representative_image,
     }
   }
 

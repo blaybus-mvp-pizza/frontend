@@ -41,6 +41,41 @@ function formatDateTime(dateString: string): string {
   const minutes = date.getMinutes().toString().padStart(2, '0')
   return `${year}.${month}.${day}(${hours}:${minutes})`
 }
+
+function getBidIncrement(
+  currentPrice: number,
+  bidSteps: number[] | undefined,
+): { increment: number; isMaxBid: boolean } {
+  if (!bidSteps || bidSteps.length === 0) {
+    return { increment: 1000, isMaxBid: false }
+  }
+
+  // Find the current price in bid steps or the next higher step
+  let currentIndex = -1
+  for (let i = 0; i < bidSteps.length; i++) {
+    if (currentPrice < bidSteps[i]!) {
+      currentIndex = i
+      break
+    } else if (currentPrice === bidSteps[i]) {
+      currentIndex = i + 1
+      break
+    }
+  }
+
+  // If current price is at or above the last step, it's max bid
+  if (currentIndex === -1 || currentIndex >= bidSteps.length) {
+    return { increment: 0, isMaxBid: true }
+  }
+
+  // If it's the last available step
+  if (currentIndex === bidSteps.length - 1) {
+    return { increment: bidSteps[currentIndex]! - currentPrice, isMaxBid: false }
+  }
+
+  // Calculate increment to next step
+  const nextStep = bidSteps[currentIndex]
+  return { increment: nextStep! - currentPrice, isMaxBid: false }
+}
 export default function ProductDetailPage() {
   const params = useParams()
   const productId = Number(params.id)
@@ -166,11 +201,17 @@ export default function ProductDetailPage() {
                     </Typography>
                   </div>
                   <Typography variant={'sub'}>
-                    입찰 단위{' '}
-                    {(
-                      (auction?.bid_steps?.[1] ?? 0) - (auction?.bid_steps?.[0] ?? 0) || 1000
-                    ).toLocaleString()}
-                    원
+                    {(() => {
+                      const currentPrice = auction?.current_highest_bid || auction?.start_price || 0
+                      const { increment, isMaxBid } = getBidIncrement(
+                        currentPrice,
+                        auction?.bid_steps,
+                      )
+                      if (isMaxBid) {
+                        return '상한가 도달'
+                      }
+                      return `입찰 단위 ${increment.toLocaleString()}원`
+                    })()}
                   </Typography>
                 </div>
                 <div className="col-span-2 grid grid-cols-2 gap-3 rounded-sm bg-[#F6F6F6] p-4">
@@ -280,24 +321,31 @@ export default function ProductDetailPage() {
                 </div>
                 {auction && (
                   <>
-                    {auction.status === 'RUNNING' && (
-                      <div
-                        onClick={handleAuctionBid}
-                        className="flex cursor-pointer items-center justify-center rounded-sm bg-[#B5F5EB] px-4 py-3 transition-colors hover:bg-[#9FF3E8]"
-                      >
-                        <p className="font-bold text-[#11111]">
-                          입찰하기{' '}
-                          {(
-                            (auction.current_highest_bid || auction.start_price || 0) +
-                              (auction?.bid_steps?.[1] ?? 0) -
-                              (auction?.bid_steps?.[0] ?? 0) ||
-                            1000 ||
-                            1000
-                          ).toLocaleString()}
-                          원
-                        </p>
-                      </div>
-                    )}
+                    {auction.status === 'RUNNING' &&
+                      (() => {
+                        const currentPrice = auction.current_highest_bid || auction.start_price || 0
+                        const { increment, isMaxBid } = getBidIncrement(
+                          currentPrice,
+                          auction?.bid_steps,
+                        )
+                        if (isMaxBid) {
+                          return (
+                            <div className="flex cursor-not-allowed items-center justify-center rounded-sm bg-gray-300 px-4 py-3">
+                              <p className="font-bold text-gray-600">상한가 도달</p>
+                            </div>
+                          )
+                        }
+                        return (
+                          <div
+                            onClick={handleAuctionBid}
+                            className="flex cursor-pointer items-center justify-center rounded-sm bg-[#B5F5EB] px-4 py-3 transition-colors hover:bg-[#9FF3E8]"
+                          >
+                            <p className="font-bold text-[#11111]">
+                              입찰하기 {(currentPrice + increment).toLocaleString()}원
+                            </p>
+                          </div>
+                        )
+                      })()}
                     {auction.status === 'ENDED' && (
                       <div className="flex items-center justify-center rounded-sm bg-gray-200 px-4 py-3">
                         <p className="font-bold text-gray-600">경매가 종료되었습니다</p>
@@ -371,7 +419,10 @@ export default function ProductDetailPage() {
           productName={product.name}
           currentBid={auction.current_highest_bid || auction.start_price || 0}
           minBidIncrement={
-            (auction?.bid_steps?.[1] ?? 0) - (auction?.bid_steps?.[0] ?? 0) || 1000 || 1000
+            getBidIncrement(
+              auction.current_highest_bid || auction.start_price || 0,
+              auction?.bid_steps,
+            ).increment
           }
           onClose={() => setShowBidModal(false)}
           onConfirm={() => {

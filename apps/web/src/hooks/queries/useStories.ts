@@ -22,8 +22,21 @@ export function useStories(page: number = 1, size: number = 9) {
   })
 }
 
+export interface StoryDetailRV {
+  story_id: number
+  product: {
+    id: number
+    name: string
+    image: string
+    summary: string
+  }
+  title: string
+  content: string
+  images: string[]
+  created_at: string
+}
 export function useStoryDetail(id: number) {
-  return useQuery<StoryMeta>({
+  return useQuery<StoryDetailRV>({
     queryKey: storyKeys.detail(id),
     queryFn: () => storiesApi.getStoryDetail(id),
     staleTime: 1000 * 60 * 5, // 5 minutes

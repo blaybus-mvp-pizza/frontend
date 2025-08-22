@@ -4,19 +4,33 @@ import { Story } from '@workspace/ui/types'
 
 import { cn } from '@/utils/cn'
 
+interface StoryCardProduct {
+  id: number
+  image: string
+  name: string
+  summary: string
+}
+
+export interface StoryCustomType {
+  content: string
+  product: StoryCardProduct
+  representative_image: string
+  story_id: number
+  title: string
+}
+
 interface StoryCardProps {
-  story: Story
+  story: StoryCustomType
   onClick: () => void
 }
 
 export default function StoryCard({ story, onClick }: StoryCardProps) {
-  const mainImage = story.images?.[0]?.imageUrl || '/placeholder.png'
-  const popupStore = story.product?.popupStore
+  const mainImage = story.representative_image || '/placeholder.png'
 
   return (
     <div
       className={cn(
-        'flex w-[301px] cursor-pointer flex-col overflow-hidden rounded-[1px]',
+        'border-border-light flex w-[301px] cursor-pointer flex-col overflow-hidden rounded-[1px] border',
         'bg-background-100',
       )}
       onClick={onClick}
@@ -53,14 +67,14 @@ export default function StoryCard({ story, onClick }: StoryCardProps) {
       <div className={cn('flex h-[96px] w-full items-start space-x-4 p-4', 'bg-background-200')}>
         <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-sm">
           <img
-            src={popupStore.bannerImageUrl || '/placeholder.png'}
-            alt={popupStore.name}
+            src={story.product.image || '/placeholder.png'}
+            alt={story.product.name}
             className="h-full w-full rounded-sm object-cover"
           />
         </div>
         <div className="flex flex-col gap-1">
           <span className={cn('line-clamp-1 text-sm font-semibold', 'text-text-primary')}>
-            {popupStore.name}
+            {story.product.name}
           </span>
           <span
             className={cn(
@@ -68,7 +82,7 @@ export default function StoryCard({ story, onClick }: StoryCardProps) {
               'text-text-secondary',
             )}
           >
-            {popupStore.description}
+            {story.product.summary}
           </span>
         </div>
       </div>
