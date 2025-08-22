@@ -1,36 +1,29 @@
 "use client";
 
-import { DataTable } from "@/components/product/data-table";
 import {
   ColumnFiltersState,
   getCoreRowModel,
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { createColumns } from "@/components/product/columns";
+import { DataTable } from "@/components/product/data-table";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 import { useState } from "react";
-import { ProductFilter } from "../product/product-filter";
-import ProductCreateButton from "../product/product-create-button";
-import { TPOPUPSTORE } from "@/types";
+import { ProductFilter } from "./product-filter";
+import ProductExcelDownloadButton from "./product-excel-download-button";
 import { useProductList } from "@/hooks/use-products";
 import { ProductItem } from "@/api/product/type";
-import { createColumns } from "../product/columns";
 import AuctionFormModal from "../auction/auction-form-modal";
 
-type PopUpStoreProductsSectionProps = {
-  popupstore: TPOPUPSTORE;
-};
-
-export default function PopUpStoreProductsSection({
-  popupstore,
-}: PopUpStoreProductsSectionProps) {
+export default function ProductTable() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const { data } = useProductList({
+  const { data, isLoading } = useProductList({
     page: 1,
     size: 100,
     q: globalFilter,
-    store_id: popupstore.id,
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,30 +58,33 @@ export default function PopUpStoreProductsSection({
     getFilteredRowModel: getFilteredRowModel(),
   });
 
+  if (isLoading) {
+    return (
+      <div className='space-y-4'>
+        <Skeleton className='h-[400px] w-full' />
+      </div>
+    );
+  }
+
   return (
     <>
-      <h2 className='text-2xl font-bold mb-2 mt-10'>관련 상품 목록</h2>
-      <>
-        <div className='flex justify-between items-center'>
-          <ProductFilter
-            globalFilter={globalFilter}
-            setGlobalFilter={setGlobalFilter}
-            columnFilters={columnFilters}
-            setColumnFilters={setColumnFilters}
-          />
-          <div className='flex gap-1'>
-            <ProductCreateButton storeId={popupstore.id} />
-          </div>
-        </div>
-        <DataTable table={table} />
-
-        <AuctionFormModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          mode='create'
-          productId={selectedProductId || undefined}
+      <div className='flex justify-between items-center'>
+        <ProductFilter
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
         />
-      </>
+        <ProductExcelDownloadButton />
+      </div>
+      <DataTable table={table} />
+
+      <AuctionFormModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        mode='create'
+        productId={selectedProductId || undefined}
+      />
     </>
   );
 }
