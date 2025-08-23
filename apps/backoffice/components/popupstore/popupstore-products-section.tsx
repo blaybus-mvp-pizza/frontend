@@ -10,7 +10,7 @@ import { ProductFilter } from "../product/product-filter";
 import ProductCreateButton from "../product/product-create-button";
 import { TPOPUPSTORE } from "@/types";
 import { useProductList } from "@/hooks/use-products";
-import { ProductItem } from "@/api/product/type";
+import { ProductItem } from "@/apis/product/type";
 import { createColumns } from "../product/columns";
 import AuctionFormModal from "../auction/auction-form-modal";
 import { Pagination, PaginationInfo } from '../common/pagination';

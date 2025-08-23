@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 import { getColumns } from "./columns";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { useAuctionList } from "@/hooks/use-auctions";
-import { AuctionItem } from "@/api/auction/type";
+import { AuctionItem } from "@/apis/auction/type";
 import AuctionFilter from "./auction-filter";
 import { DataTable } from "./data-table";
 import AuctionFormModal, { FormMode } from "./auction-form-modal";

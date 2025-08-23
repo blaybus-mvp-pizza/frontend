@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { AuctionItem } from "@/api/auction/type";
+import { AuctionItem } from "@/apis/auction/type";
 import Link from "next/link";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";

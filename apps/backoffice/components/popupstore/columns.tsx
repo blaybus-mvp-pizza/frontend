@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ImageOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@workspace/ui/components/button";
-import { PopupStoreItem } from '@/api/popupstore/type';
+import { PopupStoreItem } from '@/apis/popupstore/type';
 
 export const columns: ColumnDef<PopupStoreItem>[] = [
   {

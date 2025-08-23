@@ -8,7 +8,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@workspace/ui/components/select";
-import { AUCTION_STATUS_MAP } from "@/api/auction/type";
+import { AUCTION_STATUS_MAP } from "@/apis/auction/type";
 import { useEditAuctionStatus } from "@/hooks/use-auctions";
 
 interface AuctionStatusEditorProps {

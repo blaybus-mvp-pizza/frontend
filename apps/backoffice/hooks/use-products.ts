@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { getProductList, getProduct, createOrEditProduct } from "@/api/product";
+import { getProductList, getProduct, createOrEditProduct } from "@/apis/product";
 import {
   ProductListParams,
   ProductListResponse,
@@ -8,7 +8,7 @@ import {
   ProductResponse,
   TProductStatus,
   ProductRequest,
-} from "@/api/product/type";
+} from "@/apis/product/type";
 import { useRouter } from "next/navigation";
 
 export const useProductList = (

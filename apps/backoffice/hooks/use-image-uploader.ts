@@ -1,4 +1,4 @@
-import { EntityType, uploadImage } from "@/api/image";
+import { EntityType, uploadImage } from "@/apis/image";
 import { useState, useCallback } from "react";
 
 interface UploadResponse {

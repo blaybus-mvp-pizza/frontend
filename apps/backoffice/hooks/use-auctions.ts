@@ -6,7 +6,7 @@ import {
   editAuctionStatus,
   getShippingStatus,
   AuctionFinalize,
-} from "@/api/auction";
+} from "@/apis/auction";
 import {
   AuctionListParams,
   AuctionListResponse,
@@ -15,7 +15,7 @@ import {
   AuctionStatusRequest,
   ShippingStatusResponse,
   AuctionFinalizeResponse,
-} from "@/api/auction/type";
+} from "@/apis/auction/type";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";

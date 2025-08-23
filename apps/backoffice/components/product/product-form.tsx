@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ProductRequest } from "@/api/product/type";
+import { ProductRequest } from "@/apis/product/type";
 import { useProduct, useCreateOrEditProduct } from "@/hooks/use-products";
 import { Button } from "@workspace/ui/components/button";
 import {

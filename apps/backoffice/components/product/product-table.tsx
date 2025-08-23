@@ -11,7 +11,7 @@ import { useState } from "react";
 import { ProductFilter } from "./product-filter";
 import ProductExcelDownloadButton from "./product-excel-download-button";
 import { useProductList } from "@/hooks/use-products";
-import { ProductItem } from "@/api/product/type";
+import { ProductItem } from "@/apis/product/type";
 import AuctionFormModal from "../auction/auction-form-modal";
 import { Pagination, PaginationInfo } from '../common/pagination';
 import { useDebounce } from '@/hooks/use-debounce';

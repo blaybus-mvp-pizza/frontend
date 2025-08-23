@@ -1,5 +1,5 @@
 "use client";
-import { EntityType } from "@/api/image";
+import { EntityType } from "@/apis/image";
 import { useImageUploader } from "@/hooks/use-image-uploader";
 import { useEffect, useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";

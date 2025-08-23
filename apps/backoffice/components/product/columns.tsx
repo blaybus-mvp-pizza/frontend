@@ -6,7 +6,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
 import { ImageOff, MoreVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { ProductItem } from "@/api/product/type";
+import { ProductItem } from "@/apis/product/type";
 import {
   DropdownMenu,
   DropdownMenuTrigger,

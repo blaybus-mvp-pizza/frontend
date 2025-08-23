@@ -1,5 +1,5 @@
-import { createOrEditPopUpStore, getPopupStoreList } from '@/api/popupstore';
-import { PopupStore, PopupStoreListParams, PopupStoreListResponse } from '@/api/popupstore/type';
+import { createOrEditPopUpStore, getPopupStoreList } from '@/apis/popupstore';
+import { PopupStore, PopupStoreListParams, PopupStoreListResponse } from '@/apis/popupstore/type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 

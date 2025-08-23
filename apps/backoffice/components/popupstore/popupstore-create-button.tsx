@@ -24,7 +24,7 @@ import { Calendar } from "@workspace/ui/components/calendar";
 import { cn } from "@workspace/ui/lib/utils";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
-import { PopupStore } from '@/api/popupstore/type';
+import { PopupStore } from '@/apis/popupstore/type';
 import { useCreatePopupStore } from '@/hooks/use-popupstore';
 import ImageUploader from '../image/image-uploader';
 

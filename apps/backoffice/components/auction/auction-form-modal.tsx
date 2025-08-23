@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import {
   TAuctionStatus,
-} from "@/api/auction/type";
+} from "@/apis/auction/type";
 import {
   Dialog,
   DialogContent,
