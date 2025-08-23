@@ -9,9 +9,9 @@ import { useRouter } from 'next/navigation'
 import { Typography } from '@workspace/ui/components/typography'
 import { Bell, Menu, Search, X } from 'lucide-react'
 
+import { useUnreadNotificationsCount } from '@/api/hooks/queries/useNotifications'
 import { TOP_NAVBAR_MENU } from '@/constants'
 import { useAuthStore } from '@/store/auth.store'
-import { useUnreadNotificationsCount } from '@/api/hooks/queries/useNotifications'
 
 import { AuthBtns } from './AuthBtns'
 
@@ -25,12 +25,8 @@ export function TopNavBar() {
   return (
     <div className="relative">
       {/* Announcement banner - normal flow */}
-      <div className="bg-black text-center">
-        <Typography
-          variant="caption"
-          align="center"
-          className="p-1 px-2 text-xs text-white md:text-sm"
-        >
+      <div className="bg-black py-2.5 text-center">
+        <Typography variant="caption" align="center" className="text-xs text-white md:text-sm">
           신규 오픈, 지금 <span className="text-brand-mint">NafaL</span>에서{' '}
           <span className="hidden sm:inline">
             <span className="text-brand-mint">나만의 한정판 굿즈</span>를 입찰하세요
@@ -42,7 +38,7 @@ export function TopNavBar() {
       </div>
 
       {/* Sticky navigation header */}
-      <header className="sticky top-0 z-50 border-b border-[#E5E5EC] bg-white">
+      <header className="sticky top-0 z-50 border-b border-[#E5E5EC] bg-white pt-2">
         <nav className="bg-white">
           <div className="max-w-container mx-auto px-2 md:px-4">
             <div className="md:h-18 flex h-16 items-center justify-between">
@@ -53,24 +49,25 @@ export function TopNavBar() {
                 >
                   {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
+                <div className="flex items-center gap-8 pl-2">
+                  <Link href="/home" className="flex-shrink-0">
+                    <Image
+                      src="/images/LOGO_HEADER.svg"
+                      alt="Logo"
+                      width={84}
+                      height={28}
+                      className="w-16 md:w-20 lg:w-[84px]"
+                    />
+                  </Link>
 
-                <Link href="/home" className="flex-shrink-0">
-                  <Image
-                    src="/images/LOGO_HEADER.svg"
-                    alt="Logo"
-                    width={84}
-                    height={28}
-                    className="w-16 md:w-20 lg:w-[84px]"
-                  />
-                </Link>
-
-                {/* 데스크톱 검색바 */}
-                <div className="relative hidden w-full max-w-xs md:block lg:max-w-md xl:max-w-lg">
-                  <input
-                    className="h-10 w-full rounded-lg bg-[#f5f5f5] px-4 pr-10 text-sm md:h-12"
-                    placeholder="찾으시는 상품이 있으신가요?"
-                  />
-                  <Search className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                  {/* 데스크톱 검색바 */}
+                  <div className="relative hidden w-[320px] max-w-xs md:block lg:max-w-md xl:max-w-lg">
+                    <input
+                      className="bg-secondary h-10 w-full rounded-lg px-4 pr-10 text-sm md:h-12"
+                      placeholder="찾으시는 상품이 있으신가요?"
+                    />
+                    <Search className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                  </div>
                 </div>
               </div>
 
@@ -81,22 +78,21 @@ export function TopNavBar() {
                   <Search size={20} />
                 </button>
 
-                {/* 알림 아이콘 */}
-                <button 
-                  className="relative p-2"
-                  onClick={() => router.push('/notifications')}
-                >
-                  <Bell size={20} className="md:h-6 md:w-6" />
-                  {isAuthenticated && unreadCount && unreadCount.count > 0 && (
-                    <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                      {unreadCount.count > 9 ? '9+' : unreadCount.count}
-                    </span>
-                  )}
-                </button>
+                <div className="flex items-center gap-4">
+                  {/* 알림 아이콘 */}
+                  <button className="relative p-2" onClick={() => router.push('/notifications')}>
+                    <Bell size={20} className="md:h-6 md:w-6" />
+                    {isAuthenticated && unreadCount && unreadCount.count > 0 && (
+                      <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                        {unreadCount.count > 9 ? '9+' : unreadCount.count}
+                      </span>
+                    )}
+                  </button>
 
-                {/* 인증 버튼 */}
-                <div className="hidden space-x-2 sm:block">
-                  <AuthBtns />
+                  {/* 인증 버튼 */}
+                  <div className="hidden space-x-2 sm:block">
+                    <AuthBtns />
+                  </div>
                 </div>
               </div>
             </div>
@@ -115,13 +111,13 @@ export function TopNavBar() {
             )}
 
             {/* 데스크톱 메뉴 */}
-            <div className="hidden h-12 w-full items-center md:flex">
+            <div className="mt-1 hidden h-12 w-full items-center md:flex">
               <ul className="flex gap-x-2 lg:gap-x-4">
                 {TOP_NAVBAR_MENU.map((v) => (
                   <li key={v.href}>
                     <Link
                       href={v.href}
-                      className="rounded-md px-3 py-2 transition-colors hover:bg-[#f5f5f5]"
+                      className="rounded-md px-3 py-2 font-medium text-black transition-colors hover:bg-[#f5f5f5]"
                     >
                       {v.name}
                     </Link>

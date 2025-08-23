@@ -136,73 +136,78 @@ function ProductContent() {
   const totalPages = pagination?.totalPages || 1
 
   return (
-    <div>
-      <div className="space-y-4 border-b border-[#E5E5E5] pb-4">
-        <h1 className="text-3xl font-semibold">{CONTENT_TITLES[content].title}</h1>
-        <h2 className="text-sm text-gray-500">{CONTENT_TITLES[content].subtitle}</h2>
-        <div
-          className="flex gap-x-2 overflow-x-auto text-nowrap"
-          style={{ scrollbarWidth: 'none' }}
-        >
-          <span
-            onClick={() => handleFilterClick('전체')}
-            className={cn(
-              'cursor-pointer rounded-full border px-3 py-1 text-sm transition-colors',
-              filter === '전체'
-                ? 'bg-text-primary text-text-inverse border-text-primary'
-                : 'bg-background-100 text-text-primary border-border-default hover:bg-background-200',
-            )}
+    <div className="mt-5">
+      <div className="flex flex-col justify-start">
+        <div className="space-y-4 border-b border-[#E5E5E5] pb-4">
+          <div className="mb-5 flex flex-col gap-2">
+            <div className="text-2xl font-bold">{CONTENT_TITLES[content].title}</div>
+            <div className="text-text-tertiary text-sm">{CONTENT_TITLES[content].subtitle}</div>
+          </div>
+
+          <div
+            className="flex gap-x-2 overflow-x-auto text-nowrap"
+            style={{ scrollbarWidth: 'none' }}
           >
-            전체
-          </span>
-          {PRODUCT_TAGS.map((v) => (
             <span
-              key={v.name}
-              onClick={() => handleFilterClick(v.name)}
+              onClick={() => handleFilterClick('전체')}
               className={cn(
-                'cursor-pointer rounded-full border px-3 py-1 text-sm transition-colors',
-                filter === v.name
+                'cursor-pointer rounded-full border px-3.5 py-1.5 text-sm transition-colors',
+                filter === '전체'
                   ? 'bg-text-primary text-text-inverse border-text-primary'
                   : 'bg-background-100 text-text-primary border-border-default hover:bg-background-200',
               )}
             >
-              {v.name}
+              전체
             </span>
-          ))}
+            {PRODUCT_TAGS.map((v) => (
+              <span
+                key={v.name}
+                onClick={() => handleFilterClick(v.name)}
+                className={cn(
+                  'cursor-pointer rounded-full border px-3.5 py-1.5 text-sm transition-colors',
+                  filter === v.name
+                    ? 'bg-text-primary text-text-inverse border-text-primary'
+                    : 'bg-background-100 text-text-primary border-border-default hover:bg-background-200',
+                )}
+              >
+                {v.name}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* 필터 드롭다운 섹션 */}
-      <div className="flex flex-col gap-y-4 py-4">
-        {/* 상단 필터 버튼과 정렬 */}
-        <div className="flex items-center justify-between">
-          <div className="flex flex-wrap gap-3">
-            {/* 상태 드롭다운 */}
-            <Dropdown
-              value={status}
-              onChange={(value) => handleDropdownChange('status', value)}
-              options={STATUS_OPTIONS}
-              placeholder="상태 선택"
-              className="min-w-[120px]"
-            />
+        {/* 필터 드롭다운 섹션 */}
+        <div className="flex flex-col gap-y-4 py-4">
+          {/* 상단 필터 버튼과 정렬 */}
+          <div className="flex items-center justify-between">
+            <div className="flex flex-wrap gap-3">
+              {/* 상태 드롭다운 */}
+              <Dropdown
+                value={status}
+                onChange={(value) => handleDropdownChange('status', value)}
+                options={STATUS_OPTIONS}
+                placeholder="상태 선택"
+                className="min-w-[120px]"
+              />
 
-            {/* 입찰인원 드롭다운 */}
-            <Dropdown
-              value={bidders}
-              onChange={(value) => handleDropdownChange('bidders', value)}
-              options={BIDDER_OPTIONS}
-              placeholder="입찰인원 선택"
-              className="min-w-[140px]"
-            />
+              {/* 입찰인원 드롭다운 */}
+              <Dropdown
+                value={bidders}
+                onChange={(value) => handleDropdownChange('bidders', value)}
+                options={BIDDER_OPTIONS}
+                placeholder="입찰인원 선택"
+                className="min-w-[140px]"
+              />
 
-            {/* 가격 드롭다운 */}
-            <Dropdown
-              value={price}
-              onChange={(value) => handleDropdownChange('price', value)}
-              options={PRICE_OPTIONS}
-              placeholder="가격 선택"
-              className="min-w-[140px]"
-            />
+              {/* 가격 드롭다운 */}
+              <Dropdown
+                value={price}
+                onChange={(value) => handleDropdownChange('price', value)}
+                options={PRICE_OPTIONS}
+                placeholder="가격 선택"
+                className="min-w-[140px]"
+              />
+            </div>
           </div>
         </div>
       </div>

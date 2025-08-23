@@ -6,7 +6,7 @@ export default function StoryPage() {
   return (
     <div className="mx-auto max-w-[960px]">
       <div className="py-10 text-center">
-        <div className="text-text-primary mb-4 text-2xl font-bold leading-[14text-text-primary0%]">
+        <div className="text-text-primary mb-4 text-[28px] font-bold leading-[14text-text-primary0%]">
           NafaL 스토리
         </div>
         <p className="text-text-tertiary text-sm font-medium leading-[160%] tracking-[-0.025em]">

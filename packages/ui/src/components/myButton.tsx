@@ -13,7 +13,7 @@ export function MyButton({
 }: MyButtonProps) {
   return (
     <button
-      className={`px-2 py-1 cursor-pointer rounded-sm border-[#E5E5EC] border ${className || ""}`}
+      className={`px-2.5 py-2 cursor-pointer rounded-sm border-[#E5E5EC] border ${className || ""}`}
       onClick={onClick}
       {...props}
     >

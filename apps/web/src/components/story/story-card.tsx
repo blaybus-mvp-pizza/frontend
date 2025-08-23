@@ -55,8 +55,8 @@ export default function StoryCard({ story, onClick }: StoryCardProps) {
           </div>
           <p
             className={cn(
-              'line-clamp-2 text-sm font-medium leading-[160%] tracking-[-0.025em]',
-              'text-text-tertiary',
+              'line-clamp-2 text-sm font-normal leading-[160%] tracking-[-0.025em]',
+              'text-text-secondary',
             )}
           >
             {story.content}

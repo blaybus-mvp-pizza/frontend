@@ -259,7 +259,7 @@ export default function HomePage() {
         </>
       )}
 
-      <div className="relative mt-20 h-60 text-white">
+      <div className="relative mb-40 mt-20 h-60 text-white">
         <Image
           alt="배너2"
           src="/images/BANNER2.webp"
