@@ -73,9 +73,20 @@ apiClient.interceptors.response.use(
 
       switch (status) {
         case 401:
-          // Token expired or invalid - handle in error handler
-          // Don't remove token here, let error handler decide
-          console.warn('401 Unauthorized:', data?.message || 'Authentication failed')
+          // Token expired or invalid - handle logout for "Invalid token"
+          console.warn('401 Unauthorized:', data?.detail || data?.message || 'Authentication failed')
+          
+          // Check if the error detail is "Invalid token"
+          if (data?.detail === 'Invalid token') {
+            // Clear all auth data
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('auth-storage')
+              localStorage.removeItem('auth-token')
+              
+              // Redirect to login page
+              window.location.href = '/auth/login'
+            }
+          }
           break
 
         case 403:
