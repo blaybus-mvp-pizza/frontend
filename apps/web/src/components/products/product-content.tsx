@@ -102,8 +102,8 @@ function ProductContent() {
 
   if (productsLoading && !isPlaceholderData) {
     return (
-      <div>
-        <div className="mt-4 space-y-4 border-b border-[#E5E5E5] pb-4">
+      <div className="mt-20">
+        <div className="space-y-4 border-b border-[#E5E5E5] pb-4">
           <Skeleton className="h-9 w-32" />
           <Skeleton className="h-5 w-64" />
           <div className="flex gap-x-2">
@@ -154,7 +154,7 @@ function ProductContent() {
   const totalPages = pagination?.totalPages || 1
 
   return (
-    <div className="mt-5">
+    <div className="mt-20">
       <div className="flex flex-col justify-start">
         <motion.div
           className="space-y-4 border-b border-[#E5E5E5] pb-4"
