@@ -200,7 +200,7 @@ export default function PopupStoreContent() {
           </div>
         </div>
       </div>
-      <div className="max-w-container mx-auto mt-6 space-y-10 px-4 md:mt-20">
+      <div className="max-w-container mx-auto mt-6 space-y-10 max-md:px-4 md:mt-20">
         <div>
           <div className="space-y-4 text-center">
             <p className="text-text-primary text-lg font-bold md:text-2xl">
