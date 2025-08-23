@@ -9,7 +9,7 @@ interface ProductInfoProps {
 export function ProductInfo({ tags, title, description }: ProductInfoProps) {
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         {tags.map((tag) => (
           <span
             key={tag}
