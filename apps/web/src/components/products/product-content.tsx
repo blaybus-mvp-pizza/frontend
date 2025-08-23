@@ -1,13 +1,14 @@
 'use client'
 
 import { useMemo } from 'react'
-import { motion } from 'framer-motion'
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { ProductCard } from '@workspace/ui/components/product-card'
+import { motion } from 'framer-motion'
 import { SlidersHorizontal } from 'lucide-react'
 
+import { SortOption } from '@/api/types/common.types'
 import { Dropdown } from '@/components/ui/dropdown'
 import { Pagination } from '@/components/ui/pagination'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -24,7 +25,6 @@ import {
 } from '@/constants/product.constant'
 import { useProductsWithPagination } from '@/hooks/queries/useProducts'
 import { cn } from '@/utils/cn'
-import { SortOption } from '@/api/types/common.types'
 
 function ProductContent() {
   const searchParams = useSearchParams()
@@ -103,7 +103,7 @@ function ProductContent() {
   if (productsLoading && !isPlaceholderData) {
     return (
       <div>
-        <div className="space-y-4 border-b border-[#E5E5E5] pb-4">
+        <div className="mt-4 space-y-4 border-b border-[#E5E5E5] pb-4">
           <Skeleton className="h-9 w-32" />
           <Skeleton className="h-5 w-64" />
           <div className="flex gap-x-2">
@@ -156,7 +156,7 @@ function ProductContent() {
   return (
     <div className="mt-5">
       <div className="flex flex-col justify-start">
-        <motion.div 
+        <motion.div
           className="space-y-4 border-b border-[#E5E5E5] pb-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -213,7 +213,6 @@ function ProductContent() {
           {/* 상단 필터 버튼과 정렬 */}
           <div className="flex items-center justify-between">
             <div className="flex flex-wrap gap-3">
-              {/* 상태 드롭다운 */}
               <Dropdown
                 value={status}
                 onChange={(value) => handleDropdownChange('status', value)}
@@ -228,7 +227,7 @@ function ProductContent() {
                 onChange={(value) => handleDropdownChange('bidders', value)}
                 options={BIDDER_OPTIONS}
                 placeholder="입찰인원 선택"
-                className="min-w-[140px]"
+                className="min-w-[120px]"
               />
 
               {/* 가격 드롭다운 */}
@@ -237,7 +236,7 @@ function ProductContent() {
                 onChange={(value) => handleDropdownChange('price', value)}
                 options={PRICE_OPTIONS}
                 placeholder="가격 선택"
-                className="min-w-[140px]"
+                className="min-w-[120px]"
               />
             </div>
           </div>
@@ -256,14 +255,14 @@ function ProductContent() {
           onChange={(value) => handleDropdownChange('sort', value)}
           options={SORT_OPTIONS}
           placeholder="정렬"
-          className="min-w-[120px]"
+          className="min-w-[100px]"
         />
       </div>
 
       {/* Product Grid - 4x4 레이아웃 */}
       {products.length > 0 ? (
         <>
-          <div className="grid grid-cols-2 gap-4 py-6 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-6 py-6 md:grid-cols-3 md:gap-y-10 lg:grid-cols-4">
             {products.map((product) => {
               const auction =
                 product.auction ||

@@ -56,8 +56,9 @@ export function Dropdown({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          'focus:ring-brand-mint flex items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm transition-all hover:border-gray-400 focus:border-transparent focus:outline-none focus:ring-2',
+          'focus:ring-brand-mint flex items-center justify-between rounded border border-gray-300 bg-white px-4 py-2 text-sm transition-all hover:border-gray-400 focus:border-transparent focus:outline-none focus:ring-2',
           isOpen && 'ring-brand-mint border-gray-400 ring-2',
+          `${placeholder === '정렬' ? 'border-none focus:ring-0' : ''}`,
           className,
         )}
       >

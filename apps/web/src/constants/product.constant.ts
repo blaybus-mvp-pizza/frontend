@@ -59,10 +59,17 @@ export const PRICE_OPTIONS = [
   { value: 'BT_50000_150000', label: '5-15만원' },
   { value: 'BT_150000_300000', label: '15-30만원' },
   { value: 'BT_300000_500000', label: '30-50만원' },
-  { value: 'CUSTOM', label: '직접입력' },
 ]
 
-export type PriceOption = 'ALL' | 'LT_10000' | 'BT_10000_30000' | 'BT_30000_50000' | 'BT_50000_150000' | 'BT_150000_300000' | 'BT_300000_500000' | 'CUSTOM'
+export type PriceOption =
+  | 'ALL'
+  | 'LT_10000'
+  | 'BT_10000_30000'
+  | 'BT_30000_50000'
+  | 'BT_50000_150000'
+  | 'BT_150000_300000'
+  | 'BT_300000_500000'
+  | 'CUSTOM'
 
 // Pagination settings
 export const ITEMS_PER_PAGE = 16 // 4x4 grid
