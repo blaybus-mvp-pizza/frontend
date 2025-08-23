@@ -39,7 +39,7 @@ export default function StoryCard({ story, onClick }: StoryCardProps) {
         <img
           src={mainImage}
           alt={story.title}
-          className="h-full w-full object-cover transition-transform group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform hover:scale-105 group-hover:scale-105"
         />
       </div>
 

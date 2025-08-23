@@ -5,7 +5,7 @@ type PageParams = Promise<{ id: string }>
 export default async function StoryDetailPage({ params }: { params: PageParams }) {
   const { id } = await params
   return (
-    <div className="mx-auto my-10 max-w-[800px]">
+    <div className="mb-10">
       <StoryContent id={id} />
     </div>
   )

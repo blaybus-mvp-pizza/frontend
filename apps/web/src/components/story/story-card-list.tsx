@@ -33,6 +33,7 @@ export default function StoryCardList() {
 
   // Transform API data to Story format expected by StoryCard
   const transformToStory = (apiStory: any) => {
+    console.log('API Story:', apiStory)
     return {
       story_id: apiStory.story_id,
       content: apiStory.content,
@@ -41,7 +42,7 @@ export default function StoryCardList() {
         id: apiStory.product.id,
         name: apiStory.product.name,
         summary: apiStory.product.summary,
-        image: apiStory.representative_image,
+        image: apiStory.product.image,
       },
       representative_image: apiStory.representative_image,
     }
