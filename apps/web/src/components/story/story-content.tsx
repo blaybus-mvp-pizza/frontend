@@ -26,57 +26,59 @@ export default function StoryContent({ id }: { id: string }) {
   }
 
   return (
-    <>
-      <div className="bg-muted relative h-[300px] w-full overflow-hidden">
+    <div className="-mx-4">
+      <div className="bg-muted relative h-[360px] w-[100vw] overflow-hidden">
         <img
           src={mainImage}
           alt={story.title}
           className="h-full w-full object-cover transition-transform group-hover:scale-105"
         />
       </div>
-      <div className="px-4 sm:px-0">
-        <div className="mb-4 mt-4 flex flex-col gap-4">
-          <div className="text-text-tertiary text-sm font-medium leading-[160%] tracking-[-0.025em]">
-            {format(story.created_at, 'ko')}
+      <div className="mx-auto max-w-[880px] px-4">
+        <div className="px-4 sm:px-0">
+          <div className="mb-4 mt-4 flex flex-col gap-4">
+            <div className="text-text-tertiary text-sm font-medium leading-[160%] tracking-[-0.025em]">
+              {format(story.created_at, 'ko')}
+            </div>
+            <div className="text-text-primary text-2xl font-semibold leading-[140%] tracking-[-0.025em]">
+              {story.title}
+            </div>
           </div>
-          <div className="text-text-primary text-2xl font-semibold leading-[140%] tracking-[-0.025em]">
-            {story.title}
-          </div>
+          {popupStore && (
+            <div className="flex w-full items-start space-x-4 bg-[#F5F5F5] p-4">
+              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-sm">
+                <img
+                  src={popupStore.image || '/placeholder.png'}
+                  alt={popupStore.name}
+                  className="h-full w-full rounded-sm object-cover"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-text-primary line-clamp-1 text-sm font-semibold">
+                  {popupStore.name}
+                </span>
+                <span className="text-text-secondary line-clamp-2 text-[13px] font-normal leading-[150%] tracking-[-0.025em]">
+                  {popupStore.summary}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
-        {popupStore && (
-          <div className="flex w-full items-start space-x-4 bg-[#F5F5F5] p-4">
-            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-sm">
-              <img
-                src={popupStore.image || '/placeholder.png'}
-                alt={popupStore.name}
-                className="h-full w-full rounded-sm object-cover"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-text-primary line-clamp-1 text-sm font-semibold">
-                {popupStore.name}
-              </span>
-              <span className="text-text-secondary line-clamp-2 text-[13px] font-normal leading-[150%] tracking-[-0.025em]">
-                {popupStore.summary}
-              </span>
-            </div>
-          </div>
-        )}
+
+        <Content />
+
+        <InterviewCTA />
+
+        <div className="flex justify-center px-4 pb-3">
+          <Button
+            onClick={handleGoBack}
+            className="mt-12 h-12 cursor-pointer bg-[#52565B] text-sm font-bold text-white"
+          >
+            목록 돌아가기
+          </Button>
+        </div>
       </div>
-
-      <Content />
-
-      <InterviewCTA />
-
-      <div className="flex justify-center px-4 pb-3">
-        <Button
-          onClick={handleGoBack}
-          className="mt-12 h-12 cursor-pointer bg-[#52565B] text-sm font-bold text-white"
-        >
-          목록 돌아가기
-        </Button>
-      </div>
-    </>
+    </div>
   )
 }
 
