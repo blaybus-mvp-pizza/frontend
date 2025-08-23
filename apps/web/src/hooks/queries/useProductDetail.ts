@@ -42,10 +42,10 @@ export function useProductBids(productId: number, page: number = 1, size: number
   return useQuery<Page<BidItem>>({
     queryKey: productDetailKeys.bids(productId, page),
     queryFn: () => productsApi.getProductBids(productId, { page, size }),
-    staleTime: 1000 * 10, // 10 seconds (bids change very frequently)
+    staleTime: 1000 * 5, // 5 seconds (bids change very frequently)
     gcTime: 1000 * 60, // 1 minute
     enabled: productId > 0,
-    refetchInterval: 1000 * 10, // Auto-refresh every 10 seconds for live bid data
+    refetchInterval: 1000 * 5, // Auto-refresh every 5 seconds for live bid data
   })
 }
 

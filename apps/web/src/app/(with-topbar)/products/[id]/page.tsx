@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import Image from 'next/image'
 import { useParams } from 'next/navigation'
@@ -82,9 +82,10 @@ export default function ProductDetailPage() {
   const [showBuyNowModal, setShowBuyNowModal] = useState(false)
   const [showBidModal, setShowBidModal] = useState(false)
   const [, setCurrentTime] = useState(new Date())
+  const [newBidAnimation, setNewBidAnimation] = useState<number | null>(null)
+  const prevHighestBidderRef = useRef<number | null>(null)
 
   const { product, auction, similar, isLoading, bids, refetch } = useProductDetail(productId)
-
   // Update time every second for countdown
   useEffect(() => {
     const timer = setInterval(() => {
@@ -92,6 +93,30 @@ export default function ProductDetailPage() {
     }, 1000)
     return () => clearInterval(timer)
   }, [])
+
+  // Track highest bidder changes and trigger animation
+  useEffect(() => {
+    if (bids?.items && bids.items.length > 0) {
+      const currentHighestBidderId = bids.items[0]?.user.id
+
+      // If there was a previous highest bidder and it changed
+      if (
+        prevHighestBidderRef.current !== null &&
+        prevHighestBidderRef.current !== currentHighestBidderId
+      ) {
+        // Trigger animation for the new highest bid
+        setNewBidAnimation(currentHighestBidderId || 0)
+
+        // Remove animation class after animation completes
+        setTimeout(() => {
+          setNewBidAnimation(null)
+        }, 1500) // Animation duration
+      }
+
+      // Update the ref with current highest bidder
+      prevHighestBidderRef.current = currentHighestBidderId ?? null
+    }
+  }, [bids?.items])
   if (isLoading) {
     return <ProductDetailSkeleton />
   }
@@ -144,7 +169,7 @@ export default function ProductDetailPage() {
         <div className="space-y-3">
           <ProductInfo
             tags={product.tags || []}
-            title={product.title || product.name}
+            title={product.name}
             description={product.description}
           />
 
@@ -249,20 +274,37 @@ export default function ProductDetailPage() {
                 </div>
               </div>
               <div className="w-full space-y-5 pt-4">
-                <div className="flex w-full flex-col gap-y-3">
+                {/* New bid notification */}
+                {newBidAnimation && (
+                  <div className="flex items-center justify-center py-2">
+                    <div className="animate-bounce rounded-full bg-[#A3DDD4] px-3 py-1">
+                      <Typography variant="sub" className="text-white font-semibold">
+                        🎉 새로운 최고 입찰자!
+                      </Typography>
+                    </div>
+                  </div>
+                )}
+                <div className="flex w-full flex-col gap-y-3 relative">
                   {bids?.items && bids.items.length > 0 ? (
                     bids.items.slice(0, 3).map((bid, index) => {
                       const isHighestBidder = index === 0
                       const isWinning = isHighestBidder && auction?.status === 'RUNNING'
+                      const hasNewBidAnimation = isHighestBidder && newBidAnimation === bid.user.id
 
                       return (
                         <div
-                          key={index}
-                          className={`flex w-full items-center gap-[5px] rounded-sm px-3 py-2 ${
+                          key={bid.user.id + '_' + bid.bid_at}
+                          className={`flex w-full items-center gap-[5px] rounded-sm px-3 py-2 transition-all duration-500 transform ${
                             isHighestBidder
-                              ? 'border border-[#A3DDD4] bg-[#F8FEFD]'
+                              ? 'border border-[#A3DDD4] bg-[#F8FEFD] shadow-lg'
                               : 'bg-[#EEEEEE]'
-                          }`}
+                          } ${hasNewBidAnimation ? 'animate-slide-up-fade-in' : ''}`}
+                          style={{
+                            animation: hasNewBidAnimation
+                              ? 'slideUpFadeIn 0.8s ease-out forwards, pulseGlow 1.5s ease-out, highlightBounce 0.5s ease-out'
+                              : undefined,
+                            transition: 'all 0.5s ease-out',
+                          }}
                         >
                           <div
                             className={`h-2 w-2 rounded-full ${

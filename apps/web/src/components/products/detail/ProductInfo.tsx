@@ -21,7 +21,7 @@ export function ProductInfo({ tags, title, description }: ProductInfoProps) {
       </div>
 
       <div>
-        <p className="text-text-primary ttext-text-primaryaryold">{title}</p>
+        <p className="text-text-primary line-clamp-1 text-2xl font-bold">{title}</p>
         {description && <p className="text-text-secondary mt-0.5 text-sm">{description}</p>}
       </div>
     </div>
