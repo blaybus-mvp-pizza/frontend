@@ -86,6 +86,7 @@ export default function PopUpStoreCreateButton() {
                 id="name"
                 {...register("name", { required: true })}
                 placeholder="팝업스토어명을 입력하세요"
+                className='border-black'
               />
             </div>
 
@@ -105,6 +106,7 @@ export default function PopUpStoreCreateButton() {
                 id="description"
                 {...register("description")}
                 placeholder="상세 설명을 입력하세요"
+                className='border-black'
               />
             </div>
 
@@ -114,6 +116,7 @@ export default function PopUpStoreCreateButton() {
                 id="sales_description"
                 {...register("sales_description")}
                 placeholder="한정 수량 판매, 주말 특가 등 판매 조건을 입력하세요"
+                className='border-black'
               />
             </div>
 

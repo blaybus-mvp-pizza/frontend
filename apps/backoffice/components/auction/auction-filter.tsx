@@ -41,7 +41,7 @@ export default function AuctionFilter({
   return (
     <div className='flex items-center gap-2 py-4'>
       <Select onValueChange={handleStatusChange}>
-        <SelectTrigger className='w-[180px]'>
+        <SelectTrigger className='w-[180px] border-black'>
           <SelectValue placeholder='경매 상태 필터' />
         </SelectTrigger>
         <SelectContent>

@@ -19,7 +19,7 @@ export function PopUpStoreFilter({
           placeholder='팝업스토어명으로 검색'
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          className='max-w-sm pl-9'
+          className='max-w-sm pl-9 border-black'
         />
         <Search className='absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
       </div>

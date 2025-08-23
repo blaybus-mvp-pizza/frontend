@@ -43,13 +43,13 @@ export function ProductFilter({
           placeholder='상품명으로 검색'
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          className='max-w-sm pl-9'
+          className='max-w-sm pl-9 border-black'
         />
         <Search className='absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
       </div>
 
       <Select onValueChange={handleCategoryChange} value={category}>
-        <SelectTrigger className='w-[180px]'>
+        <SelectTrigger className='w-[180px] border-black'>
           <SelectValue placeholder='카테고리 필터' />
         </SelectTrigger>
         <SelectContent>
@@ -62,7 +62,7 @@ export function ProductFilter({
       </Select>
 
       <Select onValueChange={handleStatusChange} value={status}>
-        <SelectTrigger className='w-[180px]'>
+        <SelectTrigger className='w-[180px] border-black'>
           <SelectValue placeholder='판매 상태 필터' />
         </SelectTrigger>
         <SelectContent>
