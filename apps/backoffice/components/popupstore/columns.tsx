@@ -51,7 +51,7 @@ export const columns: ColumnDef<PopupStoreItem>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
+    cell: function ActionsCell({ row }) {
       const popupstore = row.original;
       const router = useRouter();
       return (

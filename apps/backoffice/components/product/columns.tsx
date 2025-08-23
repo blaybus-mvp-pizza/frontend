@@ -6,7 +6,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
 import { ImageOff, MoreVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { ProductItem, TProductStatus } from "@/api/product/type";
+import { ProductItem } from "@/api/product/type";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -114,7 +114,7 @@ export const createColumns = ({
   {
     id: "actions",
     header: "작업",
-    cell: ({ row }) => {
+    cell: function ActionsCell({ row }) {
       const product = row.original;
       const router = useRouter();
       return (
