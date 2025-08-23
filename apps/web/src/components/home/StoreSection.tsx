@@ -44,7 +44,7 @@ export default function StoreSection({
   return (
     <div className="mt-12 w-full space-y-4 md:mt-16 lg:mt-20">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-x-2">
-        <span className="text-brand-mint inline-flex w-fit items-center gap-x-1.5 bg-black px-2 py-1 sm:gap-x-2">
+        <span className="text-brand-mint inline-flex w-fit shrink-0 items-center gap-x-1.5 bg-black px-2 py-1 sm:gap-x-2">
           <MapIcon className="h-4 w-4 sm:h-5 sm:w-5" />
           <Typography className="text-brand-mint text-sm font-semibold sm:text-base md:text-xl">
             {storeData.name}

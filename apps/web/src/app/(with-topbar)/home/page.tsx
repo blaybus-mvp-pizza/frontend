@@ -7,17 +7,14 @@ import { Button } from '@workspace/ui/components/button'
 import { Typography } from '@workspace/ui/components/typography'
 import { motion } from 'framer-motion'
 
-import { 
-  LazyEndingSoonSection,
-  LazyRecommendedSection,
-  LazyNewProductsSection
-} from '@/components/home/LazyProductSection'
-import { LazyStoreSections } from '@/components/home/LazyStoreSection'
 import { LazySection } from '@/components/common/LazySection'
 import {
-  CategoryTagSkeleton,
-  Skeleton,
-} from '@/components/ui/skeleton'
+  LazyEndingSoonSection,
+  LazyNewProductsSection,
+  LazyRecommendedSection,
+} from '@/components/home/LazyProductSection'
+import { LazyStoreSections } from '@/components/home/LazyStoreSection'
+import HeroCarousel from '@/components/home/HeroCarousel'
 import { PRODUCT_TAGS } from '@/constants/filter.constant'
 
 export default function HomePage() {
@@ -36,14 +33,14 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* 히어로 배너 */}
+      {/* 히어로 배너 캐러셀 */}
       <motion.div
-        className="w-full"
+        className="mt-4 w-full md:mt-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <div className="md::h-[380px] mt-4 h-[200px] w-full rounded-md bg-gradient-to-b from-gray-200 to-gray-600 sm:h-[280px] md:mt-6 md:rounded-lg"></div>
+        <HeroCarousel />
       </motion.div>
 
       {/* 카테고리 태그 */}
@@ -92,12 +89,12 @@ export default function HomePage() {
           onProductClick={handleProductClick}
           onViewAllClick={handleViewAllClick}
         />
-        
+
         <LazyRecommendedSection
           onProductClick={handleProductClick}
           onViewAllClick={handleViewAllClick}
         />
-        
+
         <LazyNewProductsSection
           onProductClick={handleProductClick}
           onViewAllClick={handleViewAllClick}
@@ -130,10 +127,7 @@ export default function HomePage() {
       </LazySection>
 
       {/* Lazy-loaded store sections */}
-      <LazyStoreSections
-        storeIds={[2020, 2021]}
-        onProductClick={handleProductClick}
-      />
+      <LazyStoreSections storeIds={[2020, 2021]} onProductClick={handleProductClick} />
 
       {/* Lazy-loaded bottom banner */}
       <LazySection rootMargin="100px">
