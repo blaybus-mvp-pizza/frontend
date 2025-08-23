@@ -164,7 +164,7 @@ export default function ProductDetailSection({ id }: { id: string }) {
               <h3 className='text-xl font-semibold text-gray-800 border-b pb-2'>
                 기본 정보
               </h3>
-              <dl className='grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6'>
+              <dl className='grid grid-cols-1 sm:grid-cols-3 gap-y-3 gap-x-6'>
                 <div>
                   <dt className='text-sm font-medium text-gray-500'>상품명</dt>
                   <dd className='text-sm text-gray-800'>{product.name}</dd>
@@ -174,6 +174,12 @@ export default function ProductDetailSection({ id }: { id: string }) {
                   <dd className='text-sm text-gray-800'>{product.category}</dd>
                 </div>
                 <div>
+                <dt className='text-sm font-medium text-gray-500 mb-1'>태그</dt>
+                {product.tags.map((tag, index) => (
+                  <dd key={index} className='text-xs text-gray-800 border border-gray-200 px-2 py-1 rounded-md inline-block mr-2'>{tag}</dd>
+                ))}
+              </div>
+                <div>
                   <dt className='text-sm font-medium text-gray-500'>가격</dt>
                   <dd className='text-sm text-gray-800'>{product.price.toLocaleString()}원</dd>
                 </div>
@@ -181,22 +187,24 @@ export default function ProductDetailSection({ id }: { id: string }) {
                   <dt className='text-sm font-medium text-gray-500'>재고</dt>
                   <dd className='text-sm text-gray-800'>{product.stock}개</dd>
                 </div>
-                <div className="col-span-1 sm:col-span-2">
-                  <dt className='text-sm font-medium text-gray-500'>상품 요약</dt>
-                  <dd className='text-sm text-gray-800 leading-relaxed whitespace-pre-wrap'>{product.summary}</dd>
-                </div>
-                <div className="col-span-1 sm:col-span-2">
-                  <dt className='text-sm font-medium text-gray-500'>상세 설명</dt>
-                  <dd className='text-sm text-gray-800 leading-relaxed whitespace-pre-wrap'>{product.description}</dd>
+                <div className="col-span-1 sm:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 mt-3">
+                  <div>
+                    <dt className='text-sm font-medium text-gray-500'>상품 요약</dt>
+                    <dd className='text-sm text-gray-800 leading-relaxed whitespace-pre-wrap'>{product.summary}</dd>
+                  </div>
+                  <div>
+                    <dt className='text-sm font-medium text-gray-500'>상세 설명</dt>
+                    <dd className='text-sm text-gray-800 leading-relaxed whitespace-pre-wrap'>{product.description}</dd>
+                  </div>
                 </div>
               </dl>
             </section>
 
             <section className='space-y-6'>
               <h3 className='text-xl font-semibold text-gray-800 border-b pb-2'>
-                상품 사양
+                상세 정보
               </h3>
-              <dl className='grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6'>
+              <dl className='grid grid-cols-1 sm:grid-cols-3 gap-y-3 gap-x-6'>
                 {specsList.map((item) => (
                   <div key={item.label}>
                     <dt className='text-sm font-medium text-gray-500'>

@@ -18,6 +18,8 @@ import {
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
 import ImageUploader from "../image/image-uploader";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
+import { categoryMap } from '@/constants/proudct.constant';
 
 const productSpecsSchema = z.object({
   material: z.string().min(1, { message: "재료를 입력해야 합니다." }),
@@ -52,9 +54,10 @@ const formSchema = z.object({
     (a) => Number(a),
     z.number().positive({ message: "가격은 0보다 큰 값이어야 합니다." })
   ),
+  // 재고 스키마를 z.preprocess를 사용해 수정
   stock: z.preprocess(
-    (a) => Number(a),
-    z.number().int().min(0, { message: "재고는 0 이상이어야 합니다." })
+    (val) => (val === 1 ? 1 : undefined),
+    z.number().int().min(1, { message: "재고는 1개만 가능합니다." })
   ),
   images: z
     .array(z.string().url({ message: "유효한 이미지 URL이어야 합니다." }))
@@ -88,10 +91,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const { mutate, isPending } = useCreateOrEditProduct();
 
-  // 이미지 URLs를 관리하는 상태
   const [imageUrls, setImageUrls] = useState<string[]>([]);
-  // 폼이 초기화되었는지 추적하는 상태
   const [isFormInitialized, setIsFormInitialized] = useState(false);
+
+  const [inputValue, setInputValue] = useState('');
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -100,7 +103,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       summary: "",
       description: "",
       price: 1000,
-      stock: 1,
+      stock: 1, 
       images: [],
       category: "",
       tags: [],
@@ -121,7 +124,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     },
   });
 
-  // 수정 모드일 때 기존 데이터로 폼 초기화
   useEffect(() => {
     if (isEditMode && productData && !isFormInitialized) {
       const resetValues = {
@@ -129,7 +131,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         summary: productData.summary,
         description: productData.description,
         price: productData.price,
-        stock: productData.stock,
+        stock: 1, // 수정 모드에서도 재고를 1로 고정
         images: productData.images || [],
         category: productData.category,
         tags: productData.tags || [],
@@ -153,7 +155,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       setImageUrls(productData.images || []);
       setIsFormInitialized(true);
     } else if (!isEditMode && !isFormInitialized) {
-      // 새 상품 생성 모드일 때
       setIsFormInitialized(true);
     }
   }, [isEditMode, productData, form, storeId, isFormInitialized]);
@@ -161,7 +162,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const onSubmit = (values: ProductFormValues) => {
     const productToSubmit: ProductRequest = {
       ...values,
-      images: imageUrls, // imageUrls 상태를 사용
+      images: imageUrls,
       shipping_extra_note: values.shipping_extra_note || "",
       courier_name: values.courier_name || "",
       id: isEditMode ? productId : undefined,
@@ -231,9 +232,20 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormLabel>
                         카테고리 <span className='text-red-500'>*</span>
                       </FormLabel>
-                      <FormControl>
-                        <Input placeholder='예: 의류, 전자기기' {...field} />
-                      </FormControl>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className='w-full'>
+                            <SelectValue placeholder="카테고리를 선택하세요" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.entries(categoryMap).map(([key, value]) => (
+                            <SelectItem key={key} value={key}>
+                              {value}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -270,15 +282,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                         재고 <span className='text-red-500'>*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          type='number'
-                          placeholder='1'
-                          {...field}
-                          value={Number(field.value)}
-                          onChange={(e) =>
-                            field.onChange(Number(e.target.value))
-                          }
-                        />
+                        {/* 읽기 전용으로 표시 */}
+                        <p className="text-gray-800 font-medium">1개</p>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -318,6 +323,53 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='tags'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>태그</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='태그를 입력하고 Enter를 누르세요'
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            const newTag = inputValue.trim();
+                            if (newTag && !field.value.includes(newTag)) {
+                              field.onChange([...field.value, newTag]);
+                              setInputValue('');
+                            }
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <div className='mt-2 flex flex-wrap gap-2'>
+                      {field.value.map((tag, index) => (
+                        <span
+                          key={index}
+                          className='flex items-center gap-1 rounded-md bg-gray-100 px-3 py-1 text-sm text-gray-700'
+                        >
+                          {tag}
+                          <button
+                            type='button'
+                            onClick={() => {
+                              const newTags = field.value.filter((t) => t !== tag);
+                              field.onChange(newTags);
+                            }}
+                            className='text-gray-500 hover:text-red-500'
+                          >
+                            &times;
+                          </button>
+                        </span>
+                      ))}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -476,7 +528,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 상품 이미지
               </h3>
               <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-                {/* 기존 이미지들 표시 */}
                 {imageUrls.map((imageUrl, index) => (
                   <div key={`existing-${index}`} className='relative w-full h-48'>
                     <ImageUploader
@@ -487,7 +538,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     />
                   </div>
                 ))}
-                {/* 새 이미지 업로드 버튼 (최대 6개까지) */}
                 {imageUrls.length < 6 && (
                   <div key="new-upload" className='relative w-full h-48'>
                     <ImageUploader
@@ -497,7 +547,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   </div>
                 )}
               </div>
-              {/* 이미지 관련 에러 메시지 */}
               {form.formState.errors.images && (
                 <div className="text-sm text-red-500 mt-2 text-center">
                   {form.formState.errors.images.message}

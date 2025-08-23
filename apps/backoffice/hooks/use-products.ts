@@ -6,7 +6,6 @@ import {
   ProductListResponse,
   ProductDetailResponse,
   ProductResponse,
-  TProductStatus,
   ProductRequest,
 } from "@/apis/product/type";
 import { useRouter } from "next/navigation";
