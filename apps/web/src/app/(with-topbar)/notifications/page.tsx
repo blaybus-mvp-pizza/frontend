@@ -119,7 +119,7 @@ function NotificationCard({
         },
       })
     }
-    
+
     // Navigate to relevant page based on notification type/data if needed
     // For now, just mark as read
   }
@@ -163,18 +163,21 @@ function NotificationCard({
     </div>
   )
 }
-
 function EmptyNotifications() {
   return (
-    <div className="flex flex-col items-center justify-center px-4 py-20">
-      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-        <Bell className="h-8 w-8 text-gray-400" />
+    <div className="mt-20 flex flex-col items-center justify-center px-4 py-20">
+      <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-gray-200 bg-gray-50">
+        <Bell className="h-8 w-8 text-gray-300" />
       </div>
-      <p className="text-center text-gray-500">알림이 없습니다</p>
+      <h3 className="mb-4 text-xl font-semibold text-gray-800">알림</h3>
+      <p className="mb-2 font-medium text-gray-600">앗! 아직 받은 알림이 없어요</p>
+      <div className="text-center text-sm leading-relaxed text-gray-500">
+        <p>신규 경매, 경매 진행, 추천 소식 알림 등</p>
+        <p>나팔에서 다양한 알림을 가장 먼저 알려드릴게요.</p>
+      </div>
     </div>
   )
 }
-
 function NotificationPageSkeleton() {
   return (
     <div className="min-h-screen bg-gray-50">
