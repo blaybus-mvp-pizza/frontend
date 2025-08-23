@@ -26,9 +26,8 @@ export default function PopUpStoreProductsSection({
   const [globalFilter, setGlobalFilter] = useState("");
   const debouncedGlobalFilter = useDebounce(globalFilter, 500);
 
-  // 카테고리와 상태 필터 상태 추가
   const [category, setCategory] = useState("ALL");
-  const [status, setStatus] = useState("ALL");
+  const [isSold, setIsSold] = useState<boolean | null>(null);
 
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(8);
@@ -39,10 +38,9 @@ export default function PopUpStoreProductsSection({
     q: debouncedGlobalFilter,
     store_id: popupstore.id,
     category: category !== "ALL" ? category : undefined,
-    status: status !== "ALL" ? status : undefined,
+    is_sold: isSold !== null ? isSold : undefined,
   });
 
-  // 데이터 상태 동기화 로직 추가
   const [displayProducts, setDisplayProducts] = useState<ProductItem[]>([]);
   const [totalItems, setTotalItems] = useState(0);
 
@@ -88,11 +86,10 @@ export default function PopUpStoreProductsSection({
           <ProductFilter
             globalFilter={globalFilter}
             setGlobalFilter={setGlobalFilter}
-            // `columnFilters` 대신 새로운 상태 전달
             category={category}
             setCategory={setCategory}
-            status={status}
-            setStatus={setStatus}
+            isSold={isSold}
+            setIsSold={setIsSold}
           />
           <div className='flex gap-1'>
             <ProductCreateButton storeId={popupstore.id} />

@@ -12,15 +12,14 @@ import {
 import { useRouter } from "next/navigation";
 
 export const useProductList = (
-  params: Omit<ProductListParams, "status" | "category"> & {
-    status?: string;
+  params: Omit<ProductListParams,  "category"> & {
     category?: string;
   }
 ) => {
   const apiParams: ProductListParams = {
     page: params.page,
     size: params.size,
-    status: (params.status || "ALL") as TProductStatus,
+    is_sold: params.is_sold,
     category: params.category || "ALL",
     q: params.q,
     store_id: params.store_id,

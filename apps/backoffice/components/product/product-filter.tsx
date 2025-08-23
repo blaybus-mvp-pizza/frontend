@@ -16,8 +16,8 @@ type ProductFilterProps = {
   setGlobalFilter: (value: string) => void;
   category: string;
   setCategory: (value: string) => void;
-  status: string;
-  setStatus: (value: string) => void;
+  isSold: boolean | null;
+  setIsSold: (value: boolean | null) => void;
 };
 
 export function ProductFilter({
@@ -25,32 +25,40 @@ export function ProductFilter({
   setGlobalFilter,
   category,
   setCategory,
-  status,
-  setStatus,
+  isSold,
+  setIsSold,
 }: ProductFilterProps) {
   const handleCategoryChange = (value: string) => {
     setCategory(value);
   };
 
   const handleStatusChange = (value: string) => {
-    setStatus(value);
+    if (value === "ALL") {
+      setIsSold(null);
+    } else if (value === "SOLD") {
+      setIsSold(true);
+    } else {
+      setIsSold(false);
+    }
   };
 
+  const statusValue = isSold === null ? "ALL" : isSold ? "SOLD" : "AVAILABLE";
+
   return (
-    <div className='flex items-center gap-2 py-4'>
-      <div className='relative'>
+    <div className="flex items-center gap-2 py-4">
+      <div className="relative">
         <Input
-          placeholder='상품명으로 검색'
+          placeholder="상품명으로 검색"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          className='max-w-sm pl-9 border-black'
+          className="max-w-sm pl-9 border-black"
         />
-        <Search className='absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
+        <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       </div>
 
       <Select onValueChange={handleCategoryChange} value={category}>
-        <SelectTrigger className='w-[180px] border-black'>
-          <SelectValue placeholder='카테고리 필터' />
+        <SelectTrigger className="w-[180px] border-black">
+          <SelectValue placeholder="카테고리 필터" />
         </SelectTrigger>
         <SelectContent>
           {Object.keys(categoryMap).map((key) => (
@@ -61,14 +69,14 @@ export function ProductFilter({
         </SelectContent>
       </Select>
 
-      <Select onValueChange={handleStatusChange} value={status}>
-        <SelectTrigger className='w-[180px] border-black'>
-          <SelectValue placeholder='판매 상태 필터' />
+      <Select onValueChange={handleStatusChange} value={statusValue}>
+        <SelectTrigger className="w-[180px] border-black">
+          <SelectValue placeholder="판매 상태 필터" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value='ALL'>전체</SelectItem>
-          <SelectItem value='AVAILABLE'>판매중</SelectItem>
-          <SelectItem value='SOLD'>판매완료</SelectItem>
+          <SelectItem value="ALL">전체</SelectItem>
+          <SelectItem value="AVAILABLE">판매중</SelectItem>
+          <SelectItem value="SOLD">판매완료</SelectItem>
         </SelectContent>
       </Select>
     </div>

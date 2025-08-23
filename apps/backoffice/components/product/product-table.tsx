@@ -21,7 +21,7 @@ export default function ProductTable() {
   const debouncedGlobalFilter = useDebounce(globalFilter, 500);
 
   const [category, setCategory] = useState("ALL");
-  const [status, setStatus] = useState("ALL");
+  const [isSold, setIsSold] = useState<boolean | null>(false);
 
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(8);
@@ -31,7 +31,7 @@ export default function ProductTable() {
     size: size,
     q: debouncedGlobalFilter,
     category: category !== "ALL" ? category : undefined,
-    status: status !== "ALL" ? status : undefined,
+    is_sold: isSold ? isSold : undefined,
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,8 +79,8 @@ export default function ProductTable() {
           setGlobalFilter={setGlobalFilter}
           category={category}
           setCategory={setCategory}
-          status={status}
-          setStatus={setStatus}
+          isSold={isSold}
+          setIsSold={setIsSold}
         />
         <ProductExcelDownloadButton />
       </div>

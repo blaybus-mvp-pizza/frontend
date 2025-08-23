@@ -3,7 +3,7 @@ export type TProductStatus = "ALL" | "AVAILABLE" | "SOLD";
 export interface ProductListParams {
   page: number;
   size: number;
-  status?: TProductStatus;
+  is_sold?: boolean;
   category?: string;
   q?: string;
   store_id?: string;

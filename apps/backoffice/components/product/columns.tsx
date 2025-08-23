@@ -75,10 +75,10 @@ export const createColumns = ({
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: "is_sold",
     header: "상태",
     cell: ({ row }) => {
-      const isSold = row.original.status === "SOLD";
+      const isSold = row.original.is_sold;
       return (
         <Badge
           className={`px-2.5 py-1 ${isSold ? "bg-gray-200 text-gray-800" : "bg-green-100 text-green-600"}`}
