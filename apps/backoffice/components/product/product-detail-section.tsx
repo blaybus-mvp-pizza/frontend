@@ -5,13 +5,18 @@ import { Button } from "@workspace/ui/components/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AuctionFormModal, { FormMode } from "../auction/auction-form-modal";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@workspace/ui/components/tooltip";
+import { useAuction } from '@/hooks/use-auctions';
+import { AUCTION_STATUS_MAP } from "@/apis/auction/type";
 
 export default function ProductDetailSection({ id }: { id: string }) {
   const productId = Number(id);
-  const { data: product, isLoading, isError } = useProduct(productId);
+  const { data: product, isLoading: isProductLoading, isError: isProductError } = useProduct(productId);
   const router = useRouter();
 
   const auctionId = product?.auction_id;
+
+  const { data: auctionData, isLoading: isAuctionLoading } = useAuction(auctionId as number);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<FormMode>("create");
@@ -30,7 +35,7 @@ export default function ProductDetailSection({ id }: { id: string }) {
     setSelectedAuctionId(undefined);
   };
 
-  if (isLoading) {
+  if (isProductLoading || (auctionId && isAuctionLoading)) {
     return (
       <div className='flex items-center justify-center h-screen'>
         <p className='text-gray-500'>상품 정보를 불러오는 중...</p>
@@ -38,7 +43,7 @@ export default function ProductDetailSection({ id }: { id: string }) {
     );
   }
 
-  if (isError || !product) {
+  if (isProductError || !product) {
     return (
       <div className='flex items-center justify-center h-screen'>
         <p className='text-gray-500'>
@@ -47,6 +52,13 @@ export default function ProductDetailSection({ id }: { id: string }) {
       </div>
     );
   }
+  
+  const auctionStatus = auctionData?.status;
+  const startsAt = auctionData?.starts_at;
+  const startsAtDate = startsAt ? new Date(startsAt) : null;
+  const now = new Date();
+  const isEditable = auctionStatus === "SCHEDULED" && startsAtDate && startsAtDate > now;
+  const tooltipText = "경매 수정은 경매 시작일시 이전, 경매 예정 상태에서만 가능합니다.";
 
   const specsList = [
     { label: "재료", value: product.specs.material },
@@ -69,47 +81,73 @@ export default function ProductDetailSection({ id }: { id: string }) {
       value: `${product.shipping_free_threshold.toLocaleString()}원`,
     },
     {
-      label: "추가 배송 정보",
+      label: "배송 추가 정보",
       value: product.shipping_extra_note || "정보 없음",
     },
   ];
 
   return (
     <>
-      <div className='container mx-auto p-6 space-y-8'>
-        <div className='flex justify-between items-center pb-6 border-b'>
+      <div className='container mx-auto p-4 space-y-8'>
+        <div className='flex flex-col md:flex-row justify-between items-start md:items-center pb-2'>
           <div>
             <h1 className='text-3xl font-bold'>{product.name}</h1>
-            <div className='flex gap-6'>
-              <p className='text-sm text-gray-500 mt-1'>
+            <div className='flex flex-wrap gap-x-4 text-sm text-gray-500 mt-2'>
+              <p>
                 상품 ID:{" "}
                 <span className='font-mono text-gray-700'>{product.id}</span>
               </p>
-              <p className='text-sm text-gray-500 mt-1'>
-                가격:{" "}
-                <span className='font-mono text-gray-700'>
-                  {" "}
-                  {product.price.toLocaleString()}원
-                </span>
-              </p>
-              <p className='text-sm text-gray-500 mt-1'>
+              <p>
                 경매 ID:{" "}
                 <span className='font-mono text-gray-700'>
-                  {" "}
                   {product.auction_id || "없음"}
+                </span>
+              </p>
+              <p>
+                등록일:{" "}
+                <span className='font-mono text-gray-700'>
+                  {new Date(product.created_at).toLocaleDateString()}
+                </span>
+              </p>
+              <p>
+                수정일:{" "}
+                <span className='font-mono text-gray-700'>
+                  {new Date(product.updated_at).toLocaleDateString()}
                 </span>
               </p>
             </div>
           </div>
-          <div className='flex gap-2'>
-            {!auctionId && (
-              <Button
-                variant='outline'
-                onClick={() => handleOpenModal("create")}
-              >
-                경매 등록
-              </Button>
-            )}
+          <div className='flex gap-2 mt-4 md:mt-0'>
+            <TooltipProvider>
+              {auctionId ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className={!isEditable ? 'cursor-not-allowed' : ''}>
+                      <Button
+                        variant='outline'
+                        onClick={() => handleOpenModal("edit", auctionId)}
+                        disabled={!isEditable}
+                        className={!isEditable ? 'pointer-events-none' : ''}
+                      >
+                        경매 수정
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  {!isEditable && (
+                    <TooltipContent side='bottom'>
+                      <p>{tooltipText}</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              ) : (
+                <Button
+                  variant='outline'
+                  onClick={() => handleOpenModal("create")}
+                >
+                  경매 등록
+                </Button>
+              )}
+            </TooltipProvider>
             <Button
               onClick={() => {
                 router.push(`/product/edit/${productId}`);
@@ -120,89 +158,125 @@ export default function ProductDetailSection({ id }: { id: string }) {
           </div>
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-8 border-b'>
-          <div className='space-y-4'>
-            <h3 className='text-lg font-semibold text-gray-800'>
-              상품 요약 정보
-            </h3>
-            <dl className='grid grid-cols-2 gap-y-3 gap-x-6'>
-              <div>
-                <dt className='text-sm font-medium text-gray-500'>카테고리</dt>
-                <dd className='text-sm font-semibold text-gray-800'>
-                  {product.category}
-                </dd>
-              </div>
-              <div></div>
-              <div>
-                <dt className='text-sm font-medium text-gray-500'>등록일</dt>
-                <dd className='text-sm font-semibold text-gray-800'>
-                  {new Date(product.created_at).toLocaleDateString()}
-                </dd>
-              </div>
-              <div>
-                <dt className='text-sm font-medium text-gray-500'>수정일</dt>
-                <dd className='text-sm font-semibold text-gray-800'>
-                  {new Date(product.updated_at).toLocaleDateString()}
-                </dd>
-              </div>
-            </dl>
+        <div className='grid lg:grid-cols-2 gap-8'>
+          <div className='space-y-8'>
+            <section className='space-y-6'>
+              <h3 className='text-xl font-semibold text-gray-800 border-b pb-2'>
+                기본 정보
+              </h3>
+              <dl className='grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6'>
+                <div>
+                  <dt className='text-sm font-medium text-gray-500'>상품명</dt>
+                  <dd className='text-sm text-gray-800'>{product.name}</dd>
+                </div>
+                <div>
+                  <dt className='text-sm font-medium text-gray-500'>카테고리</dt>
+                  <dd className='text-sm text-gray-800'>{product.category}</dd>
+                </div>
+                <div>
+                  <dt className='text-sm font-medium text-gray-500'>가격</dt>
+                  <dd className='text-sm text-gray-800'>{product.price.toLocaleString()}원</dd>
+                </div>
+                <div>
+                  <dt className='text-sm font-medium text-gray-500'>재고</dt>
+                  <dd className='text-sm text-gray-800'>{product.stock}개</dd>
+                </div>
+                <div className="col-span-1 sm:col-span-2">
+                  <dt className='text-sm font-medium text-gray-500'>상품 요약</dt>
+                  <dd className='text-sm text-gray-800 leading-relaxed whitespace-pre-wrap'>{product.summary}</dd>
+                </div>
+                <div className="col-span-1 sm:col-span-2">
+                  <dt className='text-sm font-medium text-gray-500'>상세 설명</dt>
+                  <dd className='text-sm text-gray-800 leading-relaxed whitespace-pre-wrap'>{product.description}</dd>
+                </div>
+              </dl>
+            </section>
+
+            <section className='space-y-6'>
+              <h3 className='text-xl font-semibold text-gray-800 border-b pb-2'>
+                상품 사양
+              </h3>
+              <dl className='grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6'>
+                {specsList.map((item) => (
+                  <div key={item.label}>
+                    <dt className='text-sm font-medium text-gray-500'>
+                      {item.label}
+                    </dt>
+                    <dd className='text-sm text-gray-800'>{item.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
           </div>
 
-          <div className='space-y-4'>
-            <h3 className='text-lg font-semibold text-gray-800'>상품 사양</h3>
-            <dl className='grid grid-cols-2 gap-y-3 gap-x-6'>
-              {specsList.map((item) => (
-                <div key={item.label}>
-                  <dt className='text-sm font-medium text-gray-500'>
-                    {item.label}
-                  </dt>
-                  <dd className='text-sm font-semibold text-gray-800'>
-                    {item.value}
+          <div className='space-y-8'>
+          {auctionData && (
+            <section className='space-y-6'>
+              <h3 className='text-xl font-semibold text-gray-800 border-b pb-2'>
+                경매 정보
+              </h3>
+              <dl className='grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6'>
+                <div>
+                  <dt className='text-sm font-medium text-gray-500'>경매 상태</dt>
+                  <dd className='text-sm text-gray-800'>{AUCTION_STATUS_MAP[auctionData.status as keyof typeof AUCTION_STATUS_MAP] || auctionData.status}</dd>
+                </div>
+                <div>
+                  <dt className='text-sm font-medium text-gray-500'>경매 시작가</dt>
+                  <dd className='text-sm text-gray-800'>{auctionData.start_price.toLocaleString()}원</dd>
+                </div>
+                <div>
+                  <dt className='text-sm font-medium text-gray-500'>현재 최고 입찰가</dt>
+                  <dd className='text-sm text-gray-800'>
+                    {auctionData.current_highest_bid ? `${auctionData.current_highest_bid.toLocaleString()}원` : "입찰 없음"}
                   </dd>
                 </div>
-              ))}
-            </dl>
-          </div>
-
-          <div className='space-y-4'>
-            <h3 className='text-lg font-semibold text-gray-800'>배송 정보</h3>
-            <dl className='grid grid-cols-2 gap-y-3 gap-x-6'>
-              {shippingInfo.map((item) => (
-                <div key={item.label}>
-                  <dt className='text-sm font-medium text-gray-500'>
-                    {item.label}
-                  </dt>
-                  <dd className='text-sm font-semibold text-gray-800'>
-                    {item.value}
-                  </dd>
+                <div>
+                  <dt className='text-sm font-medium text-gray-500'>경매 시작일시</dt>
+                  <dd className='text-sm text-gray-800'>{new Date(auctionData.starts_at).toLocaleString()}</dd>
                 </div>
-              ))}
-            </dl>
-          </div>
-        </div>
+                <div>
+                  <dt className='text-sm font-medium text-gray-500'>경매 종료일시</dt>
+                  <dd className='text-sm text-gray-800'>{new Date(auctionData.ends_at).toLocaleString()}</dd>
+                </div>
+              </dl>
+            </section>
+            )}
 
-        <div className='space-y-4 pb-8 border-b'>
-          <h3 className='text-lg font-semibold'>상품 이미지</h3>
-          <p className='text-sm text-gray-500'>
-            총 {product.images.length}장의 이미지
-          </p>
-          <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-            {product.images.map((image, index) => (
-              <img
-                key={index}
-                src={image}
-                alt={`${product.name} thumbnail ${index + 1}`}
-                className='w-full h-auto object-cover rounded-md'
-              />
-            ))}
-          </div>
-        </div>
+            <section className='space-y-6'>
+              <h3 className='text-xl font-semibold text-gray-800 border-b pb-2'>
+                상품 이미지
+              </h3>
+              <p className='text-sm text-gray-500'>
+                총 {product.images.length}장의 이미지
+              </p>
+              <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
+                {product.images.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`${product.name} thumbnail ${index + 1}`}
+                    className='w-full h-auto object-cover rounded-md'
+                  />
+                ))}
+              </div>
+            </section>
 
-        <div className='space-y-4'>
-          <h3 className='text-lg font-semibold'>상품 상세 설명</h3>
-          <p className='text-sm text-gray-700 leading-relaxed whitespace-pre-wrap'>
-            {product.description}
-          </p>
+            <section className='space-y-6'>
+              <h3 className='text-xl font-semibold text-gray-800 border-b pb-2'>
+                배송 정보
+              </h3>
+              <dl className='grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6'>
+                {shippingInfo.map((item) => (
+                  <div key={item.label}>
+                    <dt className='text-sm font-medium text-gray-500'>
+                      {item.label}
+                    </dt>
+                    <dd className='text-sm text-gray-800'>{item.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          </div>
         </div>
       </div>
       <AuctionFormModal
