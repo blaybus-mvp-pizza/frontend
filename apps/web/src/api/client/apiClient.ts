@@ -18,7 +18,7 @@ apiClient.interceptors.request.use(
       // Try to get token from auth store first (if hydrated)
       const authStorage = localStorage.getItem('auth-storage')
       let token = null
-      
+
       if (authStorage) {
         try {
           const parsed = JSON.parse(authStorage)
@@ -27,12 +27,12 @@ apiClient.interceptors.request.use(
           console.error('Failed to parse auth storage:', e)
         }
       }
-      
+
       // Fallback to direct localStorage token
       if (!token) {
         token = localStorage.getItem('auth-token')
       }
-      
+
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`
       }
@@ -74,20 +74,20 @@ apiClient.interceptors.response.use(
       // Handle 401 Unauthorized
       if (status === 401) {
         console.warn('401 Unauthorized:', data?.detail || data?.message || 'Authentication failed')
-        
+
         // Check if token is invalid
         if (data?.detail === 'Invalid token' && typeof window !== 'undefined') {
           const currentPath = window.location.pathname
-          
+
           // Protected routes that require authentication
           const protectedRoutes = ['/mypage', '/notifications']
-          const isProtectedRoute = protectedRoutes.some(route => currentPath.startsWith(route))
-          
+          const isProtectedRoute = protectedRoutes.some((route) => currentPath.startsWith(route))
+
           if (isProtectedRoute) {
             // Clear all auth data
             localStorage.removeItem('auth-storage')
             localStorage.removeItem('auth-token')
-            
+
             // Redirect to login
             window.location.href = `/auth/login?from=${encodeURIComponent(currentPath)}`
           }

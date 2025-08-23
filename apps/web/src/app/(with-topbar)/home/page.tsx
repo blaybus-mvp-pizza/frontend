@@ -8,13 +8,13 @@ import { Typography } from '@workspace/ui/components/typography'
 import { motion } from 'framer-motion'
 
 import { LazySection } from '@/components/common/LazySection'
+import HeroCarousel from '@/components/home/HeroCarousel'
 import {
   LazyEndingSoonSection,
   LazyNewProductsSection,
   LazyRecommendedSection,
 } from '@/components/home/LazyProductSection'
 import { LazyStoreSections } from '@/components/home/LazyStoreSection'
-import HeroCarousel from '@/components/home/HeroCarousel'
 import { PRODUCT_TAGS } from '@/constants/filter.constant'
 
 export default function HomePage() {
@@ -105,7 +105,7 @@ export default function HomePage() {
       <LazySection rootMargin="100px">
         <motion.div
           onClick={() => {}}
-          className="relative h-40 text-white"
+          className="relative -mx-4 h-40 text-white"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
@@ -121,7 +121,7 @@ export default function HomePage() {
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <p className="text-[24px] md:text-[32px]">SHOW ROOM OPEN EVENT</p>
-            <p className="font-light">나팔 서비스 오픈기념 이벤트 바로가기</p>
+            <p className="font-light">나팔 서비스 오픈기념 이벤트</p>
           </div>
         </motion.div>
       </LazySection>
@@ -132,7 +132,7 @@ export default function HomePage() {
       {/* Lazy-loaded bottom banner */}
       <LazySection rootMargin="100px">
         <motion.div
-          className="relative mb-40 mt-20 h-60 text-white"
+          className="relative -mx-4 mb-40 mt-20 h-60 text-white"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -146,9 +146,9 @@ export default function HomePage() {
             priority={false}
             loading="lazy"
           />
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <p className="text-[24px] md:text-[32px]">기업의 자산을 사회적 가치로 전환합니다</p>
-            <p className="font-light">
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+            <p className="text-[20px] md:text-[32px]">기업의 자산을 사회적 가치로 전환합니다</p>
+            <p className="md:text-bae px-8 text-sm font-light">
               나팔은 버려지는 기업과 자산이 새로운 공간에서 가치를 이어갈 수 있도록 함께합니다.
             </p>
             <Button

@@ -97,7 +97,7 @@ export default function HeroCarousel() {
             />
 
             {/* Text content */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-white sm:p-8 md:px-20 md:py-[52px]">
+            <div className="absolute bottom-0 left-0 right-0 p-10 text-white sm:p-8 md:px-20 md:py-[52px]">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -108,11 +108,13 @@ export default function HeroCarousel() {
                   <p className="text-lg font-semibold md:text-[28px]">
                     {BANNER_PROPS[currentIndex]!.title}
                   </p>
-                  <p className="text-sm md:text-base">{BANNER_PROPS[currentIndex]!.subtitle}</p>
+                  <p className="line-clamp-2 text-xs md:text-base">
+                    {BANNER_PROPS[currentIndex]!.subtitle}
+                  </p>
                 </div>
                 <button
                   onClick={handleBannerClick}
-                  className="text-text-primary rounded-sm bg-white p-3 text-sm font-semibold"
+                  className="text-text-primary rounded-sm bg-white px-3 py-2 text-xs font-semibold md:p-3 md:text-sm"
                 >
                   {BANNER_PROPS[currentIndex]!.buttonText}
                 </button>
