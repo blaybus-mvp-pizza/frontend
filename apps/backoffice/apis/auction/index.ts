@@ -87,7 +87,7 @@ export const editAuction = async ({
     const { id, ...updateData } = auctionData;
     const response: AxiosResponse<AuctionResponse> = await axios.patch(
       `${API_BASE_URL}/admin/v1/auctions/${id}`,
-      updateData,
+      auctionData,
       {
         headers: {
           Authorization: authorization,

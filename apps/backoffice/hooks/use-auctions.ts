@@ -56,7 +56,7 @@ export const useCreateAuction = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auctionList"] });
-      queryClient.invalidateQueries({ queryKey: ["productionList"] });
+      queryClient.invalidateQueries({ queryKey: ["productList"] });
       toast.success("경매가 성공적으로 등록되었습니다.");
     },
     onError: (error) => {
