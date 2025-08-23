@@ -69,22 +69,24 @@ export function useSimilarProducts(
 }
 
 // Store metadata hook
-export function useStoreMeta(storeId: number) {
+export function useStoreMeta(storeId: number, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: productDetailKeys.store(storeId),
     queryFn: () => productsApi.getStoreMeta(storeId),
     staleTime: 1000 * 60 * 10, // 10 minutes
     gcTime: 1000 * 60 * 20, // 20 minutes
-    enabled: storeId > 0,
+    enabled: storeId > 0 && (options?.enabled !== false),
+    ...options,
   })
 }
-export function useStoreProductMeta(storeId: number) {
+export function useStoreProductMeta(storeId: number, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: productDetailKeys.storeProducts(storeId),
     queryFn: () => productsApi.getStoreProducts(storeId),
     staleTime: 1000 * 60 * 10, // 10 minutes
     gcTime: 1000 * 60 * 20, // 20 minutes
-    enabled: storeId > 0,
+    enabled: storeId > 0 && (options?.enabled !== false),
+    ...options,
   })
 }
 
