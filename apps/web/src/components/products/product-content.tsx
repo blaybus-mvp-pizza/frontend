@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
+import { motion } from 'framer-motion'
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
@@ -138,17 +139,25 @@ function ProductContent() {
   return (
     <div className="mt-5">
       <div className="flex flex-col justify-start">
-        <div className="space-y-4 border-b border-[#E5E5E5] pb-4">
+        <motion.div 
+          className="space-y-4 border-b border-[#E5E5E5] pb-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="mb-5 flex flex-col gap-2">
             <div className="text-2xl font-bold">{CONTENT_TITLES[content].title}</div>
             <div className="text-text-tertiary text-sm">{CONTENT_TITLES[content].subtitle}</div>
           </div>
 
-          <div
+          <motion.div
             className="flex gap-x-2 overflow-x-auto text-nowrap"
             style={{ scrollbarWidth: 'none' }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <span
+            <motion.span
               onClick={() => handleFilterClick('전체')}
               className={cn(
                 'cursor-pointer rounded-full border px-3.5 py-1.5 text-sm transition-colors',
@@ -156,11 +165,14 @@ function ProductContent() {
                   ? 'bg-text-primary text-text-inverse border-text-primary'
                   : 'bg-background-100 text-text-primary border-border-default hover:bg-background-200',
               )}
+              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
             >
               전체
-            </span>
-            {PRODUCT_TAGS.map((v) => (
-              <span
+            </motion.span>
+            {PRODUCT_TAGS.map((v, index) => (
+              <motion.span
                 key={v.name}
                 onClick={() => handleFilterClick(v.name)}
                 className={cn(
@@ -169,12 +181,15 @@ function ProductContent() {
                     ? 'bg-text-primary text-text-inverse border-text-primary'
                     : 'bg-background-100 text-text-primary border-border-default hover:bg-background-200',
                 )}
+                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
               >
                 {v.name}
-              </span>
+              </motion.span>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* 필터 드롭다운 섹션 */}
         <div className="flex flex-col gap-y-4 py-4">

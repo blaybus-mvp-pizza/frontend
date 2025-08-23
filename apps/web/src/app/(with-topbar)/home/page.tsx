@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
 
 import { Button } from '@workspace/ui/components/button'
 import { ProductSampleList } from '@workspace/ui/components/product/product-sample-list'
@@ -160,18 +161,32 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* 히어로 배너 */}
-      <div className="w-full">
+      <motion.div 
+        className="w-full"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="md::h-[380px] mt-4 h-[200px] w-full rounded-md bg-gradient-to-b from-gray-200 to-gray-600 sm:h-[280px] md:mt-6 md:rounded-lg"></div>
-      </div>
+      </motion.div>
 
       {/* 카테고리 태그 */}
-      <div className="mt-6 md:mt-10">
+      <motion.div 
+        className="mt-6 md:mt-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
         <div className="grid grid-cols-4 gap-2 sm:grid-cols-4 md:grid-cols-5 md:gap-3 lg:grid-cols-7">
-          {PRODUCT_TAGS.map((v) => (
-            <div
+          {PRODUCT_TAGS.map((v, index) => (
+            <motion.div
               className="flex cursor-pointer flex-col items-center gap-1 rounded-lg bg-[#f6f6f6] p-2 transition-colors hover:bg-[#ececec] sm:gap-2 sm:p-3 md:gap-3 md:p-4"
               key={v.name}
               onClick={() => router.push(`/products?filter=${encodeURIComponent(v.name)}`)}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
             >
               <Image
                 src={v.imgSrc}
@@ -190,14 +205,20 @@ export default function HomePage() {
               >
                 {v.name}
               </Typography>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* 상품 리스트 섹션 */}
       <div className="mt-8 space-y-12 pb-8 md:mt-12 md:space-y-16 md:pb-12 lg:mt-14 lg:space-y-20 lg:pb-16">
-        <ProductSampleList
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+        >
+          <ProductSampleList
           products={urgentProducts}
           auctions={auctions}
           title="지금 놓치면 사라져요!"
@@ -205,31 +226,53 @@ export default function HomePage() {
           showViewAll={true}
           showTimeLeft={true}
           onProductClick={handleProductClick}
-          onViewAllClick={() => handleViewAllClick('ending-soon')}
-        />
-        <ProductSampleList
-          products={mdPicks}
+            onViewAllClick={() => handleViewAllClick('ending-soon')}
+          />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+        >
+          <ProductSampleList
+            products={mdPicks}
           auctions={auctions}
           title="알찬 상품만 추렸어요!"
           subtitle="MD`S Pick"
           showViewAll={true}
           showTimeLeft={true}
           onProductClick={handleProductClick}
-          onViewAllClick={() => handleViewAllClick('popular')}
-        />
-        <ProductSampleList
-          products={newProducts}
+            onViewAllClick={() => handleViewAllClick('popular')}
+          />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+        >
+          <ProductSampleList
+            products={newProducts}
           auctions={auctions}
           title="따끈따근 새롭게 올라온"
           subtitle="신규 상품!"
           showViewAll={true}
           showTimeLeft={true}
           onProductClick={handleProductClick}
-          onViewAllClick={() => handleViewAllClick('new')}
-        />
+            onViewAllClick={() => handleViewAllClick('new')}
+          />
+        </motion.div>
       </div>
 
-      <div onClick={() => {}} className="relative h-40 text-white">
+      <motion.div 
+        onClick={() => {}} 
+        className="relative h-40 text-white"
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
         <Image
           alt="배너1"
           src="/images/BANNER1.webp"
@@ -243,23 +286,37 @@ export default function HomePage() {
           <p className="text-[24px] md:text-[32px]">SHOW ROOM OPEN EVENT</p>
           <p className="font-light">나팔 서비스 오픈기념 이벤트 바로가기</p>
         </div>
-      </div>
+      </motion.div>
 
       {recentStoresData && recentStoresData.items && recentStoresData.items.length > 0 && (
         <>
           {recentStoresData.items
             .filter((storeData) => storeData.products && storeData.products.length > 0)
-            .map((storeData) => (
-              <StoreSection
+            .map((storeData, index) => (
+              <motion.div
+                key={`store-motion-${storeData.store.store_id}`}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <StoreSection
                 key={`store-${storeData.store.store_id}`}
                 storeData={storeData}
-                onProductClick={handleProductClick}
-              />
+                  onProductClick={handleProductClick}
+                />
+              </motion.div>
             ))}
         </>
       )}
 
-      <div className="relative mb-40 mt-20 h-60 text-white">
+      <motion.div 
+        className="relative mb-40 mt-20 h-60 text-white"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
         <Image
           alt="배너2"
           src="/images/BANNER2.webp"
@@ -285,7 +342,7 @@ export default function HomePage() {
             파트너십 문의하기
           </Button>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

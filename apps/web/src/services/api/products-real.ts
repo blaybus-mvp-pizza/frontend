@@ -396,6 +396,36 @@ export const productApiReal = {
     }
   },
 
+  async getRecentStores(params?: {
+    page?: number
+    stores?: number
+    size?: number
+    sort?: string
+    status?: string
+    bidders?: string
+    price_bucket?: string
+    price_min?: number
+    price_max?: number
+    category?: string
+  }): Promise<Page<StoreWithProducts>> {
+    const response = await apiClient.get<Page<StoreWithProducts>>('/products/stores/recent', {
+      params: {
+        page: params?.page || 1,
+        stores: params?.stores || 8,
+        size: params?.size || 4,
+        sort: params?.sort || 'latest',
+        status: params?.status || 'RUNNING',
+        bidders: params?.bidders || 'ALL',
+        price_bucket: params?.price_bucket || 'ALL',
+        price_min: params?.price_min,
+        price_max: params?.price_max,
+        category: params?.category || 'ALL',
+      },
+    })
+    
+    return response.data
+  },
+
   async getAuctionByProductId(productId: number): Promise<Auction | null> {
     try {
       // This would need a proper auction detail endpoint
@@ -418,3 +448,4 @@ export const productApiReal = {
 
 // Export with both names for compatibility
 export const productApi = productApiReal
+export const productsService = productApiReal
