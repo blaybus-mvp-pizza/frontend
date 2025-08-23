@@ -30,37 +30,39 @@ export const SORT_OPTIONS = [
 
 export type SortOption = 'recommended' | 'latest' | 'popular'
 
-// Status filter options
+// Status filter options (matching API enum values)
 export const STATUS_OPTIONS = [
-  { value: 'all', label: '상태' },
-  { value: 'ongoing', label: '진행중' },
-  { value: 'completed', label: '종료' },
-  { value: 'upcoming', label: '예정' },
+  { value: 'ALL', label: '상태' },
+  { value: 'RUNNING', label: '진행중' },
+  { value: 'ENDED', label: '종료' },
+  { value: 'SCHEDULED', label: '예정' },
 ]
 
-export type StatusOption = 'all' | 'ongoing' | 'completed' | 'upcoming'
+export type StatusOption = 'ALL' | 'RUNNING' | 'ENDED' | 'SCHEDULED'
 
-// Bidder count filter options
+// Bidder count filter options (matching API enum values)
 export const BIDDER_OPTIONS = [
-  { value: 'all', label: '입찰인원' },
-  { value: '0-10', label: '10명 이하' },
-  { value: '11-50', label: '11-50명' },
-  { value: '51-100', label: '51-100명' },
-  { value: '100+', label: '100명 이상' },
+  { value: 'ALL', label: '입찰인원' },
+  { value: 'LE_10', label: '10명 이하' },
+  { value: 'BT_10_20', label: '11-20명' },
+  { value: 'GE_20', label: '20명 이상' },
 ]
 
-export type BidderOption = 'all' | '0-10' | '11-50' | '51-100' | '100+'
+export type BidderOption = 'ALL' | 'LE_10' | 'BT_10_20' | 'GE_20'
 
-// Price range filter options
+// Price range filter options (matching API enum values)
 export const PRICE_OPTIONS = [
-  { value: 'all', label: '가격' },
-  { value: '0-100000', label: '10만원 이하' },
-  { value: '100000-500000', label: '10-50만원' },
-  { value: '500000-1000000', label: '50-100만원' },
-  { value: '1000000+', label: '100만원 이상' },
+  { value: 'ALL', label: '가격' },
+  { value: 'LT_10000', label: '1만원 미만' },
+  { value: 'BT_10000_30000', label: '1-3만원' },
+  { value: 'BT_30000_50000', label: '3-5만원' },
+  { value: 'BT_50000_150000', label: '5-15만원' },
+  { value: 'BT_150000_300000', label: '15-30만원' },
+  { value: 'BT_300000_500000', label: '30-50만원' },
+  { value: 'CUSTOM', label: '직접입력' },
 ]
 
-export type PriceOption = 'all' | '0-100000' | '100000-500000' | '500000-1000000' | '1000000+'
+export type PriceOption = 'ALL' | 'LT_10000' | 'BT_10000_30000' | 'BT_30000_50000' | 'BT_50000_150000' | 'BT_150000_300000' | 'BT_300000_500000' | 'CUSTOM'
 
 // Pagination settings
 export const ITEMS_PER_PAGE = 16 // 4x4 grid
@@ -70,8 +72,8 @@ export const DEFAULT_FILTERS = {
   content: 'popular' as ContentType,
   filter: '전체',
   sort: 'recommended' as SortOption,
-  status: 'all' as StatusOption,
-  bidders: 'all' as BidderOption,
-  price: 'all' as PriceOption,
+  status: 'ALL' as any,
+  bidders: 'ALL' as any,
+  price: 'ALL' as any,
   page: 1,
 }

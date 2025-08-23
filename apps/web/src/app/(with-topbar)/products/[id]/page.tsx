@@ -129,7 +129,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1950px] py-6">
+    <div className="mx-auto w-full py-6">
       <Breadcrumb items={breadcrumbItems} className="mb-6" />
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
@@ -190,16 +190,16 @@ export default function ProductDetailPage() {
                   </div>
                 </div>
                 <div className="border-border-light flex w-full items-center justify-between rounded border px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <Typography variant="sub" weight="normal">
+                  <div className="flex items-center gap-2 md:flex-row">
+                    <Typography variant="sub" weight="normal" className="max-md:text-xs">
                       현재 입찰가
                     </Typography>
-                    <Typography variant={'first'} weight="bold">
+                    <Typography variant={'first'} weight="bold" className="max-md:text-sm">
                       {(auction?.current_highest_bid || auction?.start_price || 0).toLocaleString()}
                       원
                     </Typography>
                   </div>
-                  <Typography variant={'sub'}>
+                  <Typography variant={'sub'} className="line-clamp-1 max-md:text-xs">
                     {(() => {
                       const currentPrice = auction?.current_highest_bid || auction?.start_price || 0
                       const { increment, isMaxBid } = getBidIncrement(
@@ -375,19 +375,20 @@ export default function ProductDetailPage() {
               <div className="flex items-center gap-3">
                 <div className="relative h-10 w-10">
                   <Image
-                    src="/icons/EARTH_ICON.svg"
+                    src="/earth.gif"
                     alt="Earth Icon"
                     fill
                     sizes="40px"
                     className="rounded-full"
+                    unoptimized
                   />
                 </div>
-                <div className="relative flex items-center gap-1 rounded bg-[#222222] px-3 py-1.5">
+                <div className="relative flex items-center gap-1 whitespace-nowrap rounded bg-[#222222] px-3 py-1.5">
                   <div className="absolute -left-1.5 top-1/2 h-0 w-0 -translate-y-1/2 border-b-[6px] border-r-[8px] border-t-[6px] border-b-transparent border-r-[#222222] border-t-transparent"></div>
                   <span className="text-sm font-medium text-white">이 상품이 주인을 찾으면</span>
                   <span className="flex items-center gap-x-1 text-xs font-medium text-[#94D8D4]">
-                    <span className="relative inline-block h-2.5 w-2.5">
-                      <Image src="/icons/RECYCLE.svg" alt="Recycle Icon" fill sizes="10px" />
+                    <span className="relative inline-block h-2.5 w-2.5 shrink-0">
+                      <Image src="/icons/RECYCLE.svg" alt="Recycle Icon" fill sizes="12px" />
                     </span>
                     탄소 2.4kg
                   </span>

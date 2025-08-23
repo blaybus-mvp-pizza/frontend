@@ -146,7 +146,7 @@ export default function StoreSection({
               : undefined
 
             return (
-              <div key={product.product_id} className="grid w-full grid-cols-2">
+              <div key={product.product_id} className=",max-md:grid-cols-2 grid w-full">
                 <ProductCard
                   product={productData}
                   auction={auctionData}

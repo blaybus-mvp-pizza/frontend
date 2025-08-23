@@ -26,6 +26,17 @@ export const productsApi = {
     return response.data
   },
 
+  // Search products
+  searchProducts: async (query: string, filters?: Omit<ProductFilters, 'query'>): Promise<Page<ProductListItem>> => {
+    const response = await apiClient.get('/products/recommended', {
+      params: {
+        q: query,
+        ...filters,
+      },
+    })
+    return response.data
+  },
+
   // Get new products
   getNew: async (filters?: ProductFilters): Promise<Page<ProductListItem>> => {
     const response = await apiClient.get('/products/new', {

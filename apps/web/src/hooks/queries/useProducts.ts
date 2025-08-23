@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { Auction, Product } from '@workspace/ui/types'
 
-import { PaginatedResponse, ProductFilters, productApi } from '@/services/api/products-real'
+import { PaginatedResponse, productApi } from '@/services/api/products-real'
+import { productsApi } from '@/api/endpoints/products.api'
+import { Page, ProductFilters } from '@/api/types/common.types'
+import { ProductListItem } from '@/api/types/product.types'
 
 // Query keys factory for better organization
 export const productKeys = {
@@ -27,6 +30,18 @@ export function useProductsWithPagination(filters: ProductFilters) {
     staleTime: 1000 * 60 * 2, // 2 minutes
     gcTime: 1000 * 60 * 5, // 5 minutes
     placeholderData: (previousData) => previousData, // Keep previous data while fetching
+  })
+}
+
+// Hook to search products with a specific query
+export function useSearchProducts(query: string, filters?: Omit<ProductFilters, 'query'>) {
+  return useQuery<Page<ProductListItem>>({
+    queryKey: ['products', 'search', query, filters],
+    queryFn: () => productsApi.searchProducts(query, filters),
+    staleTime: 1000 * 60 * 1, // 1 minute (search results change more frequently)
+    gcTime: 1000 * 60 * 3, // 3 minutes
+    placeholderData: (previousData) => previousData,
+    enabled: !!query && query.trim().length > 0, // Only run when query exists
   })
 }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -18,9 +18,38 @@ import { AuthBtns } from './AuthBtns'
 export function TopNavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const desktopSearchRef = useRef<HTMLInputElement>(null)
+  const mobileSearchRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
   const { isAuthenticated, isHydrated } = useAuthStore()
   const { data: unreadCount } = useUnreadNotificationsCount(isAuthenticated && isHydrated)
+
+  const handleSearch = (query: string) => {
+    const trimmedQuery = query.trim()
+    if (trimmedQuery && trimmedQuery.length >= 1) {
+      router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`)
+      setIsSearchOpen(false)
+      setSearchQuery('')
+      // Clear both search inputs
+      if (desktopSearchRef.current) desktopSearchRef.current.value = ''
+      if (mobileSearchRef.current) mobileSearchRef.current.value = ''
+    }
+  }
+
+  const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const target = e.target as HTMLInputElement
+      handleSearch(target.value)
+    }
+  }
+
+  const handleSearchButtonClick = (isMobile: boolean) => {
+    const inputRef = isMobile ? mobileSearchRef : desktopSearchRef
+    if (inputRef.current) {
+      handleSearch(inputRef.current.value)
+    }
+  }
 
   return (
     <>
@@ -63,10 +92,17 @@ export function TopNavBar() {
                   {/* 데스크톱 검색바 */}
                   <div className="relative hidden w-[320px] max-w-xs md:block lg:max-w-md xl:max-w-lg">
                     <input
+                      ref={desktopSearchRef}
                       className="bg-secondary h-10 w-full rounded-sm px-4 pr-10 text-sm md:h-12"
                       placeholder="찾으시는 상품이 있으신가요?"
+                      onKeyPress={handleSearchKeyPress}
                     />
-                    <Search className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2" />
+                    <button
+                      onClick={() => handleSearchButtonClick(false)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors hover:text-gray-600"
+                    >
+                      <Search className="h-5 w-5" />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -102,10 +138,18 @@ export function TopNavBar() {
               <div className="pb-3 md:hidden">
                 <div className="relative">
                   <input
+                    ref={mobileSearchRef}
                     className="h-10 w-full rounded-lg bg-[#f5f5f5] px-4 pr-10 text-sm"
                     placeholder="찾으시는 상품이 있으신가요?"
+                    onKeyPress={handleSearchKeyPress}
+                    autoFocus
                   />
-                  <Search className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                  <button
+                    onClick={() => handleSearchButtonClick(true)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
+                  >
+                    <Search className="h-5 w-5" />
+                  </button>
                 </div>
               </div>
             )}
