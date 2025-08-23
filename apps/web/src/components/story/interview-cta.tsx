@@ -41,7 +41,6 @@ export default function InterviewCTA() {
         )}
         onClick={() => {
           // TODO: 인터뷰 신청하기 동작
-          console.log('인터뷰 신청하기')
         }}
       >
         <span

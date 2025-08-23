@@ -139,7 +139,7 @@ const convertApiProductToProduct = (apiProduct: ProductListItem, index: number =
     tags: [],
     labels: apiProduct.labels || [],
     description: `${apiProduct.product_name} - ${apiProduct.popup_store_name}`,
-    category: apiProduct.category || '아트/컬렉터블',
+    category: '아트/컬렉터블',
     popupStore: {
       id: 1,
       name: apiProduct.popup_store_name,
@@ -190,7 +190,7 @@ const convertApiProductToAuction = (
           createdAt: new Date(),
         }
       : undefined,
-    bidCount: apiProduct.bidders_count || 0,
+    bidCount: 0,
   }
 }
 

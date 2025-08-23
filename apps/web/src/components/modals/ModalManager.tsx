@@ -11,7 +11,7 @@ const modalComponents = {
   buyNow: lazy(() => import('./modals/BuyNowModal')),
   error: lazy(() => import('./modals/ErrorModal')),
   success: lazy(() => import('./modals/SuccessModal')),
-  phoneVerification: lazy(() => import('./modals/PhoneVerificationModal')),
+  phoneVerification: lazy(() => import('./PhoneVerificationModal')),
 }
 
 interface ModalManagerProps {

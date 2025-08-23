@@ -56,7 +56,6 @@ export default function HomePage() {
     useStoreProductMeta(2020)
   const { data: homeStoreProductMeta2, isLoading: homeStoreProductMeta2Loading } =
     useStoreProductMeta(2021)
-  console.log(homeStoreMeta1, homeStoreMeta2, homeStoreProductMeta1, homeStoreProductMeta2)
   const handleProductClick = (productId: number) => {
     router.push(`/products/${productId}`)
   }
@@ -68,7 +67,6 @@ export default function HomePage() {
       router.push('/products')
     }
   }
-  console.log()
 
   // Show skeleton loading state
   if (recommendedLoading || endingSoonLoading || newProductsLoading) {
@@ -163,7 +161,6 @@ export default function HomePage() {
   const urgentProducts = transformProductsForCard(endingSoonData?.items || [])
   const mdPicks = transformProductsForCard(recommendedData?.items || [])
   const newProducts = transformProductsForCard(newProductsData?.items || [])
-  // console.log(urgentProducts);
   // Create auctions from all products
   const auctions = [
     ...transformAuctions(endingSoonData?.items || []),
