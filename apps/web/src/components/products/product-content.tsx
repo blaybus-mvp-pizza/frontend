@@ -24,6 +24,7 @@ import {
 } from '@/constants/product.constant'
 import { useProductsWithPagination } from '@/hooks/queries/useProducts'
 import { cn } from '@/utils/cn'
+import { SortOption } from '@/api/types/common.types'
 
 function ProductContent() {
   const searchParams = useSearchParams()
@@ -32,18 +33,34 @@ function ProductContent() {
   const content = (searchParams.get('content') as ContentType) || DEFAULT_FILTERS.content
   const filter = searchParams.get('filter') || DEFAULT_FILTERS.filter
   const category = searchParams.get('category')
-  const sort = searchParams.get('sort') || DEFAULT_FILTERS.sort
+  const sortParam = searchParams.get('sort') || DEFAULT_FILTERS.sort
   const search = searchParams.get('search')
   const page = parseInt(searchParams.get('page') || String(DEFAULT_FILTERS.page), 10)
   const status = searchParams.get('status') || DEFAULT_FILTERS.status
   const bidders = searchParams.get('bidders') || DEFAULT_FILTERS.bidders
   const price = searchParams.get('price') || DEFAULT_FILTERS.price
 
+  // Convert sort string to SortOption enum
+  const sortOption = useMemo(() => {
+    switch (sortParam) {
+      case 'recommended':
+        return SortOption.RECOMMENDED
+      case 'popular':
+        return SortOption.POPULAR
+      case 'latest':
+        return SortOption.LATEST
+      case 'ending':
+        return SortOption.ENDING
+      default:
+        return SortOption.RECOMMENDED
+    }
+  }, [sortParam])
+
   const filters = useMemo(
     () => ({
       content,
       category: filter !== '전체' ? filter : category || undefined,
-      sort,
+      sort: sortOption,
       search: search || undefined,
       page,
       pageSize: ITEMS_PER_PAGE,
@@ -51,7 +68,7 @@ function ProductContent() {
       bidders,
       price,
     }),
-    [content, filter, category, sort, search, page, status, bidders, price],
+    [content, filter, category, sortOption, search, page, status, bidders, price],
   )
 
   const {
@@ -235,7 +252,7 @@ function ProductContent() {
 
         {/* 정렬 드롭다운 - 추천순/등록순/인기순 */}
         <Dropdown
-          value={sort}
+          value={sortParam}
           onChange={(value) => handleDropdownChange('sort', value)}
           options={SORT_OPTIONS}
           placeholder="정렬"

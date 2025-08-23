@@ -21,7 +21,7 @@ export function PurchaseOptions({ buyNowPrice, onBuyNow, status }: PurchaseOptio
         onClick={() => {
           status !== 'ENDED' ? onBuyNow && onBuyNow() : undefined
         }}
-        className="rounded-sm bg-[#52565B] px-4 py-3 text-white transition-colors hover:bg-[#42464B]"
+        className="rounded-sm bg-[#52565B] px-4 py-3 text-sm text-white transition-colors hover:bg-[#42464B]"
       >
         {status !== 'ENDED' ? '즉시 구매하기' : '경매 종료'}
       </button>
