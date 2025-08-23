@@ -1,16 +1,16 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
 
 import { ProductSampleList } from '@workspace/ui/components/product/product-sample-list'
+import { motion } from 'framer-motion'
 
 import {
   useProductsEndingSoon,
   useProductsNew,
+  useProductsPopularAuctions,
   useProductsRecommended,
   useProductsUpcoming,
-  useProductsPopularAuctions,
 } from '@/api/hooks/queries/useProducts'
 import { ProductListSkeleton } from '@/components/ui/skeleton'
 import { useLazyLoad } from '@/hooks/useIntersectionObserver'
@@ -34,6 +34,7 @@ const transformProductsForCard = (items: any[]) => {
     name: item.product_name,
     labels: item.labels,
     price: item.buy_now_price || 0,
+    // current_highest_bid: item.current_highest_bid || 0,
     stock: 0,
     shippingBaseFee: 0,
     isActive: true,
@@ -57,7 +58,7 @@ const transformProductsForCard = (items: any[]) => {
   }))
 }
 
-const transformAuctions = (items: any[]) => {
+const transformAuctions = (items: any[]): any => {
   if (!items) return []
   return items
     .filter((item) => item.auction_ends_at)
@@ -67,6 +68,9 @@ const transformAuctions = (items: any[]) => {
       startPrice: 0,
       minBidPrice: 0,
       buyNowPrice: item.buy_now_price,
+      currentBid: {
+        amount: item.current_highest_bid || 0,
+      },
       depositAmount: 0,
       startsAt: new Date(),
       endsAt: new Date(item.auction_ends_at),
@@ -94,41 +98,37 @@ function LazyProductSectionContent({
   })
 
   // Conditionally call hooks based on shouldLoad
-  const endingSoonQuery = useProductsEndingSoon(
-    { page: 1, size: 4 },
-    { enabled: shouldLoad && type === 'ending-soon' } as any
-  )
-  
-  const recommendedQuery = useProductsRecommended(
-    { page: 1, size: 4 },
-    { enabled: shouldLoad && type === 'recommended' } as any
-  )
-  
-  const newQuery = useProductsNew(
-    { page: 1, size: 4 },
-    { enabled: shouldLoad && type === 'new' } as any
-  )
+  const endingSoonQuery = useProductsEndingSoon({ page: 1, size: 4 }, {
+    enabled: shouldLoad && type === 'ending-soon',
+  } as any)
 
-  const upcomingQuery = useProductsUpcoming(
-    { page: 1, size: 4 },
-    { enabled: shouldLoad && type === 'upcoming' } as any
-  )
+  const recommendedQuery = useProductsRecommended({ page: 1, size: 4 }, {
+    enabled: shouldLoad && type === 'recommended',
+  } as any)
 
-  const popularAuctionsQuery = useProductsPopularAuctions(
-    { page: 2, size: 4 },
-    { enabled: shouldLoad && type === 'popular-auctions' } as any
-  )
+  const newQuery = useProductsNew({ page: 1, size: 4 }, {
+    enabled: shouldLoad && type === 'new',
+  } as any)
+
+  const upcomingQuery = useProductsUpcoming({ page: 1, size: 4 }, {
+    enabled: shouldLoad && type === 'upcoming',
+  } as any)
+
+  const popularAuctionsQuery = useProductsPopularAuctions({ page: 2, size: 4 }, {
+    enabled: shouldLoad && type === 'popular-auctions',
+  } as any)
 
   // Get the appropriate query based on type
-  const query = type === 'ending-soon' 
-    ? endingSoonQuery 
-    : type === 'recommended' 
-    ? recommendedQuery 
-    : type === 'new'
-    ? newQuery
-    : type === 'upcoming'
-    ? upcomingQuery
-    : popularAuctionsQuery
+  const query =
+    type === 'ending-soon'
+      ? endingSoonQuery
+      : type === 'recommended'
+        ? recommendedQuery
+        : type === 'new'
+          ? newQuery
+          : type === 'upcoming'
+            ? upcomingQuery
+            : popularAuctionsQuery
 
   const { data, isLoading } = query
 

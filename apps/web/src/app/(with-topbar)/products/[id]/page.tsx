@@ -23,6 +23,7 @@ import { StoreInfo } from '@/components/products/detail/StoreInfo'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useProductDetail } from '@/hooks/queries/useProductDetail'
+import { useUIStore } from '@/store/ui.store'
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
@@ -108,6 +109,7 @@ export default function ProductDetailPage() {
   const [newBidAnimation, setNewBidAnimation] = useState<number | null>(null)
   const prevHighestBidderRef = useRef<number | null>(null)
   const [isClick, setIsClick] = useState(false)
+  const { showError } = useUIStore()
 
   const { product, auction, similar, isLoading, bids, refetch } = useProductDetail(productId)
   // Update time every second for countdown
@@ -172,7 +174,21 @@ export default function ProductDetailPage() {
     { label: product.name },
   ]
   function handleAuctionBid() {
-    if (auction && auction.status === 'RUNNING') {
+    if (!auction) {
+      return
+    }
+
+    if (auction.status === 'ENDED') {
+      showError('종료된 경매입니다.')
+      return
+    }
+
+    if (auction.status === 'SCHEDULED') {
+      showError('아직 시작되지 않은 경매입니다.')
+      return
+    }
+
+    if (auction.status === 'RUNNING') {
       setShowBidModal(true)
     }
   }
@@ -340,16 +356,6 @@ export default function ProductDetailPage() {
                 </div>
               </div>
               <div className="w-full space-y-5 pt-4">
-                {/* New bid notification */}
-                {newBidAnimation && (
-                  <div className="flex items-center justify-center py-2">
-                    <div className="animate-bounce rounded-full bg-[#A3DDD4] px-3 py-1">
-                      <Typography variant="sub" className="font-semibold text-white">
-                        🎉 새로운 최고 입찰자!
-                      </Typography>
-                    </div>
-                  </div>
-                )}
                 <div className="relative flex w-full flex-col gap-y-3">
                   {bids?.items && bids.items.length > 0 ? (
                     bids.items.slice(0, 3).map((bid, index) => {
@@ -360,7 +366,7 @@ export default function ProductDetailPage() {
                       return (
                         <div
                           key={bid.user.id + '_' + bid.bid_at}
-                          className={`flex w-full transform items-center gap-[5px] rounded-sm px-3 py-2 transition-all duration-500 ${
+                          className={`flex w-full transform flex-col sm:flex-row sm:items-center gap-2 sm:gap-[5px] rounded-sm px-3 py-3 sm:py-2 transition-all duration-500 ${
                             isHighestBidder
                               ? 'border border-[#A3DDD4] bg-[#F8FEFD] shadow-lg'
                               : 'bg-[#EEEEEE]'
@@ -372,13 +378,14 @@ export default function ProductDetailPage() {
                             transition: 'all 0.5s ease-out',
                           }}
                         >
-                          <div
-                            className={`h-2 w-2 rounded-full ${
-                              isHighestBidder ? 'bg-[#A3DDD4]' : 'bg-[#BBBBBB]'
-                            }`}
-                          />
-                          <div className="flex flex-1 items-center gap-2">
-                            <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                          {/* Mobile: Top Row with User Info */}
+                          <div className="flex items-center gap-2 w-full sm:flex-1">
+                            <div
+                              className={`h-2 w-2 rounded-full shrink-0 ${
+                                isHighestBidder ? 'bg-[#A3DDD4]' : 'bg-[#BBBBBB]'
+                              }`}
+                            />
+                            <div className="relative h-8 w-8 overflow-hidden rounded-full shrink-0">
                               <Image
                                 src={bid.user.profile_image || '/placeholder.png'}
                                 alt="profileImg"
@@ -387,32 +394,38 @@ export default function ProductDetailPage() {
                                 className="object-cover"
                               />
                             </div>
-                            <div className="flex flex-col gap-y-0.5">
+                            <div className="flex flex-col gap-y-0.5 flex-1 min-w-0">
                               <Typography
                                 variant="sub"
-                                className={
+                                className={`truncate ${
                                   isHighestBidder ? 'text-text-primary' : 'text-text-tertiary'
-                                }
+                                }`}
                                 weight={'semibold'}
                               >
                                 {bid.user.name || `사용자 ${bid.user.id}`}
                               </Typography>
                               <Typography
                                 variant="sub"
-                                className={
+                                className={`text-xs sm:text-sm ${
                                   isHighestBidder ? 'text-text-primary' : 'text-text-tertiary'
-                                }
+                                }`}
                               >
                                 {formatDateTime(bid.bid_at)}
                               </Typography>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Typography variant={'second'} weight={'semibold'} className="text-sm">
+                          
+                          {/* Mobile: Bottom Row / Desktop: Right Side with Price and Status */}
+                          <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto pl-11 sm:pl-0">
+                            <Typography 
+                              variant={'second'} 
+                              weight={'semibold'} 
+                              className="text-sm sm:text-base"
+                            >
                               {bid.bid_amount.toLocaleString()}원
                             </Typography>
                             <button
-                              className={`rounded-sm px-2 py-[3px] text-xs font-semibold ${
+                              className={`rounded-sm px-2 py-[3px] text-xs font-semibold whitespace-nowrap ${
                                 isWinning
                                   ? 'text-brand-mint bg-[#111111]'
                                   : 'bg-[#999999] text-white'

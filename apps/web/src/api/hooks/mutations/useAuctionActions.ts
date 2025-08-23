@@ -34,13 +34,19 @@ export const usePlaceBid = () => {
       queryClient.invalidateQueries({ queryKey: ['products'] })
       showSuccess(`입찰이 성공적으로 완료되었습니다. (입찰가: ${data.amount.toLocaleString()}원)`)
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       if (error.message === 'LOGIN_REQUIRED') {
         showError('로그인이 필요합니다.')
         // Redirect to login
         window.location.href = '/auth/login'
       } else if (error.message === 'PHONE_VERIFICATION_REQUIRED') {
         setShowPhoneVerificationModal(true)
+      } else if (error.response?.data?.code === 'BID_ALREADY_EXISTS') {
+        showError(error.response?.data?.message || '이미 참여한 경매입니다.')
+      } else if (error.response?.data?.code === 'AUCTION_ENDED') {
+        showError(error.response?.data?.message || '종료된 경매입니다.')
+      } else if (error.response?.data?.message) {
+        showError(error.response.data.message)
       } else {
         showError('입찰에 실패했습니다.')
       }

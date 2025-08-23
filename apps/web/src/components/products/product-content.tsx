@@ -208,7 +208,6 @@ function ProductContent() {
           </motion.div>
         </motion.div>
 
-        {/* 필터 드롭다운 섹션 */}
         <div className="flex flex-col gap-y-4 py-4">
           {/* 상단 필터 버튼과 정렬 */}
           <div className="flex items-center justify-between">
