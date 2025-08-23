@@ -60,11 +60,11 @@ export default function LoginForm() {
           'mx-auto h-[50px] w-full',
           'px-6 py-[15px]',
           'flex items-center justify-between',
-          'bg-background-100 border-border-light rounded-[8px] border',
+          'bg-background-100 border-border-light border',
           'text-text-primary text-center text-lg font-medium leading-[1.4] tracking-[-0.025em]',
           'hover:bg-background-200',
           'cursor-pointer',
-          'disabled:cursor-not-allowed disabled:opacity-50',
+          'rounded-sm disabled:cursor-not-allowed disabled:opacity-50',
         )}
       >
         <div className="flex h-6 w-6 items-center justify-center">
@@ -77,12 +77,6 @@ export default function LoginForm() {
         </span>
         <div className="h-6 w-6"></div>
       </Button>
-      <div className={cn('text-center text-sm', 'text-text-tertiary')}>
-        처음이신가요?{' '}
-        <a href="/auth/signup" className={cn('font-medium hover:underline', 'text-text-primary')}>
-          회원가입
-        </a>
-      </div>
     </div>
   )
 }

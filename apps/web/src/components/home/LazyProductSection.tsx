@@ -9,6 +9,8 @@ import {
   useProductsEndingSoon,
   useProductsNew,
   useProductsRecommended,
+  useProductsUpcoming,
+  useProductsPopularAuctions,
 } from '@/api/hooks/queries/useProducts'
 import { ProductListSkeleton } from '@/components/ui/skeleton'
 import { useLazyLoad } from '@/hooks/useIntersectionObserver'
@@ -19,7 +21,7 @@ interface LazyProductListProps {
   content?: string
   onProductClick: (productId: number) => void
   onViewAllClick: (content?: string) => void
-  type: 'ending-soon' | 'recommended' | 'new'
+  type: 'ending-soon' | 'recommended' | 'new' | 'upcoming' | 'popular-auctions'
 }
 
 // Transform API data to match component expectations
@@ -107,12 +109,26 @@ function LazyProductSectionContent({
     { enabled: shouldLoad && type === 'new' } as any
   )
 
+  const upcomingQuery = useProductsUpcoming(
+    { page: 1, size: 4 },
+    { enabled: shouldLoad && type === 'upcoming' } as any
+  )
+
+  const popularAuctionsQuery = useProductsPopularAuctions(
+    { page: 2, size: 4 },
+    { enabled: shouldLoad && type === 'popular-auctions' } as any
+  )
+
   // Get the appropriate query based on type
   const query = type === 'ending-soon' 
     ? endingSoonQuery 
     : type === 'recommended' 
     ? recommendedQuery 
-    : newQuery
+    : type === 'new'
+    ? newQuery
+    : type === 'upcoming'
+    ? upcomingQuery
+    : popularAuctionsQuery
 
   const { data, isLoading } = query
 
@@ -195,6 +211,44 @@ export function LazyNewProductsSection({
       subtitle="신규 상품!"
       content="new"
       type="new"
+      onProductClick={onProductClick}
+      onViewAllClick={onViewAllClick}
+    />
+  )
+}
+
+/**
+ * Lazy-loaded popular auctions section
+ */
+export function LazyPopularAuctionsSection({
+  onProductClick,
+  onViewAllClick,
+}: Pick<LazyProductListProps, 'onProductClick' | 'onViewAllClick'>) {
+  return (
+    <LazyProductSectionContent
+      title="사람들이 주목하고 있어요!"
+      subtitle="인기 경매 상품"
+      content="popular"
+      type="popular-auctions"
+      onProductClick={onProductClick}
+      onViewAllClick={onViewAllClick}
+    />
+  )
+}
+
+/**
+ * Lazy-loaded upcoming products section
+ */
+export function LazyUpcomingProductsSection({
+  onProductClick,
+  onViewAllClick,
+}: Pick<LazyProductListProps, 'onProductClick' | 'onViewAllClick'>) {
+  return (
+    <LazyProductSectionContent
+      title="곧 만나러 가요"
+      subtitle="기대되는 오픈예정 상품"
+      content="upcoming"
+      type="upcoming"
       onProductClick={onProductClick}
       onViewAllClick={onViewAllClick}
     />

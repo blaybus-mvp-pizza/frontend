@@ -13,6 +13,8 @@ import {
   LazyEndingSoonSection,
   LazyNewProductsSection,
   LazyRecommendedSection,
+  LazyPopularAuctionsSection,
+  LazyUpcomingProductsSection,
 } from '@/components/home/LazyProductSection'
 import { LazyStoreSections } from '@/components/home/LazyStoreSection'
 import { PRODUCT_TAGS } from '@/constants/filter.constant'
@@ -128,6 +130,19 @@ export default function HomePage() {
 
       {/* Lazy-loaded store sections */}
       <LazyStoreSections storeIds={[2020, 2021]} onProductClick={handleProductClick} />
+
+      {/* Additional product sections */}
+      <div className="mt-8 space-y-12 pb-8 md:mt-12 md:space-y-16 md:pb-12 lg:mt-14 lg:space-y-20 lg:pb-16">
+        <LazyPopularAuctionsSection
+          onProductClick={handleProductClick}
+          onViewAllClick={handleViewAllClick}
+        />
+
+        <LazyUpcomingProductsSection
+          onProductClick={handleProductClick}
+          onViewAllClick={handleViewAllClick}
+        />
+      </div>
 
       {/* Lazy-loaded bottom banner */}
       <LazySection rootMargin="100px">

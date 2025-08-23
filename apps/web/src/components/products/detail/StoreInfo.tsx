@@ -14,7 +14,7 @@ interface StoreInfoProps {
 
 export function StoreInfo({ store }: StoreInfoProps) {
   return (
-    <div className="space-y-3 bg-[#F6F6F6] p-4">
+    <div className="space-y-3 rounded bg-[#F6F6F6] p-4">
       <div className="flex items-start gap-4">
         <div className="flex flex-1 flex-col">
           <h3 className="text-text-primary text-lg font-bold">{store.name}</h3>

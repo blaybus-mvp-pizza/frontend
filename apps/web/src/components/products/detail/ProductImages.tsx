@@ -25,9 +25,7 @@ const shimmer = (w: number, h: number) => `
 </svg>`
 
 const toBase64 = (str: string) =>
-  typeof window === 'undefined'
-    ? Buffer.from(str).toString('base64')
-    : window.btoa(str)
+  typeof window === 'undefined' ? Buffer.from(str).toString('base64') : window.btoa(str)
 
 const dataUrl = `data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`
 
@@ -49,44 +47,17 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
 
   return (
     <div className="space-y-4">
-      <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-100">
+      <div className="relative aspect-[5/4] overflow-hidden rounded-lg bg-gray-100">
         <Image
           src={images[selectedImageIndex] || '/placeholder.png'}
           alt={productName}
           fill
           className="object-cover"
           priority
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          sizes="(max-width: 500px) 100vw, (max-width: 1200px) 50vw, 33vw"
           placeholder="blur"
           blurDataURL={dataUrl}
         />
-
-        {images.length > 1 && (
-          <>
-            <button
-              onClick={() => setSelectedImageIndex(Math.max(0, selectedImageIndex - 1))}
-              disabled={selectedImageIndex === 0}
-              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-lg backdrop-blur transition-colors hover:bg-white disabled:opacity-50"
-              aria-label="이전 이미지"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() =>
-                setSelectedImageIndex(Math.min(images.length - 1, selectedImageIndex + 1))
-              }
-              disabled={selectedImageIndex === images.length - 1}
-              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-lg backdrop-blur transition-colors hover:bg-white disabled:opacity-50"
-              aria-label="다음 이미지"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-
-            <div className="absolute bottom-4 right-4 rounded-full bg-black/50 px-3 py-1 text-sm text-white">
-              {selectedImageIndex + 1} / {images.length}
-            </div>
-          </>
-        )}
       </div>
 
       {images.length > 1 && (
@@ -96,7 +67,7 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
               key={index}
               onClick={() => setSelectedImageIndex(index)}
               className={cn(
-                'relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all',
+                'relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all',
                 selectedImageIndex === index
                   ? 'border-black'
                   : 'border-gray-200 hover:border-gray-400',

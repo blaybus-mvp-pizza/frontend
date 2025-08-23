@@ -88,4 +88,20 @@ export const productsApi = {
     const response = await apiClient.post(`/products/${productId}/like`)
     return response.data
   },
+
+  // Get upcoming products (scheduled auctions)
+  getUpcoming: async (filters?: ProductFilters): Promise<Page<ProductListItem>> => {
+    const response = await apiClient.get('/products/upcoming', {
+      params: filters,
+    })
+    return response.data
+  },
+
+  // Get popular auction products
+  getPopularAuctions: async (filters?: ProductFilters): Promise<Page<ProductListItem>> => {
+    const response = await apiClient.get('/products/recommended', {
+      params: { ...filters, page: filters?.page || 2 },
+    })
+    return response.data
+  },
 }

@@ -42,6 +42,29 @@ function formatDateTime(dateString: string): string {
   return `${year}.${month}.${day}(${hours}:${minutes})`
 }
 
+function calculateTimeUntilStart(starts_at: string | Date): string {
+  if (!starts_at) return ''
+
+  const startTime =
+    typeof starts_at === 'string' ? new Date(starts_at).getTime() : starts_at.getTime()
+  const now = Date.now()
+  const timeUntilStart = startTime - now
+
+  if (timeUntilStart <= 0) return ''
+
+  const days = Math.floor(timeUntilStart / (1000 * 60 * 60 * 24))
+  const hours = Math.floor((timeUntilStart / (1000 * 60 * 60)) % 24)
+  const minutes = Math.floor((timeUntilStart / (1000 * 60)) % 60)
+
+  if (days > 0) {
+    return `${days}일 ${hours}시간 후 시작`
+  } else if (hours > 0) {
+    return `${hours}시간 ${minutes}분 후 시작`
+  } else {
+    return `${minutes}분 후 시작`
+  }
+}
+
 function getBidIncrement(
   currentPrice: number,
   bidSteps: number[] | undefined,
@@ -84,6 +107,7 @@ export default function ProductDetailPage() {
   const [, setCurrentTime] = useState(new Date())
   const [newBidAnimation, setNewBidAnimation] = useState<number | null>(null)
   const prevHighestBidderRef = useRef<number | null>(null)
+  const [isClick, setIsClick] = useState(false)
 
   const { product, auction, similar, isLoading, bids, refetch } = useProductDetail(productId)
   // Update time every second for countdown
@@ -157,15 +181,20 @@ export default function ProductDetailPage() {
     <div className="mx-auto w-full py-6">
       <Breadcrumb items={breadcrumbItems} className="mb-6" />
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
+        {/* Left column - Images and specs */}
         <div className="space-y-6">
           <div className="space-y-4">
             <ProductImages images={product.images || []} productName={product.name} />
             <ProductSpecs />
           </div>
-          <ProductTabs />
+          {/* Product tabs - shown after purchase options on mobile, normal position on desktop */}
+          <div className="hidden lg:block">
+            <ProductTabs />
+          </div>
         </div>
 
+        {/* Right column - Product info and purchase options */}
         <div className="space-y-3">
           <ProductInfo
             tags={product.tags || []}
@@ -186,27 +215,61 @@ export default function ProductDetailPage() {
               <div className="flex items-center gap-2">
                 <ClockIcon className="text-white" size={16} />
                 <span className="flex items-center gap-1 text-sm text-white">
-                  남은시간:
-                  {auction && auction.status === 'RUNNING' ? (
-                    <span className="text-brand-mint text-lg font-bold">
-                      {calculateRemainingTime(auction.ends_at)}
-                    </span>
+                  {auction && auction.status === 'SCHEDULED' ? (
+                    <>
+                      시작까지:
+                      <span className="text-lg font-bold text-yellow-400">
+                        {calculateTimeUntilStart(auction.starts_at)}
+                      </span>
+                    </>
+                  ) : auction && auction.status === 'RUNNING' ? (
+                    <>
+                      남은시간:
+                      <span className="text-brand-mint text-lg font-bold">
+                        {calculateRemainingTime(auction.ends_at)}
+                      </span>
+                    </>
                   ) : (
-                    <span className="text-lg font-bold text-gray-400">경매 종료</span>
+                    <>
+                      남은시간:
+                      <span className="text-lg font-bold text-gray-400">경매 종료</span>
+                    </>
                   )}
                 </span>
               </div>
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
-                <BellIcon className="text-white" size={16} />
+              <div
+                className={`flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 ${
+                  isClick ? 'bg-white/40 shadow-inner' : 'bg-white/20'
+                }`}
+                onClick={() => setIsClick(!isClick)}
+              >
+                <BellIcon
+                  className={`transition-colors duration-200 ${
+                    isClick ? 'text-white/90' : 'text-white'
+                  }`}
+                  size={16}
+                />
               </div>
             </div>
             <div className="divide-border-light border-border-light divide-y rounded-b border p-5">
               <div className="w-full space-y-3 pb-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-[#ff0000]" />
+                    <div
+                      className={`h-2 w-2 rounded-full ${
+                        auction?.status === 'SCHEDULED'
+                          ? 'bg-yellow-500'
+                          : auction?.status === 'RUNNING'
+                            ? 'bg-[#ff0000]'
+                            : 'bg-gray-400'
+                      }`}
+                    />
                     <Typography variant="second" weight={'semibold'}>
-                      실시간 경매 LIVE
+                      {auction?.status === 'SCHEDULED'
+                        ? '경매 시작 예정'
+                        : auction?.status === 'RUNNING'
+                          ? '실시간 경매 LIVE'
+                          : '경매 종료'}
                     </Typography>
                   </div>
                   <div className="flex items-center gap-2">
@@ -217,7 +280,7 @@ export default function ProductDetailPage() {
                 <div className="border-border-light flex w-full items-center justify-between rounded border px-4 py-3">
                   <div className="flex items-center gap-2 md:flex-row">
                     <Typography variant="sub" weight="normal" className="max-md:text-xs">
-                      현재 입찰가
+                      {auction?.status === 'SCHEDULED' ? '시작가' : '현재 입찰가'}
                     </Typography>
                     <Typography variant={'first'} weight="bold" className="max-md:text-sm">
                       {(auction?.current_highest_bid || auction?.start_price || 0).toLocaleString()}
@@ -226,6 +289,9 @@ export default function ProductDetailPage() {
                   </div>
                   <Typography variant={'sub'} className="line-clamp-1 max-md:text-xs">
                     {(() => {
+                      if (auction?.status === 'SCHEDULED') {
+                        return '경매 시작 전'
+                      }
                       const currentPrice = auction?.current_highest_bid || auction?.start_price || 0
                       const { increment, isMaxBid } = getBidIncrement(
                         currentPrice,
@@ -278,13 +344,13 @@ export default function ProductDetailPage() {
                 {newBidAnimation && (
                   <div className="flex items-center justify-center py-2">
                     <div className="animate-bounce rounded-full bg-[#A3DDD4] px-3 py-1">
-                      <Typography variant="sub" className="text-white font-semibold">
+                      <Typography variant="sub" className="font-semibold text-white">
                         🎉 새로운 최고 입찰자!
                       </Typography>
                     </div>
                   </div>
                 )}
-                <div className="flex w-full flex-col gap-y-3 relative">
+                <div className="relative flex w-full flex-col gap-y-3">
                   {bids?.items && bids.items.length > 0 ? (
                     bids.items.slice(0, 3).map((bid, index) => {
                       const isHighestBidder = index === 0
@@ -294,7 +360,7 @@ export default function ProductDetailPage() {
                       return (
                         <div
                           key={bid.user.id + '_' + bid.bid_at}
-                          className={`flex w-full items-center gap-[5px] rounded-sm px-3 py-2 transition-all duration-500 transform ${
+                          className={`flex w-full transform items-center gap-[5px] rounded-sm px-3 py-2 transition-all duration-500 ${
                             isHighestBidder
                               ? 'border border-[#A3DDD4] bg-[#F8FEFD] shadow-lg'
                               : 'bg-[#EEEEEE]'
@@ -366,6 +432,13 @@ export default function ProductDetailPage() {
                 </div>
                 {auction && (
                   <>
+                    {auction.status === 'SCHEDULED' && (
+                      <div className="flex items-center justify-center rounded-sm bg-yellow-100 px-4 py-3">
+                        <p className="font-bold text-yellow-700">
+                          {calculateTimeUntilStart(auction.starts_at) || '경매 시작 예정'}
+                        </p>
+                      </div>
+                    )}
                     {auction.status === 'RUNNING' &&
                       (() => {
                         const currentPrice = auction.current_highest_bid || auction.start_price || 0
@@ -394,11 +467,6 @@ export default function ProductDetailPage() {
                     {auction.status === 'ENDED' && (
                       <div className="flex items-center justify-center rounded-sm bg-gray-200 px-4 py-3">
                         <p className="font-bold text-gray-600">경매가 종료되었습니다</p>
-                      </div>
-                    )}
-                    {auction.status === 'SCHEDULED' && (
-                      <div className="flex items-center justify-center rounded-sm bg-gray-200 px-4 py-3">
-                        <p className="font-bold text-gray-600">경매 시작 예정</p>
                       </div>
                     )}
                   </>
@@ -442,7 +510,14 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      <SimilarProducts items={similar?.items || []} />
+      {/* Product tabs - shown at the bottom on mobile */}
+      <div className="mt-8 block lg:hidden">
+        <ProductTabs />
+      </div>
+
+      <div className="mt-8">
+        <SimilarProducts items={similar?.items || []} />
+      </div>
 
       {showBuyNowModal && auction && (
         <BuyNowModal
@@ -488,7 +563,7 @@ function ProductDetailSkeleton() {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
         <div className="space-y-4">
-          <Skeleton className="aspect-square rounded-lg" />
+          <Skeleton className="aspect-[5/4] rounded-lg" />
           <div className="flex gap-2">
             {[...Array(4)].map((_, i) => (
               <Skeleton key={i} className="h-20 w-20 rounded-lg" />

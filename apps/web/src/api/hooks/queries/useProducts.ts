@@ -55,6 +55,32 @@ export const useProductsNew = (
   })
 }
 
+// Get upcoming products (scheduled auctions)
+export const useProductsUpcoming = (
+  filters?: ProductFilters,
+  options?: UseQueryOptions<Page<ProductListItem>>,
+) => {
+  return useQuery({
+    queryKey: queryKeys.products.upcoming(filters),
+    queryFn: () => productsApi.getUpcoming(filters),
+    staleTime: 60000, // 1 minute
+    ...options,
+  })
+}
+
+// Get popular auction products
+export const useProductsPopularAuctions = (
+  filters?: ProductFilters,
+  options?: UseQueryOptions<Page<ProductListItem>>,
+) => {
+  return useQuery({
+    queryKey: queryKeys.products.popularAuctions(filters),
+    queryFn: () => productsApi.getPopularAuctions(filters),
+    staleTime: 60000, // 1 minute
+    ...options,
+  })
+}
+
 // Infinite scroll for products
 export const useInfiniteProducts = (
   filters?: ProductFilters,
