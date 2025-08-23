@@ -23,8 +23,8 @@ export function TopNavBar() {
   const { data: unreadCount } = useUnreadNotificationsCount(isAuthenticated && isHydrated)
 
   return (
-    <div className="relative">
-      {/* Announcement banner - normal flow */}
+    <>
+      {/* Announcement banner - normal flow, disappears on scroll */}
       <div className="bg-black py-2.5 text-center">
         <Typography variant="caption" align="center" className="text-xs text-white md:text-sm">
           신규 오픈, 지금 <span className="text-brand-mint">NafaL</span>에서{' '}
@@ -63,10 +63,10 @@ export function TopNavBar() {
                   {/* 데스크톱 검색바 */}
                   <div className="relative hidden w-[320px] max-w-xs md:block lg:max-w-md xl:max-w-lg">
                     <input
-                      className="bg-secondary h-10 w-full rounded-lg px-4 pr-10 text-sm md:h-12"
+                      className="bg-secondary h-10 w-full rounded-sm px-4 pr-10 text-sm md:h-12"
                       placeholder="찾으시는 상품이 있으신가요?"
                     />
-                    <Search className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                    <Search className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2" />
                   </div>
                 </div>
               </div>
@@ -117,7 +117,7 @@ export function TopNavBar() {
                   <li key={v.href}>
                     <Link
                       href={v.href}
-                      className="rounded-md px-3 py-2 font-medium text-black transition-colors hover:bg-[#f5f5f5]"
+                      className="text-text-primary rounded-md px-3 py-2 font-medium transition-colors hover:bg-[#f5f5f5]"
                     >
                       {v.name}
                     </Link>
@@ -157,6 +157,6 @@ export function TopNavBar() {
           )}
         </nav>
       </header>
-    </div>
+    </>
   )
 }

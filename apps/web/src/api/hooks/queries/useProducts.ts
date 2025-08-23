@@ -86,10 +86,13 @@ export const useProductDetail = (productId: number, options?: UseQueryOptions<Pr
 }
 
 // Get recent stores
-export const useRecentStores = (options?: UseQueryOptions<Page<StoreWithProducts>>) => {
+export const useRecentStores = (
+  filters?: { page?: number; size?: number; stores?: number },
+  options?: UseQueryOptions<Page<StoreWithProducts>>,
+) => {
   return useQuery({
-    queryKey: queryKeys.products.stores.recent(),
-    queryFn: () => productsApi.getRecentStores(),
+    queryKey: queryKeys.products.stores.recent(filters),
+    queryFn: () => productsApi.getRecentStores(filters),
     staleTime: 120000, // 2 minutes
     ...options,
   })

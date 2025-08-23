@@ -1,11 +1,6 @@
-import type {
-  AuctionInfo,
-  BidItem,
-  Page,
-  ProductListItem,
-  ProductMeta,
-  StoreMeta,
-} from '@/types/api'
+import { ProductListItem } from '@workspace/ui/types'
+
+import type { AuctionInfo, BidItem, Page, ProductMeta, StoreMeta } from '@/types/api'
 
 import { apiClient } from '../client/apiClient'
 
@@ -29,7 +24,7 @@ export const productsApi = {
       price_min?: number
       price_max?: number
     },
-  ): Promise<Page<ProductListItem>> => {
+  ): Promise<Page<any>> => {
     const response = await apiClient.get(`/catalog/stores/${storeId}/products`, { params })
     return response.data
   },
@@ -76,7 +71,7 @@ export const productsApi = {
       price_min?: number
       price_max?: number
     },
-  ): Promise<Page<ProductListItem>> => {
+  ): Promise<Page<any>> => {
     const response = await apiClient.get(`/catalog/products/${productId}/similar`, {
       params: {
         page: params?.page || 1,

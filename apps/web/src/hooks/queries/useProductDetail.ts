@@ -11,6 +11,7 @@ export const productDetailKeys = {
   bids: (id: number, page?: number) => [...productDetailKeys.all, 'bids', id, { page }] as const,
   similar: (id: number, params?: any) => [...productDetailKeys.all, 'similar', id, params] as const,
   store: (id: number) => ['store', id] as const,
+  storeProducts: (id: number) => ['store', 'products', id] as const,
 }
 
 // Product metadata hook
@@ -72,6 +73,15 @@ export function useStoreMeta(storeId: number) {
   return useQuery({
     queryKey: productDetailKeys.store(storeId),
     queryFn: () => productsApi.getStoreMeta(storeId),
+    staleTime: 1000 * 60 * 10, // 10 minutes
+    gcTime: 1000 * 60 * 20, // 20 minutes
+    enabled: storeId > 0,
+  })
+}
+export function useStoreProductMeta(storeId: number) {
+  return useQuery({
+    queryKey: productDetailKeys.storeProducts(storeId),
+    queryFn: () => productsApi.getStoreProducts(storeId),
     staleTime: 1000 * 60 * 10, // 10 minutes
     gcTime: 1000 * 60 * 20, // 20 minutes
     enabled: storeId > 0,

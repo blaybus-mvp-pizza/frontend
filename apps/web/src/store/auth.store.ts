@@ -18,6 +18,7 @@ interface AuthState {
   setLoading: (loading: boolean) => void
   setToken: (token: string) => void
   setHydrated: () => void
+  setAuthenticated: (authenticated: boolean) => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -85,6 +86,8 @@ export const useAuthStore = create<AuthState>()(
         },
 
         setHydrated: () => set({ isHydrated: true }, false, 'auth/setHydrated'),
+        
+        setAuthenticated: (authenticated) => set({ isAuthenticated: authenticated }, false, 'auth/setAuthenticated'),
       }),
       {
         name: 'auth-storage',

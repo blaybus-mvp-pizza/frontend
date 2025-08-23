@@ -2,11 +2,11 @@
 
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
 
 import { Button } from '@workspace/ui/components/button'
 import { ProductSampleList } from '@workspace/ui/components/product/product-sample-list'
 import { Typography } from '@workspace/ui/components/typography'
+import { motion } from 'framer-motion'
 
 import {
   useProductsEndingSoon,
@@ -22,6 +22,7 @@ import {
   Skeleton,
 } from '@/components/ui/skeleton'
 import { PRODUCT_TAGS } from '@/constants/filter.constant'
+import { useStoreMeta, useStoreProductMeta } from '@/hooks/queries/useProductDetail'
 
 export default function HomePage() {
   const router = useRouter()
@@ -42,8 +43,20 @@ export default function HomePage() {
     size: 4,
   })
 
-  const { data: recentStoresData, isLoading: recentStoresLoading } = useRecentStores()
+  // const { data: recentStoresData, isLoading: recentStoresLoading } = useRecentStores({
+  //   page: 1,
+  //   size: 2,
+  //   stores: 2,
+  // })
 
+  const { data: homeStoreMeta1, isLoading: homeStoreMeta1Loading } = useStoreMeta(2020)
+  const { data: homeStoreMeta2, isLoading: homeStoreMeta2Loading } = useStoreMeta(2021)
+
+  const { data: homeStoreProductMeta1, isLoading: homeStoreProductMeta1Loading } =
+    useStoreProductMeta(2020)
+  const { data: homeStoreProductMeta2, isLoading: homeStoreProductMeta2Loading } =
+    useStoreProductMeta(2021)
+  console.log(homeStoreMeta1, homeStoreMeta2, homeStoreProductMeta1, homeStoreProductMeta2)
   const handleProductClick = (productId: number) => {
     router.push(`/products/${productId}`)
   }
@@ -58,7 +71,7 @@ export default function HomePage() {
   console.log()
 
   // Show skeleton loading state
-  if (recommendedLoading || endingSoonLoading || newProductsLoading || recentStoresLoading) {
+  if (recommendedLoading || endingSoonLoading || newProductsLoading) {
     return (
       <div className="min-h-screen">
         {/* 히어로 배너 skeleton */}
@@ -161,7 +174,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* 히어로 배너 */}
-      <motion.div 
+      <motion.div
         className="w-full"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -171,7 +184,7 @@ export default function HomePage() {
       </motion.div>
 
       {/* 카테고리 태그 */}
-      <motion.div 
+      <motion.div
         className="mt-6 md:mt-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -210,63 +223,62 @@ export default function HomePage() {
         </div>
       </motion.div>
 
-      {/* 상품 리스트 섹션 */}
       <div className="mt-8 space-y-12 pb-8 md:mt-12 md:space-y-16 md:pb-12 lg:mt-14 lg:space-y-20 lg:pb-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
         >
           <ProductSampleList
-          products={urgentProducts}
-          auctions={auctions}
-          title="지금 놓치면 사라져요!"
-          subtitle="마감임박 상품"
-          showViewAll={true}
-          showTimeLeft={true}
-          onProductClick={handleProductClick}
+            products={urgentProducts}
+            auctions={auctions}
+            title="지금 놓치면 사라져요!"
+            subtitle="마감임박 상품"
+            showViewAll={true}
+            showTimeLeft={true}
+            onProductClick={handleProductClick}
             onViewAllClick={() => handleViewAllClick('ending-soon')}
           />
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
         >
           <ProductSampleList
             products={mdPicks}
-          auctions={auctions}
-          title="알찬 상품만 추렸어요!"
-          subtitle="MD`S Pick"
-          showViewAll={true}
-          showTimeLeft={true}
-          onProductClick={handleProductClick}
+            auctions={auctions}
+            title="알찬 상품만 추렸어요!"
+            subtitle="MD`S Pick"
+            showViewAll={true}
+            showTimeLeft={true}
+            onProductClick={handleProductClick}
             onViewAllClick={() => handleViewAllClick('popular')}
           />
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
         >
           <ProductSampleList
             products={newProducts}
-          auctions={auctions}
-          title="따끈따근 새롭게 올라온"
-          subtitle="신규 상품!"
-          showViewAll={true}
-          showTimeLeft={true}
-          onProductClick={handleProductClick}
+            auctions={auctions}
+            title="따끈따근 새롭게 올라온"
+            subtitle="신규 상품!"
+            showViewAll={true}
+            showTimeLeft={true}
+            onProductClick={handleProductClick}
             onViewAllClick={() => handleViewAllClick('new')}
           />
         </motion.div>
       </div>
 
-      <motion.div 
-        onClick={() => {}} 
+      <motion.div
+        onClick={() => {}}
         className="relative h-40 text-white"
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
@@ -288,29 +300,40 @@ export default function HomePage() {
         </div>
       </motion.div>
 
-      {recentStoresData && recentStoresData.items && recentStoresData.items.length > 0 && (
+      {homeStoreMeta1 && homeStoreMeta2 && homeStoreProductMeta1 && homeStoreProductMeta2 && (
         <>
-          {recentStoresData.items
-            .filter((storeData) => storeData.products && storeData.products.length > 0)
-            .map((storeData, index) => (
-              <motion.div
-                key={`store-motion-${storeData.store.store_id}`}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <StoreSection
-                key={`store-${storeData.store.store_id}`}
-                storeData={storeData}
-                  onProductClick={handleProductClick}
-                />
-              </motion.div>
-            ))}
+          <motion.div
+            key={`store-motion-1`}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <StoreSection
+              key={`store-1`}
+              storeData={homeStoreMeta1}
+              productData={homeStoreProductMeta1.items}
+              onProductClick={handleProductClick}
+            />
+          </motion.div>
+          <motion.div
+            key={`store-motion-2`}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <StoreSection
+              key={`store-2`}
+              storeData={homeStoreMeta2}
+              productData={homeStoreProductMeta2.items}
+              onProductClick={handleProductClick}
+            />
+          </motion.div>
         </>
       )}
 
-      <motion.div 
+      <motion.div
         className="relative mb-40 mt-20 h-60 text-white"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}

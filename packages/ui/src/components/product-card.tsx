@@ -89,12 +89,10 @@ export function ProductCard({
           </p>
         )}
 
-        {/* 상품명 */}
         <p className="text-text-primary font-semibold leading-[140%] line-clamp-2">
           {product.name}
         </p>
         </div>
-        {/* 가격 정보 */}
         <div >
           {auction ? (
             <div className="space-y-1">
@@ -123,13 +121,12 @@ export function ProductCard({
           )}
         </div>
 
-        {/* 태그 */}
         {product.labels && product.labels.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {product.labels.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="rounded border gap-1 border-[#E5E5EC] p-0.5 text-xs text-secondary-foreground"
+                className="rounded border gap-1 border-[#E5E5EC] px-1 py-[3px] text-xs text-secondary-foreground"
               >
                 {tag}
               </span>

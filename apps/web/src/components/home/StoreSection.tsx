@@ -5,7 +5,10 @@ import Image from 'next/image'
 import { ProductCard } from '@workspace/ui/components/product-card'
 import { Typography } from '@workspace/ui/components/typography'
 
+import { ProductListItem } from '@/api/types'
 import { MapIcon } from '@/components/icons'
+import { useStoreMeta } from '@/hooks/queries/useProductDetail'
+import { StoreMeta } from '@/types/api'
 
 interface StoreData {
   store: {
@@ -28,34 +31,36 @@ interface StoreData {
 }
 
 interface StoreSectionProps {
-  storeData: StoreData
+  storeData: StoreMeta
+  productData: ProductListItem[]
   onProductClick: (productId: number) => void
 }
 
-export default function StoreSection({ storeData, onProductClick }: StoreSectionProps) {
+export default function StoreSection({
+  storeData,
+  productData,
+  onProductClick,
+}: StoreSectionProps) {
   return (
     <div className="mt-12 w-full space-y-4 md:mt-16 lg:mt-20">
-      {/* Store Header */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-x-2">
         <span className="text-brand-mint inline-flex w-fit items-center gap-x-1.5 bg-black px-2 py-1 sm:gap-x-2">
           <MapIcon className="h-4 w-4 sm:h-5 sm:w-5" />
           <Typography className="text-brand-mint text-sm font-semibold sm:text-base md:text-xl">
-            {storeData.store.name}
+            {storeData.name}
           </Typography>
         </span>
         <Typography variant="h6" className="text-sm font-semibold sm:text-base md:text-xl">
-          {storeData.store.sales_description || '팝업스토어에서 판매중인 아이템'}
+          {storeData.sales_description || '팝업스토어에서 판매중인 아이템'}
         </Typography>
       </div>
 
-      {/* Store Showcase */}
       <div className="flex flex-col gap-4 lg:flex-row lg:gap-x-8">
-        {/* Store Image with Info Overlay */}
         <div className="relative aspect-square w-full overflow-hidden rounded-lg lg:h-[400px] lg:max-w-[442px] lg:shrink-0">
-          {storeData.store.image_url && (
+          {storeData.image_url && (
             <Image
-              src={storeData.store.image_url}
-              alt={`${storeData.store.name} 썸네일`}
+              src={storeData.image_url}
+              alt={`${storeData.name} 썸네일`}
               quality={100}
               fill
               className="object-cover"
@@ -68,20 +73,18 @@ export default function StoreSection({ storeData, onProductClick }: StoreSection
               variant="h5"
               className="mb-1 text-lg font-bold text-white sm:mb-2 sm:text-xl lg:text-2xl"
             >
-              {storeData.store.name}
+              {storeData.name}
             </Typography>
             <Typography variant="body1" className="line-clamp-2 text-sm text-white/90 sm:text-base">
-              {storeData.store.description}
+              {storeData.description}
             </Typography>
           </div>
         </div>
-
-        {/* Product Cards */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:flex lg:gap-4">
-          {storeData.products.slice(0, 2).map((product) => {
+        <div className="flex gap-3 sm:gap-4 lg:flex lg:gap-4">
+          {productData.slice(0, 2).map((product) => {
             const productData = {
               id: product.product_id,
-              popupStoreId: storeData.store.store_id,
+              popupStoreId: 0,
               category: '아트/컬렉터블',
               name: product.product_name,
               summary: product.popup_store_name,
@@ -106,7 +109,7 @@ export default function StoreSection({ storeData, onProductClick }: StoreSection
                 : [],
               tags: [],
               popupStore: {
-                id: storeData.store.store_id,
+                id: storeData.store_id,
                 name: product.popup_store_name,
                 createdAt: new Date(),
               },

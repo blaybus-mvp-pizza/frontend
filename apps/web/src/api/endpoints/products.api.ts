@@ -57,8 +57,10 @@ export const productsApi = {
   },
 
   // Get recent stores with products
-  getRecentStores: async (): Promise<Page<StoreWithProducts>> => {
-    const response = await apiClient.get('/products/stores/recent')
+  getRecentStores: async (filters: any): Promise<Page<StoreWithProducts>> => {
+    const response = await apiClient.get('/products/stores/recent', {
+      params: filters,
+    })
     return response.data
   },
 

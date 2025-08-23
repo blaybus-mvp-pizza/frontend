@@ -21,7 +21,7 @@ export const queryKeys = {
     new: (filters?: ProductFilters) => [...queryKeys.products.all, 'new', filters] as const,
     stores: {
       all: () => [...queryKeys.products.all, 'stores'] as const,
-      recent: () => [...queryKeys.products.stores.all(), 'recent'] as const,
+      recent: (filters?: any) => [...queryKeys.products.stores.all(), 'recent', filters] as const,
       list: (filters?: StoreFilters) =>
         [...queryKeys.products.stores.all(), 'list', filters] as const,
     },

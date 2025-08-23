@@ -11,9 +11,7 @@ export default function RootLayout({
   return (
     <>
       <TopNavBar />
-      <main className="max-w-container relative mx-auto min-h-[100svh] w-full px-2 pt-5 md:px-4">
-        {children}
-      </main>
+      <main className="relative min-h-[100svh] w-full px-4">{children}</main>
       <Footer />
     </>
   )

@@ -74,9 +74,6 @@ export interface ProductListItem {
   representativeImage?: string;
   auctionEndsAt?: string;
   labels: string[]; // 상품 라벨 ("신규상품", "베스트" 등)
-  biddersCount?: number;
-  isLiked?: boolean;
-  auction?: Auction; // For auction card display
 }
 
 // 상세 페이지용 전체 타입

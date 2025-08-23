@@ -129,12 +129,10 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1950px] px-4 py-6">
-      {/* Breadcrumb */}
+    <div className="mx-auto w-full max-w-[1950px] py-6">
       <Breadcrumb items={breadcrumbItems} className="mb-6" />
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
-        {/* Left Column - Images and Details */}
         <div className="space-y-6">
           <div className="space-y-4">
             <ProductImages images={product.images || []} productName={product.name} />
@@ -215,7 +213,7 @@ export default function ProductDetailPage() {
                     })()}
                   </Typography>
                 </div>
-                <div className="col-span-2 grid grid-cols-2 gap-3 rounded-sm bg-[#F6F6F6] p-4">
+                <div className="col-span-2 grid grid-cols-1 gap-2 rounded-sm bg-[#F6F6F6] p-3 sm:grid-cols-2 sm:gap-3 md:p-4">
                   <div className="flex items-center gap-2">
                     <Typography variant={'sub'} className="text-text-tertiary">
                       경매 시작일
@@ -386,7 +384,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="relative flex items-center gap-1 rounded bg-[#222222] px-3 py-1.5">
                   <div className="absolute -left-1.5 top-1/2 h-0 w-0 -translate-y-1/2 border-b-[6px] border-r-[8px] border-t-[6px] border-b-transparent border-r-[#222222] border-t-transparent"></div>
-                  <span className="text-xs font-medium text-white">이 상품이 주인을 찾으면</span>
+                  <span className="text-sm font-medium text-white">이 상품이 주인을 찾으면</span>
                   <span className="flex items-center gap-x-1 text-xs font-medium text-[#94D8D4]">
                     <span className="relative inline-block h-2.5 w-2.5">
                       <Image src="/icons/RECYCLE.svg" alt="Recycle Icon" fill sizes="10px" />

@@ -27,12 +27,11 @@ export function ProductTabs({ details, shipping, returns }: ProductTabsProps) {
                   </td>
                   <td className="px-6 py-4">스테인리스</td>
                 </tr>
-                text-text-secondary
                 <tr className="border-b border-[#F8F8F8]">
                   <td className="bg-gray-50 px-6 py-4 text-sm font-medium text-[#505050]">
                     사용위치
                   </td>
-                  <td className="px-6 py-4">거실</td>text-text-secondary
+                  <td className="px-6 py-4">거실</td>
                 </tr>
                 <tr className="border-b border-[#F8F8F8]">
                   <td className="bg-gray-50 px-6 py-4 text-sm font-medium text-[#505050]">
