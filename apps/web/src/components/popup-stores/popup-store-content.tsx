@@ -1,23 +1,16 @@
-// apps/web/src/components/popup-stores/popup-store-content.tsx
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 import { ProductCard } from '@workspace/ui/components/product-card'
-import { Typography } from '@workspace/ui/components/typography'
 import { Auction, Product } from '@workspace/ui/types'
-import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { StoreWithProducts } from '@/api/types/product.types'
 import { productsService } from '@/services/api/products-real'
-
-// apps/web/src/components/popup-stores/popup-store-content.tsx
-
-// apps/web/src/components/popup-stores/popup-store-content.tsx
-
-// apps/web/src/components/popup-stores/popup-store-content.tsx
 
 export default function PopupStoreContent() {
   const router = useRouter()
@@ -25,7 +18,6 @@ export default function PopupStoreContent() {
   const [stores, setStores] = useState<StoreWithProducts[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [carouselIndex, setCarouselIndex] = useState(0)
   const carouselRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -58,15 +50,26 @@ export default function PopupStoreContent() {
   }
 
   const handleCarouselPrev = () => {
-    if (carouselIndex > 0) {
-      setCarouselIndex(carouselIndex - 1)
+    if (currentStoreIndex > 0) {
+      const newIndex = currentStoreIndex - 1
+      setCurrentStoreIndex(newIndex)
+      if (carouselRef.current) {
+        // Scroll to show the selected store
+        const scrollPosition = newIndex * 290
+        carouselRef.current.scrollTo({ left: scrollPosition, behavior: 'smooth' })
+      }
     }
   }
 
   const handleCarouselNext = () => {
-    const maxIndex = Math.ceil(stores.length / 3) - 1
-    if (carouselIndex < maxIndex) {
-      setCarouselIndex(carouselIndex + 1)
+    if (currentStoreIndex < stores.length - 1) {
+      const newIndex = currentStoreIndex + 1
+      setCurrentStoreIndex(newIndex)
+      if (carouselRef.current) {
+        // Scroll to show the selected store
+        const scrollPosition = newIndex * 290
+        carouselRef.current.scrollTo({ left: scrollPosition, behavior: 'smooth' })
+      }
     }
   }
 
@@ -123,9 +126,9 @@ export default function PopupStoreContent() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <Typography variant="h4" className="mb-2">
+          <p className="mb-2 text-xl font-semibold tracking-tight md:text-2xl lg:text-3xl">
             {error || 'No popup stores available'}
-          </Typography>
+          </p>
         </div>
       </div>
     )
@@ -137,9 +140,9 @@ export default function PopupStoreContent() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <Typography variant="h4" className="mb-2">
+          <p className="mb-2 text-xl font-semibold tracking-tight md:text-2xl lg:text-3xl">
             No store selected
-          </Typography>
+          </p>
         </div>
       </div>
     )
@@ -147,133 +150,74 @@ export default function PopupStoreContent() {
 
   return (
     <div className="min-h-screen">
-      {/* Banner Carousel Section */}
-      <div className="relative w-full overflow-hidden bg-gray-50 py-8">
-        <div className="mx-auto max-w-7xl px-4">
-          {/* Carousel Navigation */}
-          <div className="mb-4 flex items-center justify-between">
-            <Typography variant="h4" weight="bold">
-              팝업스토어
-            </Typography>
-            <div className="flex items-center gap-2">
+      <div className="relative w-full overflow-hidden bg-[#F8F8FA] py-4">
+        <div className="max-w-container mx-auto w-full space-y-6 px-4">
+          <div className="flex w-full justify-between">
+            <p className="text-lg font-bold md:text-2xl">팝업스토어</p>
+            <div className="flex items-center gap-3">
               <button
                 onClick={handleCarouselPrev}
-                disabled={carouselIndex === 0}
-                className="rounded-full bg-white p-2 shadow-md transition-opacity disabled:opacity-50"
+                className="p-1 text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-30"
+                disabled={currentStoreIndex === 0}
               >
                 <ChevronLeft size={20} />
               </button>
-              <Typography variant="caption" className="px-2">
-                {carouselIndex + 1} / {Math.ceil(stores.length / 3)}
-              </Typography>
+              <span className="min-w-[60px] text-center text-sm font-medium">
+                {String(currentStoreIndex + 1).padStart(2, '0')} /{' '}
+                {String(stores.length).padStart(2, '0')}
+              </span>
               <button
                 onClick={handleCarouselNext}
-                disabled={carouselIndex >= Math.ceil(stores.length / 3) - 1}
-                className="rounded-full bg-white p-2 shadow-md transition-opacity disabled:opacity-50"
+                className="p-1 text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-30"
+                disabled={currentStoreIndex === stores.length - 1}
               >
                 <ChevronRight size={20} />
               </button>
             </div>
           </div>
-
-          {/* Carousel Container */}
           <div className="overflow-hidden" ref={carouselRef}>
-            <div
-              className="flex transition-transform duration-300 ease-in-out"
-              style={{ transform: `translateX(-${carouselIndex * 100}%)` }}
-            >
-              {Array.from({ length: Math.ceil(stores.length / 3) }).map((_, pageIndex) => (
-                <div key={pageIndex} className="flex w-full flex-shrink-0 gap-4">
-                  {stores.slice(pageIndex * 3, (pageIndex + 1) * 3).map((storeData, index) => {
-                    const actualIndex = pageIndex * 3 + index
-                    return (
-                      <motion.div
-                        key={storeData.store.store_id}
-                        className={`relative flex-1 cursor-pointer overflow-hidden rounded-lg transition-all hover:shadow-lg ${
-                          actualIndex === currentStoreIndex ? 'ring-2 ring-blue-500' : ''
-                        }`}
-                        onClick={() => handleStoreClick(actualIndex)}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        initial={{ opacity: 0, y: 20 }}
-                        transition={{ duration: 0.4, delay: index * 0.1 }}
-                        viewport={{ once: true }}
-                      >
-                        <div className="aspect-[16/9] w-full">
-                          {storeData.store.image_url ? (
-                            <img
-                              src={storeData.store.image_url}
-                              alt={storeData.store.name}
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-gray-200">
-                              <Typography variant="caption" className="text-gray-500">
-                                No Image
-                              </Typography>
-                            </div>
-                          )}
-
-                          {/* Store info overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-4">
-                            <Typography variant="h5" className="font-bold text-white">
-                              {storeData.store.name}
-                            </Typography>
-                            {storeData.store.sales_description && (
-                              <Typography variant="caption" className="line-clamp-2 text-white/90">
-                                {storeData.store.sales_description}
-                              </Typography>
-                            )}
-                            <div className="mt-2 flex items-center gap-2">
-                              <span className="rounded bg-white/20 px-2 py-1 text-xs text-white">
-                                {storeData.products.length}개 상품
-                              </span>
-                              {actualIndex === currentStoreIndex && (
-                                <span className="rounded bg-blue-500 px-2 py-1 text-xs text-white">
-                                  선택됨
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )
-                  })}
+            <div className="flex gap-x-5">
+              {stores.map((store, index) => (
+                <div
+                  key={store.store.store_id}
+                  className={`relative h-[166px] w-[270px] shrink-0 cursor-pointer transition-all ${
+                    index === currentStoreIndex ? 'ring-2 ring-black' : ''
+                  }`}
+                  onClick={() => handleStoreClick(index)}
+                >
+                  <Image
+                    src={store.store.image_url || '/placeholder.png'}
+                    alt={store.store.name}
+                    fill
+                    objectFit="cover"
+                  />
+                  <div className="from-black/56 absolute inset-0 flex items-end justify-center bg-gradient-to-t to-white/0">
+                    <p className="pb-4 font-medium text-white">{store.store.name}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Store Title Section */}
-      <div className="border-b bg-white px-4 py-8">
-        <div className="mx-auto max-w-7xl text-center">
-          <Typography variant="h2" weight="bold" className="mb-3">
-            {currentStore.store.name}
-          </Typography>
-          <Typography variant="body1" className="text-text-secondary mx-auto max-w-2xl">
-            {currentStore.store.description ||
-              currentStore.store.sales_description ||
-              '특별한 팝업스토어를 만나보세요.'}
-          </Typography>
-          {currentStore.products.length === 0 && (
-            <div className="mt-4 inline-block rounded-lg bg-gray-100 px-4 py-2">
-              <Typography variant="caption" className="text-gray-600">
-                현재 판매 중인 상품이 없습니다
-              </Typography>
-            </div>
-          )}
+      <div className="max-w-container mx-auto mt-6 space-y-10 px-4 md:mt-20">
+        <div>
+          <div className="space-y-4 text-center">
+            <p className="text-text-primary text-lg font-bold md:text-2xl">
+              {currentStore.store.name}
+            </p>
+            <p className="text-text-secondary text-sm font-medium">
+              {currentStore.store.description ||
+                currentStore.store.sales_description ||
+                '특별한 팝업스토어를 만나보세요.'}
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Products Grid */}
-      <div className="bg-gray-50 px-4 py-8">
-        <div className="mx-auto max-w-7xl">
+        <div className="space-y-6">
           {currentStore.products.length > 0 ? (
             <>
-              <Typography variant="h4" weight="bold" className="mb-6">
-                판매 상품
-              </Typography>
+              {/* 상품 그리드 - 일반 상품 리스트와 동일한 레이아웃 */}
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
                 {currentStore.products.map((product) => (
                   <ProductCard
@@ -288,12 +232,12 @@ export default function PopupStoreContent() {
             </>
           ) : (
             <div className="py-12 text-center">
-              <Typography variant="h5" className="mb-2 text-gray-500">
+              <p className="mb-2 text-sm font-normal text-gray-500 md:text-base">
                 현재 판매 중인 상품이 없습니다
-              </Typography>
-              <Typography variant="body2" className="text-gray-400">
+              </p>
+              <p className="text-xs font-normal text-gray-400 md:text-sm">
                 곧 새로운 상품이 등록될 예정입니다
-              </Typography>
+              </p>
             </div>
           )}
         </div>

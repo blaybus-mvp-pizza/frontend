@@ -1,4 +1,3 @@
-// apps/web/src/app/(with-topbar)/popup-stores/page.tsx
 import { Suspense } from 'react'
 
 import PopupStoreContent from '@/components/popup-stores/popup-store-content'

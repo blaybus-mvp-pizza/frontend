@@ -8,8 +8,8 @@ import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 
-import { useMyAuctions } from '@/api/hooks/queries/useMyPage'
 import { MyAuctionFilters } from '@/api/endpoints/my.api'
+import { useMyAuctions } from '@/api/hooks/queries/useMyPage'
 import { UserRelatedAuctionItem } from '@/api/types'
 
 import { Pagination } from '../ui/pagination'
@@ -34,11 +34,7 @@ export default function MyItemList({ filters }: MyItemListProps) {
     [filters, page],
   )
 
-  const {
-    data: paginatedItems,
-    isLoading,
-    isPlaceholderData,
-  } = useMyAuctions(combinedFilters)
+  const { data: paginatedItems, isLoading, isPlaceholderData } = useMyAuctions(combinedFilters)
 
   if (isLoading && !isPlaceholderData) {
     return <MyItemListSkeleton />
@@ -76,7 +72,6 @@ export default function MyItemList({ filters }: MyItemListProps) {
   if (items.length === 0) {
     return <div className="py-10 text-center text-gray-500">검색 결과가 없습니다.</div>
   }
-
   return (
     <>
       <div className="space-y-8">
@@ -90,7 +85,7 @@ export default function MyItemList({ filters }: MyItemListProps) {
                   key={item.auction_id}
                   item={item}
                   onClick={() => {
-                    router.push(`/auctions/${item.auction_id}`)
+                    router.push(`/products/${item.product_id}`)
                   }}
                 />
               ))}
