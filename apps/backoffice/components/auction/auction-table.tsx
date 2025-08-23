@@ -1,25 +1,24 @@
 "use client";
 
 import {
-  ColumnFiltersState,
   getCoreRowModel,
-  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { getColumns } from "./columns";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { useAuctionList } from "@/hooks/use-auctions";
-import { AuctionItem } from "@/apis/auction/type";
+import { AuctionItem, TAuctionStatus } from "@/apis/auction/type";
 import AuctionFilter from "./auction-filter";
 import { DataTable } from "./data-table";
 import AuctionFormModal, { FormMode } from "./auction-form-modal";
 import { Pagination, PaginationInfo } from '../common/pagination';
+import { useDebounce } from '@/hooks/use-debounce';
 
 export default function AuctionTable() {
   const [globalFilter, setGlobalFilter] = useState("");
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
+  const debouncedGlobalFilter = useDebounce(globalFilter, 500);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<FormMode>("create");
   const [selectedAuctionId, setSelectedAuctionId] = useState<
@@ -29,10 +28,13 @@ export default function AuctionTable() {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(10);
 
+  const [status, setStatus] = useState<TAuctionStatus | null>('ALL');
+
   const { data, isLoading } = useAuctionList({
     page: page,
     size: size,
-    q: globalFilter,
+    q: debouncedGlobalFilter,
+    status: status ? status : undefined,
   });
 
   const auctions: AuctionItem[] = data?.items || [];
@@ -58,10 +60,8 @@ export default function AuctionTable() {
     columns,
     state: {
       globalFilter,
-      columnFilters,
     },
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
   });
 
   if (isLoading) {
@@ -77,28 +77,31 @@ export default function AuctionTable() {
       <AuctionFilter
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
-        columnFilters={columnFilters}
-        setColumnFilters={setColumnFilters}
+        status={status}
+        setStatus={setStatus}
       />
       
       <DataTable table={table} />
       
-      <div className='flex justify-end py-3'>
-        <PaginationInfo
-          currentPage={page}
-          totalPages={totalPages}
-          totalItems={totalItems}
-          itemsPerPage={size}
-        />
-        </div>
-        <div className='flex justify-center'>
-        <Pagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-        />
-      </div>
-
+      {totalPages > 0 &&
+        <>
+          <div className='flex justify-end py-3'>
+            <PaginationInfo
+              currentPage={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              itemsPerPage={size}
+            />
+            </div>
+            <div className='flex justify-center'>
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          </div>
+        </>
+      }
       <AuctionFormModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

@@ -30,8 +30,8 @@ export const getColumns = (
     accessorKey: "product_name",
     header: "상품명",
     cell: ({ row }) => (
-      <Link href={`/admin/auctions/${row.original.auction_id}`}>
-        <span className='font-mediu'>{row.getValue("product_name")}</span>
+      <Link href={`/product/${row.original.product_id}`}>
+        <span className='hover:underline'>{row.getValue("product_name")}</span>
       </Link>
     ),
   },
