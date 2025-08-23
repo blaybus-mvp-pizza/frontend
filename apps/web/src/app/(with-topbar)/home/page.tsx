@@ -105,7 +105,7 @@ export default function HomePage() {
       <LazySection rootMargin="100px">
         <motion.div
           onClick={() => {}}
-          className="relative -mx-4 h-40 text-white"
+          className="relative h-40 text-white max-md:-mx-4"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
@@ -132,7 +132,7 @@ export default function HomePage() {
       {/* Lazy-loaded bottom banner */}
       <LazySection rootMargin="100px">
         <motion.div
-          className="relative -mx-4 mb-40 mt-20 h-60 text-white"
+          className="relative mb-40 mt-20 h-60 text-white max-md:-mx-4"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}

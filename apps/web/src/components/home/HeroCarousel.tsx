@@ -106,7 +106,7 @@ export default function HeroCarousel() {
                 className="space-y-5"
               >
                 <div className="flex flex-col gap-y-2 text-white">
-                  <p className="text-lg font-semibold md:text-[28px]">
+                  <p className="text-sm font-semibold md:text-[28px]">
                     {BANNER_PROPS[currentIndex]!.title}
                   </p>
                   <p className="line-clamp-2 text-xs md:text-base">
