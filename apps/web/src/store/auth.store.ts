@@ -52,15 +52,7 @@ export const useAuthStore = create<AuthState>()(
           // Clear token from localStorage
           if (typeof window !== 'undefined') {
             localStorage.removeItem('auth-token')
-
-            // Clear React Query cache
-            const queryClient = (window as any).queryClient
-            if (queryClient) {
-              queryClient.clear()
-            }
-
-            // Redirect to login page
-            window.location.href = '/auth/login'
+            localStorage.removeItem('auth-storage')
           }
 
           set(

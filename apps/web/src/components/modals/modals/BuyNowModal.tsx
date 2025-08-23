@@ -107,7 +107,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
             <div className="mb-6 rounded-lg border border-[#A3DDD4] bg-[#F8FEFD] p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <Typography variant="sub" className="mb-1 text-text-secondary">
+                  <Typography variant="sub" className="text-text-secondary mb-1">
                     즉시 구매가격
                   </Typography>
                   <div className="flex items-baseline gap-1">
@@ -124,11 +124,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
 
             <div className="mb-6 space-y-3">
               <div className="flex flex-1 flex-col">
-                <Typography
-                  variant="sub"
-                  weight="semibold"
-                  className="text-text-primary"
-                >
+                <Typography variant="sub" weight="semibold" className="text-text-primary">
                   즉시 구매 혜택
                 </Typography>
                 <Typography variant="sub" className="text-text-secondary">
@@ -156,7 +152,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
                 <Typography
                   variant="second"
                   weight="medium"
-                  className="text-center text-base text-text-tertiary"
+                  className="text-text-tertiary text-center text-base"
                 >
                   취소
                 </Typography>
@@ -166,7 +162,7 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
                 onClick={handleBuyNow}
                 disabled={isPending}
                 className="flex-1 rounded-sm bg-[#B5F5EB] px-4 py-3 transition-colors hover:bg-[#9FF3E8] disabled:cursor-not-allowed disabled:opacity-50"
-              >text-text-primary
+              >
                 <Typography
                   variant="second"
                   weight="bold"

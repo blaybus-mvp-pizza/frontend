@@ -14,6 +14,7 @@ interface AppProviderProps {
 }
 
 function AuthRefreshProvider({ children }: { children: React.ReactNode }) {
+  // Fetch current user data if authenticated
   const { data: user } = useCurrentUser()
 
   useEffect(() => {

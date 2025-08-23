@@ -20,10 +20,8 @@ export interface UserStats {
   deliveryCompleted: number
 }
 
-// Mock delay to simulate API call
 const mockDelay = (ms: number = 500) => new Promise((resolve) => setTimeout(resolve, ms))
 
-// Interface for paginated response
 export interface PaginatedResponse<T> {
   data: T[]
   pagination: {

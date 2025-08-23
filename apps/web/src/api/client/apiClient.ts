@@ -71,42 +71,48 @@ apiClient.interceptors.response.use(
       const status = error.response.status
       const data = error.response.data as any
 
-      switch (status) {
-        case 401:
-          // Token expired or invalid - handle logout for "Invalid token"
-          console.warn('401 Unauthorized:', data?.detail || data?.message || 'Authentication failed')
+      // Handle 401 Unauthorized
+      if (status === 401) {
+        console.warn('401 Unauthorized:', data?.detail || data?.message || 'Authentication failed')
+        
+        // Check if token is invalid
+        if (data?.detail === 'Invalid token' && typeof window !== 'undefined') {
+          const currentPath = window.location.pathname
           
-          // Check if the error detail is "Invalid token"
-          if (data?.detail === 'Invalid token') {
+          // Protected routes that require authentication
+          const protectedRoutes = ['/mypage', '/notifications']
+          const isProtectedRoute = protectedRoutes.some(route => currentPath.startsWith(route))
+          
+          if (isProtectedRoute) {
             // Clear all auth data
-            if (typeof window !== 'undefined') {
-              localStorage.removeItem('auth-storage')
-              localStorage.removeItem('auth-token')
-              
-              // Redirect to login page
-              window.location.href = '/auth/login'
-            }
+            localStorage.removeItem('auth-storage')
+            localStorage.removeItem('auth-token')
+            
+            // Redirect to login
+            window.location.href = `/auth/login?from=${encodeURIComponent(currentPath)}`
           }
-          break
+        }
+      }
 
-        case 403:
-          console.error('Permission denied:', data?.message || 'Forbidden')
-          break
-
-        case 404:
-          console.error('Resource not found:', data?.message || 'Not Found')
-          break
-
-        case 429:
-          console.error('Rate limit exceeded:', data?.message || 'Too Many Requests')
-          break
-
-        case 500:
-        case 502:
-        case 503:
-        case 504:
-          console.error('Server error:', data?.message || 'Internal Server Error')
-          break
+      // Log other errors in development
+      if (process.env.NODE_ENV === 'development') {
+        switch (status) {
+          case 403:
+            console.error('403 Forbidden:', data?.message || 'Permission denied')
+            break
+          case 404:
+            console.error('404 Not Found:', data?.message || 'Resource not found')
+            break
+          case 429:
+            console.error('429 Too Many Requests:', data?.message || 'Rate limit exceeded')
+            break
+          case 500:
+          case 502:
+          case 503:
+          case 504:
+            console.error(`${status} Server Error:`, data?.message || 'Internal server error')
+            break
+        }
       }
     } else if (error.request) {
       console.error('Network error: No response received')
