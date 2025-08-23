@@ -14,6 +14,7 @@ import {
   DropdownMenuItem,
 } from "@workspace/ui/components/dropdown-menu";
 import { MoreVertical } from "lucide-react";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@workspace/ui/components/tooltip';
 
 export const getColumns = (
   handleOpenModal: (
@@ -128,27 +129,51 @@ export const getColumns = (
     header: "작업",
     cell: ({ row }) => {
       const auctionId = row.original.auction_id;
+      const tooltipText = "경매 수정은 경매 시작일시 이전, 경매 예정 상태에서만 가능합니다.";
+      const auctionStatus = row.original.status;
+      const startsAt = row.original.starts_at;
+      const startsAtDate = startsAt ? new Date(startsAt) : null;
+      const now = new Date();
+      const isEditable = auctionStatus === "SCHEDULED" && startsAtDate && startsAtDate > now;
+
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='h-8 w-8 p-0'>
-              <span className='sr-only'>작업</span>
-              <MoreVertical className='h-4 w-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            <DropdownMenuItem
-              onClick={() => handleOpenModal("view", auctionId)}
-            >
-              상세보기
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => handleOpenModal("edit", auctionId)}
-            >
-              수정하기
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TooltipProvider>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='h-8 w-8 p-0'>
+                <span className='sr-only'>작업</span>
+                <MoreVertical className='h-4 w-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              <DropdownMenuItem
+                onClick={() => handleOpenModal("view", auctionId)}
+              >
+                상세보기
+              </DropdownMenuItem>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    onClick={isEditable ? () => handleOpenModal("edit", auctionId) : undefined}
+                    className={!isEditable ? 'cursor-not-allowed' : ''}
+                  >
+                    <DropdownMenuItem
+                      className={!isEditable ? 'opacity-50' : ''}
+                    >
+                      수정하기
+                    </DropdownMenuItem>
+                  </div>
+                </TooltipTrigger>
+                {!isEditable && (
+                  <TooltipContent side='bottom'>
+                    <p>{tooltipText}</p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TooltipProvider>
       );
     },
   },

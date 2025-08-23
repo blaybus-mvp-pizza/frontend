@@ -26,8 +26,21 @@ export default function AuctionStatusEditor({
     editStatus({ auction_id: auctionId, status: value });
   };
 
-  const isEditable =
-    currentStatus === "SCHEDULED" || currentStatus === "RUNNING";
+  const getSelectableStatuses = (status: string) => {
+    switch (status) {
+      case "SCHEDULED":
+        return ["SCHEDULED", "RUNNING"];
+      case "RUNNING":
+        return ["RUNNING", "PAUSED"];
+      case "PAUSED":
+        return ["PAUSED", "RUNNING"];
+      default:
+        return [];
+    }
+  };
+
+  const selectableStatusKeys = getSelectableStatuses(currentStatus);
+  const isEditable = selectableStatusKeys.length > 0;
 
   if (!isEditable) {
     return (
@@ -37,20 +50,18 @@ export default function AuctionStatusEditor({
     );
   }
 
-  const selectableStatuses = Object.entries(AUCTION_STATUS_MAP)
-    .filter(([status]) => status !== "ALL")
-    .map(([status, translated]) => (
-      <SelectItem key={status} value={status}>
-        {translated}
-      </SelectItem>
-    ));
-
   return (
     <Select value={currentStatus} onValueChange={handleStatusChange}>
       <SelectTrigger className='w-[120px]'>
         <SelectValue placeholder='상태 변경' />
       </SelectTrigger>
-      <SelectContent>{selectableStatuses}</SelectContent>
+      <SelectContent>
+        {selectableStatusKeys.map((status) => (
+          <SelectItem key={status} value={status}>
+            {AUCTION_STATUS_MAP[status as keyof typeof AUCTION_STATUS_MAP]}
+          </SelectItem>
+        ))}
+      </SelectContent>
     </Select>
   );
 }
