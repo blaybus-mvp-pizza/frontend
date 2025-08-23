@@ -17,6 +17,7 @@ import {
   LazyUpcomingProductsSection,
 } from '@/components/home/LazyProductSection'
 import { LazyStoreSections } from '@/components/home/LazyStoreSection'
+import PartnershipInquiryButton from '@/components/inquiry/PartnershipInquiryButton'
 import { PRODUCT_TAGS } from '@/constants/filter.constant'
 
 export default function HomePage() {
@@ -152,30 +153,27 @@ export default function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <Image
-            alt="배너2"
-            src="/images/BANNER2.webp"
-            fill
-            className="object-cover"
-            sizes="100vw"
-            priority={false}
-            loading="lazy"
-          />
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-            <p className="text-[20px] md:text-[32px]">기업의 자산을 사회적 가치로 전환합니다</p>
-            <p className="md:text-bae px-8 text-sm font-light">
-              나팔은 버려지는 기업과 자산이 새로운 공간에서 가치를 이어갈 수 있도록 함께합니다.
-            </p>
-            <Button
-              onClick={() => {
-                window.location.href =
-                  'mailto:yunsu102896@gmail.com?subject=파트너십 문의&body=안녕하세요,%0D%0A파트너십에 대해 문의드립니다.'
-              }}
-              variant={'white'}
-              className="rounded-xs mt-4"
-            >
-              파트너십 문의하기
-            </Button>
+          <div className="relative h-[200px] w-full md:h-[280px]">
+            <Image
+              alt="배너2"
+              src="/images/BANNER2.webp"
+              fill
+              className="object-cover"
+              priority={false}
+              loading="lazy"
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-5 py-14 text-center md:px-10">
+              <div className="flex flex-col gap-3">
+                <p className="text-lg font-normal md:text-[28px]">
+                  기업의 자산을 사회적 가치로 전환합니다
+                </p>
+                <p className="text-xs font-light md:text-[16px]">
+                  나팔은 버려지는 기업과 자산이 새로운 공간에서
+                  <br className="sm:hidden" /> 가치를 이어갈 수 있도록 함께합니다.
+                </p>
+              </div>
+              <PartnershipInquiryButton />
+            </div>
           </div>
         </motion.div>
       </LazySection>

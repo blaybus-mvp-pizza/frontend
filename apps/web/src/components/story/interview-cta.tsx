@@ -2,6 +2,8 @@ import { Button } from '@workspace/ui/components/button'
 
 import { cn } from '@/utils/cn'
 
+import InterviewCtaButton from '../inquiry/InterviewCtaButton'
+
 export default function InterviewCTA() {
   return (
     <div
@@ -30,28 +32,7 @@ export default function InterviewCTA() {
         </p>
       </div>
 
-      <Button
-        className={cn(
-          'flex-shrink-0',
-          'gap-2 px-3 py-0',
-          'h-12 w-full md:w-[110px]',
-          'bg-background-100 text-text-primary rounded-[4px]',
-          'hover:bg-background-200',
-          'cursor-pointer',
-        )}
-        onClick={() => {
-          // TODO: 인터뷰 신청하기 동작
-        }}
-      >
-        <span
-          className={cn(
-            'text-[14px] font-semibold leading-[160%] tracking-[-0.025em]',
-            'text-text-primary',
-          )}
-        >
-          인터뷰 신청하기
-        </span>
-      </Button>
+      <InterviewCtaButton />
     </div>
   )
 }
