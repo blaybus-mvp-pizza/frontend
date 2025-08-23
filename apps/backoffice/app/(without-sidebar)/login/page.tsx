@@ -20,9 +20,20 @@ export default function LoginPage() {
           />
         </div>
         <div className='flex flex-1 items-center justify-center'>
-          <div className='w-full max-w-xs mb-30'>
+          <div className='w-full max-w-xs mt-20'>
             <LoginForm />
           </div>
+        </div>
+        <div className="mt-6 flex flex-col items-start gap-1 text-sm text-gray-500 w-full max-w-sm">
+          <p className="font-semibold">데모 관리자 계정 정보</p>
+          <div className="w-full border-t border-gray-300 my-1"></div>
+          <p className="font-semibold text-gray-700">최고 관리자 (SUPERADMIN)</p>
+          <p>아이디: <span className="font-mono text-gray-800">superadmin</span></p>
+          <p>비밀번호: <span className="font-mono text-gray-800">123</span></p>
+          <div className="w-full border-t border-gray-300 my-1"></div>
+          <p className="font-semibold text-gray-700">일반 관리자 (ADMIN)</p>
+          <p>아이디: <span className="font-mono text-gray-800">admin</span></p>
+          <p>비밀번호: <span className="font-mono text-gray-800">123</span></p>
         </div>
       </div>
     </div>
