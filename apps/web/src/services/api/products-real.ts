@@ -70,49 +70,55 @@ const convertToApiFilters = (filters: ProductFilters): ApiProductFilters => {
     }
   }
 
-  // Convert status
-  if (filters.status) {
+  // Convert status (only if not ALL)
+  if (filters.status && filters.status !== 'ALL') {
     switch (filters.status) {
-      case 'ongoing':
-      case 'running':
+      case 'RUNNING':
         apiFilters.status = AuctionStatus.RUNNING
         break
-      case 'completed':
-      case 'ended':
+      case 'ENDED':
         apiFilters.status = AuctionStatus.ENDED
+        break
+      case 'SCHEDULED':
+        apiFilters.status = AuctionStatus.SCHEDULED
         break
     }
   }
 
-  // Convert bidders filter
-  if (filters.bidders) {
+  // Convert bidders filter (only if not ALL)
+  if (filters.bidders && filters.bidders !== 'ALL') {
     switch (filters.bidders) {
-      case '0-10':
+      case 'LE_10':
         apiFilters.bidders = BiddersFilter.LE_10
         break
-      case '11-50':
+      case 'BT_10_20':
         apiFilters.bidders = BiddersFilter.BT_10_20
         break
-      case '51-100':
-      case '100+':
+      case 'GE_20':
         apiFilters.bidders = BiddersFilter.GE_20
         break
     }
   }
 
-  // Convert price filter
-  if (filters.price) {
+  // Convert price filter (only if not ALL)
+  if (filters.price && filters.price !== 'ALL') {
     switch (filters.price) {
-      case '0-100000':
+      case 'LT_10000':
         apiFilters.price_bucket = PriceBucket.LT_10000
         break
-      case '100000-500000':
+      case 'BT_10000_30000':
+        apiFilters.price_bucket = PriceBucket.BT_10000_30000
+        break
+      case 'BT_30000_50000':
         apiFilters.price_bucket = PriceBucket.BT_30000_50000
         break
-      case '500000-1000000':
-        apiFilters.price_bucket = PriceBucket.BT_300000_500000
+      case 'BT_50000_150000':
+        apiFilters.price_bucket = PriceBucket.BT_50000_150000
         break
-      case '1000000+':
+      case 'BT_150000_300000':
+        apiFilters.price_bucket = PriceBucket.BT_150000_300000
+        break
+      case 'BT_300000_500000':
         apiFilters.price_bucket = PriceBucket.BT_300000_500000
         break
     }

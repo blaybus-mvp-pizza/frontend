@@ -24,6 +24,7 @@ export enum AuctionStatus {
   ALL = 'ALL',
   RUNNING = 'RUNNING',
   ENDED = 'ENDED',
+  SCHEDULED = 'SCHEDULED',
 }
 
 export enum BiddersFilter {

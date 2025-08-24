@@ -36,9 +36,9 @@ function ProductContent() {
   const sortParam = searchParams.get('sort')
   const search = searchParams.get('search')
   const page = parseInt(searchParams.get('page') || String(DEFAULT_FILTERS.page), 10)
-  const status = searchParams.get('status') || DEFAULT_FILTERS.status
-  const bidders = searchParams.get('bidders') || DEFAULT_FILTERS.bidders
-  const price = searchParams.get('price') || DEFAULT_FILTERS.price
+  const status = searchParams.get('status')
+  const bidders = searchParams.get('bidders')
+  const price = searchParams.get('price')
 
   // Convert sort string to SortOption enum
   const sortOption = useMemo(() => {
@@ -85,7 +85,14 @@ function ProductContent() {
 
   const handleDropdownChange = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString())
-    params.set(key, value)
+    
+    // If value is 'ALL', remove the parameter from URL
+    if (value === 'ALL') {
+      params.delete(key)
+    } else {
+      params.set(key, value)
+    }
+    
     if (key !== 'page') {
       params.set('page', '1')
     }
@@ -212,7 +219,7 @@ function ProductContent() {
           <div className="flex items-center justify-between">
             <div className="flex flex-wrap gap-3">
               <Dropdown
-                value={status}
+                value={status || 'ALL'}
                 onChange={(value) => handleDropdownChange('status', value)}
                 options={STATUS_OPTIONS}
                 placeholder="상태 선택"
@@ -221,7 +228,7 @@ function ProductContent() {
 
               {/* 입찰인원 드롭다운 */}
               <Dropdown
-                value={bidders}
+                value={bidders || 'ALL'}
                 onChange={(value) => handleDropdownChange('bidders', value)}
                 options={BIDDER_OPTIONS}
                 placeholder="입찰인원 선택"
@@ -230,7 +237,7 @@ function ProductContent() {
 
               {/* 가격 드롭다운 */}
               <Dropdown
-                value={price}
+                value={price || 'ALL'}
                 onChange={(value) => handleDropdownChange('price', value)}
                 options={PRICE_OPTIONS}
                 placeholder="가격 선택"
