@@ -11,6 +11,9 @@ export const metadata: Metadata = {
     default: 'PopShop - 팝업스토어 경매 플랫폼',
     template: '%s | PopShop',
   },
+  icons: {
+    icon: '/favicon.svg',
+  },
   description:
     '특별한 팝업스토어 상품을 경매로 만나보세요. 한정판 아이템, 독점 컬렉션, 프리미엄 상품까지.',
   keywords: ['팝업스토어', '경매', '한정판', '컬렉션', '프리미엄 상품', '온라인 경매'],
@@ -64,6 +67,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg" sizes="20" />
+      </head>
       <body className="antialiased">
         <Providers>{children}</Providers>
       </body>
