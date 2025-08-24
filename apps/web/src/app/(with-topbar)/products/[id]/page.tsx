@@ -233,9 +233,8 @@ export default function ProductDetailPage() {
                 <span className="flex items-center gap-1 text-sm text-white">
                   {auction && auction.status === 'SCHEDULED' ? (
                     <>
-                      시작까지:
                       <span className="text-lg font-bold text-yellow-400">
-                        {calculateTimeUntilStart(auction.starts_at)}
+                        경매 준비중
                       </span>
                     </>
                   ) : auction && auction.status === 'RUNNING' ? (
@@ -448,7 +447,7 @@ export default function ProductDetailPage() {
                     {auction.status === 'SCHEDULED' && (
                       <div className="flex items-center justify-center rounded-sm bg-yellow-100 px-4 py-3">
                         <p className="font-bold text-yellow-700">
-                          {calculateTimeUntilStart(auction.starts_at) || '경매 시작 예정'}
+                          경매 준비중
                         </p>
                       </div>
                     )}
