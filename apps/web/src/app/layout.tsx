@@ -28,22 +28,12 @@ export const metadata: Metadata = {
     description: '특별한 팝업스토어 상품을 경매로 만나보세요.',
     url: 'https://popshop.co.kr',
     siteName: 'PopShop',
-    images: [
-      {
-        url: '/images/SEO.png',
-        width: 1200,
-        height: 630,
-        alt: 'PopShop - 팝업스토어 경매 플랫폼',
-      },
-    ],
     locale: 'ko_KR',
     type: 'website',
   },
   twitter: {
-    card: 'summary_large_image',
     title: 'PopShop - 팝업스토어 경매 플랫폼',
     description: '특별한 팝업스토어 상품을 경매로 만나보세요.',
-    images: ['/images/SEO.png'],
     creator: '@popshop',
   },
   robots: {
