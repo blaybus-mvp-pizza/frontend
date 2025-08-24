@@ -1,7 +1,5 @@
 'use client'
 
-import { useMemo } from 'react'
-
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import StoryCard from '@/components/story/story-card'
@@ -33,7 +31,6 @@ export default function StoryCardList() {
 
   // Transform API data to Story format expected by StoryCard
   const transformToStory = (apiStory: any) => {
-    console.log('API Story:', apiStory)
     return {
       story_id: apiStory.story_id,
       content: apiStory.content,
@@ -73,7 +70,7 @@ export default function StoryCardList() {
       )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {totalPages > 0 && (
         <div className="mt-8 flex justify-center">
           <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
