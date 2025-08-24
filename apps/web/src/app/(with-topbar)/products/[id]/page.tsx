@@ -233,9 +233,7 @@ export default function ProductDetailPage() {
                 <span className="flex items-center gap-1 text-sm text-white">
                   {auction && auction.status === 'SCHEDULED' ? (
                     <>
-                      <span className="text-lg font-bold text-yellow-400">
-                        경매 준비중
-                      </span>
+                      <span className="text-lg font-bold text-yellow-400">경매 준비중</span>
                     </>
                   ) : auction && auction.status === 'RUNNING' ? (
                     <>
@@ -446,9 +444,7 @@ export default function ProductDetailPage() {
                   <>
                     {auction.status === 'SCHEDULED' && (
                       <div className="flex items-center justify-center rounded-sm bg-yellow-100 px-4 py-3">
-                        <p className="font-bold text-yellow-700">
-                          경매 준비중
-                        </p>
+                        <p className="font-bold text-yellow-700">경매 준비중</p>
                       </div>
                     )}
                     {auction.status === 'RUNNING' &&
@@ -495,7 +491,7 @@ export default function ProductDetailPage() {
                 환경 보호의 다음 여정을 홍길동님이 이어주세요
               </Typography>
               <div className="flex items-center gap-3">
-                <div className="relative h-10 w-10">
+                <div className="relative h-10 w-10 shrink-0">
                   <Image
                     src="/earth.gif"
                     alt="Earth Icon"
@@ -507,14 +503,16 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="relative flex items-center gap-1 whitespace-nowrap rounded bg-[#222222] px-3 py-1.5">
                   <div className="absolute -left-1.5 top-1/2 h-0 w-0 -translate-y-1/2 border-b-[6px] border-r-[8px] border-t-[6px] border-b-transparent border-r-[#222222] border-t-transparent"></div>
-                  <span className="text-sm font-medium text-white">이 상품이 주인을 찾으면</span>
-                  <span className="flex items-center gap-x-1 text-sm font-medium text-[#94D8D4]">
+                  <span className="text-xs font-medium text-white md:text-sm">
+                    이 상품이 주인을 찾으면
+                  </span>
+                  <span className="flex items-center gap-x-1 text-xs font-medium text-[#94D8D4] md:text-sm">
                     <span className="relative inline-block h-2.5 w-2.5 shrink-0">
                       <Image src="/icons/RECYCLE.svg" alt="Recycle Icon" fill sizes="12px" />
                     </span>
                     탄소 2.4kg
                   </span>
-                  <span className="text-xs font-medium text-white">가 절감돼요!</span>
+                  <span className="text-xs font-medium text-white md:text-sm">가 절감돼요!</span>
                 </div>
               </div>
             </div>
