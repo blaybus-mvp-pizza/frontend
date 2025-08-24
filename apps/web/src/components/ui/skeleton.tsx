@@ -52,17 +52,17 @@ export function CategoryTagSkeleton() {
 export function PopupStoreSectionSkeleton() {
   return (
     <div className="mt-20 w-full space-y-2">
-      <div className="mt-8 flex items-center gap-x-2">
+      <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-x-2">
         <Skeleton className="h-10 w-48" />
-        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-8 w-full sm:w-64" />
       </div>
-      <div className="flex h-[400px] gap-x-8">
-        <Skeleton className="h-[400px] w-[600px]" />
-        <div className="flex gap-4">
-          <div className="w-64">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-x-8">
+        <Skeleton className="h-[300px] sm:h-[350px] lg:h-[400px] w-full lg:w-[600px]" />
+        <div className="grid grid-cols-2 gap-4 lg:flex lg:gap-4">
+          <div className="w-full lg:w-64">
             <ProductCardSkeleton />
           </div>
-          <div className="w-64">
+          <div className="w-full lg:w-64">
             <ProductCardSkeleton />
           </div>
         </div>
