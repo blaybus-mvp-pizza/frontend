@@ -81,8 +81,15 @@ export default function StoryContent({ id }: { id: string }) {
     </div>
   )
 }
-
 function Content() {
+  const handleContextMenu = (e: any) => {
+    e.preventDefault()
+  }
+
+  const handleDragStart = (e: any) => {
+    e.preventDefault()
+  }
+
   return (
     <div className="relative my-8 h-auto w-full">
       <Image
@@ -91,12 +98,19 @@ function Content() {
         layout="responsive"
         width={800}
         height={3640}
-        className="object-contain"
+        className="pointer-events-none select-none object-contain"
+        onContextMenu={handleContextMenu}
+        onDragStart={handleDragStart}
+        style={{
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          msUserSelect: 'none',
+        }}
       />
     </div>
   )
 }
-
 const StoryContentSkeleton = () => {
   return (
     <div>
