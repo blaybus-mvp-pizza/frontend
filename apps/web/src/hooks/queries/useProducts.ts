@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { Auction, Product } from '@workspace/ui/types'
 
-import { PaginatedResponse, productApi } from '@/services/api/products-real'
 import { productsApi } from '@/api/endpoints/products.api'
 import { Page, ProductFilters } from '@/api/types/common.types'
 import { ProductListItem } from '@/api/types/product.types'
+import { PaginatedResponse, productApi } from '@/services/api/products-real'
 
 // Query keys factory for better organization
 export const productKeys = {

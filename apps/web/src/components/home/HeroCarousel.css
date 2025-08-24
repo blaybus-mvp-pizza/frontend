@@ -1,0 +1,93 @@
+/* Hero Carousel Custom Styles */
+.hero-carousel-wrapper .slick-slider {
+  position: relative;
+}
+
+.hero-carousel-wrapper .slick-list {
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.hero-carousel-wrapper .slick-track {
+  display: flex;
+}
+
+.hero-carousel-wrapper .slick-slide {
+  height: auto;
+}
+
+.hero-carousel-wrapper .slick-slide > div {
+  height: 100%;
+}
+
+/* Custom dots styling */
+.hero-dots-container {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.hero-dots {
+  display: flex !important;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.hero-dot {
+  width: 8px;
+  height: 8px;
+  cursor: pointer;
+}
+
+.hero-dot span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.slick-active .hero-dot span {
+  width: 32px;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.hero-dot:hover span {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+/* Override default slick arrow styles */
+.hero-carousel-wrapper .slick-prev,
+.hero-carousel-wrapper .slick-next {
+  width: auto;
+  height: auto;
+}
+
+.hero-carousel-wrapper .slick-prev:before,
+.hero-carousel-wrapper .slick-next:before {
+  display: none;
+}
+
+/* Smooth slide transition */
+.hero-carousel-wrapper .slick-slide {
+  transition: opacity 0.5s ease;
+}
+
+.hero-carousel-wrapper .slick-slide:not(.slick-active) {
+  opacity: 0;
+}
+
+.hero-carousel-wrapper .slick-active {
+  opacity: 1;
+}
+
+/* Prevent layout shift */
+.hero-carousel-wrapper .slick-initialized .slick-slide {
+  display: block;
+}

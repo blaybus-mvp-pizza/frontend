@@ -31,9 +31,9 @@ function ProductContent() {
   const router = useRouter()
 
   const content = (searchParams.get('content') as ContentType) || DEFAULT_FILTERS.content
-  const filter = searchParams.get('filter') || DEFAULT_FILTERS.filter
+  const filter = searchParams.get('filter')
   const category = searchParams.get('category')
-  const sortParam = searchParams.get('sort') || DEFAULT_FILTERS.sort
+  const sortParam = searchParams.get('sort')
   const search = searchParams.get('search')
   const page = parseInt(searchParams.get('page') || String(DEFAULT_FILTERS.page), 10)
   const status = searchParams.get('status') || DEFAULT_FILTERS.status
@@ -52,7 +52,7 @@ function ProductContent() {
       case 'ending':
         return SortOption.ENDING
       default:
-        return SortOption.RECOMMENDED
+        return ''
     }
   }, [sortParam])
 
@@ -70,12 +70,11 @@ function ProductContent() {
     }),
     [content, filter, category, sortOption, search, page, status, bidders, price],
   )
-
   const {
     data: paginatedResponse,
     isLoading: productsLoading,
     isPlaceholderData,
-  } = useProductsWithPagination(filters)
+  } = useProductsWithPagination(filters as any)
 
   const handleFilterClick = (tag: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -250,7 +249,7 @@ function ProductContent() {
 
         {/* 정렬 드롭다운 - 추천순/등록순/인기순 */}
         <Dropdown
-          value={sortParam}
+          value={sortParam as any}
           onChange={(value) => handleDropdownChange('sort', value)}
           options={SORT_OPTIONS}
           placeholder="정렬"
