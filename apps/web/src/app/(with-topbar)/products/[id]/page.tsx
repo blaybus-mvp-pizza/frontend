@@ -9,6 +9,7 @@ import { Button } from '@workspace/ui/components/button'
 import { Typography } from '@workspace/ui/components/typography'
 import { calculateRemainingTime } from '@workspace/ui/lib/utils'
 import { BellIcon, ClockIcon } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { BidModal } from '@/components/modals/modals/BidModal'
 import BuyNowModal from '@/components/modals/modals/BuyNowModal'
@@ -108,7 +109,6 @@ export default function ProductDetailPage() {
   const [, setCurrentTime] = useState(new Date())
   const [newBidAnimation, setNewBidAnimation] = useState<number | null>(null)
   const prevHighestBidderRef = useRef<number | null>(null)
-  const [isClick, setIsClick] = useState(false)
   const { showError } = useUIStore()
 
   const { product, auction, similar, isLoading, bids, refetch } = useProductDetail(productId)
@@ -123,7 +123,9 @@ export default function ProductDetailPage() {
   // Track highest bidder changes and trigger animation
   useEffect(() => {
     if (bids?.items && bids.items.length > 0) {
-      const currentHighestBidderId = bids.items[0]?.user.id
+      // Sort bids to find the actual highest bidder
+      const sortedBids = [...bids.items].sort((a, b) => b.bid_amount - a.bid_amount)
+      const currentHighestBidderId = sortedBids[0]?.user.id
 
       // If there was a previous highest bidder and it changed
       if (
@@ -251,17 +253,12 @@ export default function ProductDetailPage() {
                 </span>
               </div>
               <div
-                className={`flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 ${
-                  isClick ? 'bg-white/40 shadow-inner' : 'bg-white/20'
-                }`}
-                onClick={() => setIsClick(!isClick)}
+                className={`flex h-8 w-8 items-center justify-center rounded-full bg-white/20 transition-all duration-200`}
+                onClick={() => {
+                  toast('알림이 등록되었습니다.')
+                }}
               >
-                <BellIcon
-                  className={`transition-colors duration-200 ${
-                    isClick ? 'text-white/90' : 'text-white'
-                  }`}
-                  size={16}
-                />
+                <BellIcon className={`text-white`} size={16} />
               </div>
             </div>
             <div className="divide-border-light border-border-light divide-y rounded-b border p-5">
@@ -355,8 +352,12 @@ export default function ProductDetailPage() {
               <div className="w-full space-y-5 pt-4">
                 <div className="relative flex w-full flex-col gap-y-3">
                   {bids?.items && bids.items.length > 0 ? (
-                    bids.items.slice(0, 3).map((bid, index) => {
-                      const isHighestBidder = index === 0
+                    // Sort bids by bid_amount in descending order to find the highest bidder
+                    [...bids.items]
+                      .sort((a, b) => b.bid_amount - a.bid_amount)
+                      .slice(0, 3)
+                      .map((bid, index) => {
+                      const isHighestBidder = index === 0 // First one after sorting is the highest bidder
                       const isWinning = isHighestBidder && auction?.status === 'RUNNING'
                       const hasNewBidAnimation = isHighestBidder && newBidAnimation === bid.user.id
 
