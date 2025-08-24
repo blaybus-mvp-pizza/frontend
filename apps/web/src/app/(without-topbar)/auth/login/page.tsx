@@ -1,18 +1,41 @@
+'use client'
+
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 import LoginForm from '@/components/auth/login-form'
 
 export default function LoginPage() {
+  const router = useRouter()
+
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col md:p-10">
         <div className="hidden lg:flex">
-          <Image src="/images/LOGO_HEADER.svg" alt="Nafal" width={144} height={48} />
+          <Image
+            src="/images/LOGO_HEADER.svg"
+            alt="Nafal"
+            width={144}
+            height={48}
+            className="cursor-pointer"
+            onClick={() => {
+              router.push('/home')
+            }}
+          />
         </div>
         <div className="flex flex-1 justify-center pt-60">
           <div className="w-full max-w-sm lg:max-w-lg">
             <div className="mb-8 flex justify-center lg:hidden">
-              <Image src="/images/LOGO_HEADER.svg" alt="Nafal" width={144} height={48} />
+              <Image
+                src="/images/LOGO_HEADER.svg"
+                alt="Nafal"
+                width={144}
+                height={48}
+                className="cursor-pointer"
+                onClick={() => {
+                  router.push('/home')
+                }}
+              />
             </div>
             <LoginForm />
           </div>
