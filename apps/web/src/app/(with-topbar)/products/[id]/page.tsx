@@ -357,84 +357,85 @@ export default function ProductDetailPage() {
                       .sort((a, b) => b.bid_amount - a.bid_amount)
                       .slice(0, 3)
                       .map((bid, index) => {
-                      const isHighestBidder = index === 0 // First one after sorting is the highest bidder
-                      const isWinning = isHighestBidder && auction?.status === 'RUNNING'
-                      const hasNewBidAnimation = isHighestBidder && newBidAnimation === bid.user.id
+                        const isHighestBidder = index === 0 // First one after sorting is the highest bidder
+                        const isWinning = isHighestBidder && auction?.status === 'RUNNING'
+                        const hasNewBidAnimation =
+                          isHighestBidder && newBidAnimation === bid.user.id
 
-                      return (
-                        <div
-                          key={bid.user.id + '_' + bid.bid_at}
-                          className={`flex w-full transform flex-col gap-2 rounded-sm px-3 py-3 transition-all duration-500 sm:flex-row sm:items-center sm:gap-[5px] sm:py-2 ${
-                            isHighestBidder
-                              ? 'border border-[#A3DDD4] bg-[#F8FEFD] shadow-lg'
-                              : 'bg-[#EEEEEE]'
-                          } ${hasNewBidAnimation ? 'animate-slide-up-fade-in' : ''}`}
-                          style={{
-                            animation: hasNewBidAnimation
-                              ? 'slideUpFadeIn 0.8s ease-out forwards, pulseGlow 1.5s ease-out, highlightBounce 0.5s ease-out'
-                              : undefined,
-                            transition: 'all 0.5s ease-out',
-                          }}
-                        >
-                          {/* Mobile: Top Row with User Info */}
-                          <div className="flex w-full items-center gap-2 sm:flex-1">
-                            <div
-                              className={`h-2 w-2 shrink-0 rounded-full ${
-                                isHighestBidder ? 'bg-[#A3DDD4]' : 'bg-[#BBBBBB]'
-                              }`}
-                            />
-                            <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full">
-                              <Image
-                                src={bid.user.profile_image || '/placeholder.png'}
-                                alt="profileImg"
-                                fill
-                                sizes="32px"
-                                className="object-cover"
+                        return (
+                          <div
+                            key={bid.user.id + '_' + bid.bid_at}
+                            className={`flex w-full transform flex-col gap-2 rounded-sm px-3 py-3 transition-all duration-500 sm:flex-row sm:items-center sm:gap-[5px] sm:py-2 ${
+                              isHighestBidder
+                                ? 'border border-[#A3DDD4] bg-[#F8FEFD] shadow-lg'
+                                : 'bg-[#EEEEEE]'
+                            } ${hasNewBidAnimation ? 'animate-slide-up-fade-in' : ''}`}
+                            style={{
+                              animation: hasNewBidAnimation
+                                ? 'slideUpFadeIn 0.8s ease-out forwards, pulseGlow 1.5s ease-out, highlightBounce 0.5s ease-out'
+                                : undefined,
+                              transition: 'all 0.5s ease-out',
+                            }}
+                          >
+                            {/* Mobile: Top Row with User Info */}
+                            <div className="flex w-full items-center gap-2 sm:flex-1">
+                              <div
+                                className={`h-2 w-2 shrink-0 rounded-full ${
+                                  isHighestBidder ? 'bg-[#A3DDD4]' : 'bg-[#BBBBBB]'
+                                }`}
                               />
+                              <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full">
+                                <Image
+                                  src={bid.user.profile_image || '/placeholder.png'}
+                                  alt="profileImg"
+                                  fill
+                                  sizes="32px"
+                                  className="object-cover"
+                                />
+                              </div>
+                              <div className="flex min-w-0 flex-1 flex-col gap-y-0.5">
+                                <Typography
+                                  variant="sub"
+                                  className={`truncate ${
+                                    isHighestBidder ? 'text-text-primary' : 'text-text-tertiary'
+                                  }`}
+                                  weight={'semibold'}
+                                >
+                                  {bid.user.name || `사용자 ${bid.user.id}`}
+                                </Typography>
+                                <Typography
+                                  variant="sub"
+                                  className={`text-xs sm:text-sm ${
+                                    isHighestBidder ? 'text-text-primary' : 'text-text-tertiary'
+                                  }`}
+                                >
+                                  {formatDateTime(bid.bid_at)}
+                                </Typography>
+                              </div>
                             </div>
-                            <div className="flex min-w-0 flex-1 flex-col gap-y-0.5">
-                              <Typography
-                                variant="sub"
-                                className={`truncate ${
-                                  isHighestBidder ? 'text-text-primary' : 'text-text-tertiary'
-                                }`}
-                                weight={'semibold'}
-                              >
-                                {bid.user.name || `사용자 ${bid.user.id}`}
-                              </Typography>
-                              <Typography
-                                variant="sub"
-                                className={`text-xs sm:text-sm ${
-                                  isHighestBidder ? 'text-text-primary' : 'text-text-tertiary'
-                                }`}
-                              >
-                                {formatDateTime(bid.bid_at)}
-                              </Typography>
-                            </div>
-                          </div>
 
-                          {/* Mobile: Bottom Row / Desktop: Right Side with Price and Status */}
-                          <div className="flex w-full items-center justify-between gap-2 pl-11 sm:w-auto sm:justify-end sm:pl-0">
-                            <Typography
-                              variant={'second'}
-                              weight={'semibold'}
-                              className="text-sm sm:text-base"
-                            >
-                              {bid.bid_amount.toLocaleString()}원
-                            </Typography>
-                            <button
-                              className={`whitespace-nowrap rounded-sm px-2 py-[3px] text-xs font-semibold ${
-                                isWinning
-                                  ? 'text-brand-mint bg-[#111111]'
-                                  : 'bg-[#999999] text-white'
-                              }`}
-                            >
-                              {isWinning ? '입찰' : '유찰'}
-                            </button>
+                            {/* Mobile: Bottom Row / Desktop: Right Side with Price and Status */}
+                            <div className="flex w-full items-center justify-between gap-2 pl-11 sm:w-auto sm:justify-end sm:pl-0">
+                              <Typography
+                                variant={'second'}
+                                weight={'semibold'}
+                                className="text-sm sm:text-base"
+                              >
+                                {bid.bid_amount.toLocaleString()}원
+                              </Typography>
+                              <button
+                                className={`whitespace-nowrap rounded-sm px-2 py-[3px] text-xs font-semibold ${
+                                  isWinning
+                                    ? 'text-brand-mint bg-[#111111]'
+                                    : 'bg-[#999999] text-white'
+                                }`}
+                              >
+                                {isWinning ? '입찰' : '유찰'}
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      )
-                    })
+                        )
+                      })
                   ) : (
                     <div className="flex items-center justify-center py-8 text-gray-500">
                       <Typography variant="sub">아직 입찰자가 없습니다</Typography>
