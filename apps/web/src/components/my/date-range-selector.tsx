@@ -77,7 +77,7 @@ export default function DateRangeSelector({ onDateRangeChange }: DateRangeSelect
         {dateRanges.map((range, idx) => (
           <Button
             key={range.value}
-            className={`h-12 min-w-[120px] flex-1 border bg-transparent p-5 shadow-none transition-colors hover:bg-gray-100 ${
+            className={`h-12 min-w-[100px] flex-1 border bg-transparent p-5 shadow-none transition-colors hover:bg-gray-100 ${
               selectedRange === range.value
                 ? 'z-10 border-black text-black'
                 : 'border-gray-200 text-gray-300'
