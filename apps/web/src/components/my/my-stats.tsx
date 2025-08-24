@@ -22,7 +22,12 @@ export default function MyStats() {
   return (
     <div className="flex h-full flex-grow flex-wrap gap-2">
       {userStats.map((item, index) => (
-        <CountItem key={index} label={item.label} count={item.count} className="h-full flex-grow" />
+        <CountItem
+          key={index}
+          label={item.label}
+          count={item.count}
+          className="h-[88px] flex-grow"
+        />
       ))}
     </div>
   )
@@ -30,7 +35,7 @@ export default function MyStats() {
 
 function MyStatsSkeleton() {
   return (
-    <div className="flex h-full flex-grow flex-wrap gap-2">
+    <div className="flex h-[88px] flex-grow flex-wrap gap-2">
       {Array.from({ length: 4 }).map((_, index) => (
         <div key={index} className="flex h-full flex-grow flex-wrap gap-2">
           <div className="flex h-full flex-grow flex-col items-center justify-center gap-1.5 bg-white px-6 py-4 text-center">

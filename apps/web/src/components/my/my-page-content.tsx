@@ -2,13 +2,13 @@
 
 import { useCallback, useState } from 'react'
 
+import { MyAuctionFilters } from '@/api/endpoints/my.api'
 import DateRangeSelector from '@/components/my/date-range-selector'
 import MyItemList from '@/components/my/my-item-list'
 import MyProfile from '@/components/my/my-profile'
 import MyStats from '@/components/my/my-stats'
 import ProfileTabs from '@/components/my/profile-tabs'
 import Searchbar from '@/components/my/search-bar'
-import { MyAuctionFilters } from '@/api/endpoints/my.api'
 
 export default function MyPageContent() {
   const [isEditing, setIsEditing] = useState(false)
@@ -50,7 +50,7 @@ export default function MyPageContent() {
         </div>
       ) : (
         <div className="flex flex-col gap-5">
-          <div className="bg-secondary border-1 flex flex-col gap-2 rounded-sm p-5 sm:flex-row">
+          <div className="flex flex-col gap-2 rounded border border-[#E5E5EC] bg-[#F8F8F8] p-5 sm:flex-row">
             <MyProfile onEditClick={() => setIsEditing(true)} />
             <MyStats />
           </div>

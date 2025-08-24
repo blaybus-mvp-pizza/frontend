@@ -73,12 +73,21 @@ export default function DateRangeSelector({ onDateRangeChange }: DateRangeSelect
 
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center">
-      {/* 기간 선택 버튼 */}
-      <div className="flex items-center">
+      <div className="flex items-center rounded-md">
         {dateRanges.map((range, idx) => (
           <Button
             key={range.value}
-            className={`h-12 flex-1 rounded-none border bg-transparent p-5 shadow-none transition-colors hover:bg-gray-100 md:flex-none ${selectedRange === range.value ? 'z-10 border-black text-black' : 'border-gray-200 text-gray-300'} ${idx > 0 ? '-ml-[1px]' : ''} `}
+            className={`h-12 min-w-[120px] flex-1 border bg-transparent p-5 shadow-none transition-colors hover:bg-gray-100 ${
+              selectedRange === range.value
+                ? 'z-10 border-black text-black'
+                : 'border-gray-200 text-gray-300'
+            } ${idx > 0 ? '-ml-[1px]' : ''} ${
+              idx === 0
+                ? 'rounded-l-md rounded-r-none'
+                : idx === dateRanges.length - 1
+                  ? 'rounded-l-none rounded-r-md'
+                  : 'rounded-none'
+            }`}
             onClick={() => handleRangeClick(range.value)}
           >
             {range.label}
@@ -86,7 +95,6 @@ export default function DateRangeSelector({ onDateRangeChange }: DateRangeSelect
         ))}
       </div>
 
-      {/* 시작일, 종료일 */}
       <div className="flex items-center gap-2">
         <DateButton label="시작일" date={fromDate} onDateSelect={handleFromDateSelect} />
         <span>~</span>
@@ -110,7 +118,7 @@ function DateButton({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="w-38 justify-between rounded-none border-gray-200 p-5 shadow-none hover:bg-gray-100"
+          className="w-38 justify-between rounded border-gray-200 p-5 shadow-none hover:bg-gray-100"
         >
           {date ? format(date, 'PPP', { locale: ko }) : label}
           <ChevronDownIcon />

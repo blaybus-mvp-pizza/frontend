@@ -1,7 +1,6 @@
 'use client'
 
-import { Button } from '@workspace/ui/components/button'
-import { ChevronRight } from 'lucide-react'
+import Image from 'next/image'
 
 import { useUserProfile } from '@/api/hooks/queries/useMyPage'
 import { cn } from '@/utils/cn'
@@ -20,12 +19,9 @@ export default function MyProfile({ onEditClick }: UserProfileProps) {
   }
 
   return (
-    <div className={cn('flex h-full items-center gap-3 px-6 py-4', 'bg-background-100')}>
+    <div className={cn('flex h-[88px] items-center gap-3 px-6 py-4', 'bg-background-100')}>
       <div
-        className={cn(
-          'h-12 w-12 shrink-0 overflow-hidden rounded-full border p-1 p-2',
-          'border-border-default',
-        )}
+        className={cn('h-12 w-12 shrink-0 overflow-hidden rounded-full', 'border border-[#E5E5EC]')}
       >
         <img
           src={user?.profile_image_url || '/images/Default_user.webp'}
@@ -34,16 +30,13 @@ export default function MyProfile({ onEditClick }: UserProfileProps) {
         />
       </div>
       <div className="line-clamp-1 text-lg font-semibold">{user?.nickname}</div>
-      <Button
+      <button
         onClick={onEditClick}
-        className={cn(
-          'flex items-center gap-0 rounded p-1.5 text-[13px] font-semibold',
-          'bg-background-100 text-text-primary border-border-default border',
-          'hover:bg-background-200',
-        )}
+        className="flex h-[30px] items-center justify-center rounded border border-[#E5E5EC] bg-white pb-[6px] pl-[10px] pr-[6px] pt-[6px] text-[13px] font-semibold shadow-none outline-none focus:outline-none"
       >
-        정보 수정 <ChevronRight />
-      </Button>
+        정보 수정
+        <Image src="/icons/ChevronRight.svg" alt=">" width={16} height={16} />
+      </button>
     </div>
   )
 }
