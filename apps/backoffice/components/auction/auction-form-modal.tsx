@@ -180,6 +180,9 @@ export default function AuctionFormModal({
 
   useEffect(() => {
     if ((mode === "edit" || mode === "view") && isDataLoaded && auctionData) {
+      const startsAtFormatted = auctionData.starts_at.slice(0, 16);
+      const endsAtFormatted = auctionData.ends_at.slice(0, 16);
+
       const formData: AuctionFormRequest = {
         id: auctionId,
         product_id: auctionData.product_id,
@@ -187,8 +190,8 @@ export default function AuctionFormModal({
         min_bid_price: auctionData.min_bid_price,
         buy_now_price: auctionData.buy_now_price ?? undefined,
         deposit_amount: auctionData.deposit_amount,
-        starts_at: auctionData.starts_at,
-        ends_at: auctionData.ends_at,
+        starts_at: startsAtFormatted,
+        ends_at: endsAtFormatted,
         status: auctionData.status as TAuctionStatus,
       };
       reset(formData);

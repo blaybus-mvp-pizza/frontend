@@ -66,13 +66,13 @@ export function ProductTabs({ details, shipping, returns }: ProductTabsProps) {
                 <h3 className="mb-2 font-semibold">배송기간(물류센터)</h3>
                 <ul className="list-disc space-y-1 pl-5 text-sm text-gray-700">
                   <li>
-                    본 상품은 오프라인 방어스토어에서 판매되고 넓은 상품을 온라인으로 판매합니다.
+                    본 상품은 오프라인 팝업스토어에서 판매되고 남은 상품을 온라인으로 판매합니다.
                   </li>
-                  <li>낮낮 후 결제 완료 시점 기준으로 영업일 2~5일 이내 발송됩니다.</li>
-                  <li>모든 상품은 맵핑그쓰와 천사/보관 과정을 거친 후 품질센터로 이동합니다.</li>
+                  <li>낙찰 후 결제 완료 시점 기준으로 영업일 2~5일 이내 발송됩니다.</li>
+                  <li>모든 상품은 팝업스토어 전시/보관 과정을 거친 후 물류센터로 이동합니다.</li>
                   <li>예약/공동시설의 경우, 시전 공지된 발송일에 일괄 출고됩니다.</li>
                   <li>
-                    상품 특성상 전시/보관 중 발생할 수 있는 미세 스크래치나 패키지 헤드든
+                    상품 특성상 전시/보관 중 발생할 수 있는 미세 스크래치나 패키지 훼손은
                     상세페이지에서 사전 고지하며, 이는 반품 사유에 해당하지 않습니다.
                   </li>
                 </ul>
@@ -108,7 +108,7 @@ export function ProductTabs({ details, shipping, returns }: ProductTabsProps) {
                     않습니다.
                   </li>
                   <li>상품이 사용되었거나, 택/구성품/패키지 훼손 시 교환/반품이 불가합니다.</li>
-                  <li>교환은 앞교환이 아닌, 반품 접수 후 재구매 방식으로 진행됩니다.</li>
+                  <li>교환은 맞교환이 아닌, 반품 접수 후 재구매 방식으로 진행됩니다.</li>
                 </ul>
               </div>
 
@@ -117,11 +117,11 @@ export function ProductTabs({ details, shipping, returns }: ProductTabsProps) {
                 <ul className="list-disc space-y-1 pl-5 text-sm text-gray-700">
                   <li>
                     상품 수령 후 2~3일 [마이페이지 {'>'} 주문/배송내역]에서 직접 접수하거나
-                    고객센터로 연락 주시기 바랍니다.
+                    고객센터로 연락해주세요.
                   </li>
                   <li>
                     안내받은 배송지로 상품이 외부로 노출되지 않도록 안전하게 포장하여 발송해 주세요.
-                    (택 이전 탈수)
+                    (테이핑 필수)
                   </li>
                   <li>단순 변심 불가, 상품 하자/오배송 시 배송비는 판매자가 부담합니다.</li>
                 </ul>

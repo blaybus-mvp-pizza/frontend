@@ -57,14 +57,14 @@ export default function LoginForm() {
         onClick={handleGoogleLogin}
         disabled={isLoading('google-login') || googleLogin.isPending}
         className={cn(
-          'mx-auto h-[50px] w-full',
+          'mx-auto h-[55px] w-full',
           'px-6 py-[15px]',
           'flex items-center justify-between',
           'bg-background-100 border-border-light border',
-          'text-text-primary text-center text-lg font-medium leading-[1.4] tracking-[-0.025em]',
-          'hover:bg-background-200',
-          'cursor-pointer',
+          'text-text-primary text-center text-lg font-medium',
+          'hover:bg-background-200 cursor-pointer',
           'rounded-sm disabled:cursor-not-allowed disabled:opacity-50',
+          'shadow-none',
         )}
       >
         <div className="flex h-6 w-6 items-center justify-center">
