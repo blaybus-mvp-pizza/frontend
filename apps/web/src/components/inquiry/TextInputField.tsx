@@ -1,20 +1,21 @@
-import { Control } from 'react-hook-form'
+import { Control, FieldValues, Path } from 'react-hook-form'
 
 import { FormControl, FormField, FormItem, FormMessage } from '@workspace/ui/components/form'
 
 import FormLabelWithStatus from './FormLabelWithStatus'
 
-type TextInputFieldProps = {
-  control: Control<any>
-  name: string
+type TextInputFieldProps<TFieldValues extends FieldValues> = {
+  control: Control<TFieldValues>
+  name: Path<TFieldValues>
   label: string
   placeholder: string
   type?: string
   required?: boolean
   description?: string
+  inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'
 }
 
-export default function TextInputField({
+export default function TextInputField<TFieldValues extends FieldValues>({
   control,
   name,
   label,
@@ -22,7 +23,8 @@ export default function TextInputField({
   type = 'text',
   required = false,
   description,
-}: TextInputFieldProps) {
+  inputMode = 'text',
+}: TextInputFieldProps<TFieldValues>) {
   return (
     <FormField
       control={control}
@@ -34,29 +36,43 @@ export default function TextInputField({
             <input
               type={type}
               placeholder={placeholder}
+              inputMode={inputMode}
               {...field}
               className={`h-[48px] w-full rounded-none px-4 py-2 text-sm font-medium shadow-none outline-none focus:border-black focus:ring-0 ${
                 fieldState.error ? 'border border-red-500' : 'border border-[#E5E5EC]'
               }`}
               onChange={(e) => {
+                const value = e.target.value.replace(/[^0-9]/g, '')
+                let formattedValue = ''
+
                 if (name === 'phone') {
-                  const rawValue = e.target.value.replace(/[^0-9]/g, '')
-                  let formattedValue = ''
-
-                  if (rawValue.length > 3 && rawValue.length <= 7) {
-                    formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(3)}`
-                  } else if (rawValue.length > 7) {
-                    formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(
-                      3,
+                  if (value.length > 3 && value.length <= 7) {
+                    formattedValue = `${value.slice(0, 3)}-${value.slice(3)}`
+                  } else if (value.length > 7) {
+                    formattedValue = `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(
                       7,
-                    )}-${rawValue.slice(7, 11)}`
+                      11,
+                    )}`
                   } else {
-                    formattedValue = rawValue
+                    formattedValue = value
                   }
-
+                  field.onChange(formattedValue)
+                } else if (name === 'cardNumber') {
+                  if (value.length > 4 && value.length <= 8) {
+                    formattedValue = `${value.slice(0, 4)}-${value.slice(4)}`
+                  } else if (value.length > 8 && value.length <= 12) {
+                    formattedValue = `${value.slice(0, 4)}-${value.slice(4, 8)}-${value.slice(8)}`
+                  } else if (value.length > 12) {
+                    formattedValue = `${value.slice(0, 4)}-${value.slice(4, 8)}-${value.slice(
+                      8,
+                      12,
+                    )}-${value.slice(12, 16)}`
+                  } else {
+                    formattedValue = value
+                  }
                   field.onChange(formattedValue)
                 } else {
-                  field.onChange(e)
+                  field.onChange(e.target.value)
                 }
               }}
             />

@@ -2,6 +2,8 @@
 
 import Image from 'next/image'
 
+import PaymentEditButton from './payment-edit-button'
+
 export default function PaymentSection() {
   return (
     <div className="mt-8 flex flex-col gap-5">
@@ -13,9 +15,7 @@ export default function PaymentSection() {
             <br /> 저희는 해당 정보에 접근할 수 없습니다.
           </div>
         </div>
-        <button className="rounded border border-[#E5E5EC] bg-white px-[8px] py-[10px] text-[14px] font-semibold">
-          결제 정보 수정
-        </button>
+        <PaymentEditButton />
       </div>
 
       <div className="flex flex-col gap-3">
