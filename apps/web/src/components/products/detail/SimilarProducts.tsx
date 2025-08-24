@@ -21,8 +21,8 @@ export function SimilarProducts({ items }: SimilarProductsProps) {
   if (!items || items.length === 0) return null
 
   return (
-    <div className="border-border-light mt-10 space-y-4 border-t pt-4">
-      <p className="text-text-primary">비슷한 상품</p>
+    <div className="border-border-light mt-10 space-y-4 border-t">
+      <p className="text-text-primary mt-10 text-xl font-bold">이 상품과 유사한 상품이에요!</p>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
         {items.map((item) => {
           // Transform API response to Product and Auction objects
