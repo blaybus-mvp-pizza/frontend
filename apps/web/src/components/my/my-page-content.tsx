@@ -22,11 +22,24 @@ export default function MyPageContent() {
 
   const handleDateRangeChange = useCallback(
     (startDate: Date | undefined, endDate: Date | undefined) => {
+      let finalStartDate: string | undefined = undefined
+      let finalEndDate: string | undefined = undefined
+
+      if (startDate) {
+        startDate.setHours(0, 0, 0, 0)
+        finalStartDate = startDate.toISOString()
+      }
+
+      if (endDate) {
+        endDate.setHours(23, 59, 59, 999)
+        finalEndDate = endDate.toISOString()
+      }
+
       setFilters((prevFilters) => ({
         ...prevFilters,
-        period: startDate && endDate ? 'custom' : '1m',
-        startDate: startDate?.toISOString(),
-        endDate: endDate?.toISOString(),
+        period: finalStartDate && finalEndDate ? 'custom' : '1m',
+        startDate: finalStartDate,
+        endDate: finalEndDate,
       }))
     },
     [setFilters],
