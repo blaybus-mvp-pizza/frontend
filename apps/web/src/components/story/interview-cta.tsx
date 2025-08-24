@@ -14,12 +14,7 @@ export default function InterviewCTA() {
       }}
     >
       <div className="mb-4 flex flex-col gap-1 md:mb-0 md:gap-2">
-        <p
-          className={cn(
-            'text-sm font-normal leading-[180%] tracking-[-0.025em]',
-            'text-brand-mint',
-          )}
-        >
+        <p className={cn('text-sm leading-[180%] tracking-[-0.025em]', 'text-brand-mint')}>
           혹시 여러분도 특별한 나팔 스토리를 가지고 계신가요?
         </p>
         <p

@@ -4,7 +4,7 @@ import StoryCardList from '@/components/story/story-card-list'
 
 export default function StoryPage() {
   return (
-    <div className="w-full">
+    <div className="pb-30 w-full">
       <div className="mt-6 space-y-4 pb-10 text-center md:mt-20">
         <div className="text-text-primary text-[28px] font-bold leading-[140%]">NafaL 스토리</div>
         <p className="text-text-tertiary text-sm font-medium leading-[160%] tracking-[-0.025em]">

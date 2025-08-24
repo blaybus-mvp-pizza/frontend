@@ -26,7 +26,7 @@ export default function StoryContent({ id }: { id: string }) {
   }
 
   return (
-    <div className="-mx-4">
+    <div className="mb-30">
       <div className="bg-muted relative h-[360px] w-[100vw] overflow-hidden">
         <img
           src={mainImage}
@@ -69,12 +69,12 @@ export default function StoryContent({ id }: { id: string }) {
 
         <InterviewCTA />
 
-        <div className="flex justify-center px-4 pb-3">
+        <div className="flex justify-center px-4">
           <Button
             onClick={handleGoBack}
-            className="mt-12 h-12 cursor-pointer bg-[#52565B] text-sm font-bold text-white"
+            className="font-semobold mt-12 h-12 cursor-pointer bg-[#52565B] text-sm text-white"
           >
-            목록 돌아가기
+            목록으로 돌아가기
           </Button>
         </div>
       </div>
