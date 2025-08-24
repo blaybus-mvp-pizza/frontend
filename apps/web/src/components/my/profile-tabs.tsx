@@ -1,5 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@workspace/ui/components/tabs'
 
+import PaymentSection from './payment-section'
 import ProfileSection from './profile-section'
 
 export default function ProfileTabs() {
@@ -19,8 +20,8 @@ export default function ProfileTabs() {
     {
       value: 'payment',
       label: '결제수단',
-      component: <></>,
-      disabled: true,
+      component: <PaymentSection />,
+      disabled: false,
     },
   ]
 
