@@ -23,7 +23,8 @@ export default function StoryCardList() {
   }
 
   const handleStoryClick = (storyId: number) => {
-    router.push(`/story/${storyId}`)
+    // router.push(`/story/${storyId}`)
+    router.push(`/story/80101`) // NOTE: ID 바뀌면 안됨;;
   }
 
   const stories = data?.items || []
