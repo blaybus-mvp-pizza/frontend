@@ -72,6 +72,8 @@ export interface ProductListItem {
   currentHighestBid?: number;
   buyNowPrice?: number;
   representativeImage?: string;
+  auctionStatus?: 'ENDED' | 'RUNNING' | 'SCHEDULED';
+  auctionStartsAt?: string;
   auctionEndsAt?: string;
   labels: string[]; // 상품 라벨 ("신규상품", "베스트" 등)
 }
@@ -100,6 +102,8 @@ export interface Product {
   auction?: Auction;
   currentHighestBid?: number;
   buyNowPrice?: number;
+  auctionStatus?: 'ENDED' | 'RUNNING' | 'SCHEDULED';
+  auctionStartsAt?: string;
   auctionEndsAt?: string;
 
   // Legacy fields for backward compatibility

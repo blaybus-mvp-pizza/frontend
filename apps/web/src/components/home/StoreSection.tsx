@@ -80,7 +80,7 @@ export default function StoreSection({
             </Typography>
           </div>
         </div>
-        <div className="flex gap-3 sm:gap-4 lg:flex lg:gap-4">
+        <div className="flex h-fit gap-3 sm:gap-4 lg:flex lg:gap-4">
           {productData.slice(0, 2).map((product) => {
             const productData = {
               id: product.product_id,

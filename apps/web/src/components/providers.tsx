@@ -19,13 +19,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
       >
         {children}
         <Toaster 
-          position="top-center"
+          position="bottom-left"
           toastOptions={{
             duration: 4000,
             style: {
-              background: 'white',
-              color: '#363636',
-              border: '1px solid #e5e7eb',
+              background: 'rgba(0, 0, 0, 0.7)',
+              color: 'white',
+              border: 'none',
+              fontSize: '16px',
+              padding: '16px 24px',
+              minHeight: '60px',
+              minWidth: '320px',
             },
           }}
         />

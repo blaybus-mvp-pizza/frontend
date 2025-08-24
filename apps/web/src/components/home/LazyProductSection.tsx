@@ -40,6 +40,9 @@ const transformProductsForCard = (items: any[]) => {
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
+    auctionStatus: item.auction_status,
+    auctionStartsAt: item.auction_starts_at,
+    auctionEndsAt: item.auction_ends_at,
     images: item.representative_image
       ? [
           {
@@ -61,20 +64,22 @@ const transformProductsForCard = (items: any[]) => {
 const transformAuctions = (items: any[]): any => {
   if (!items) return []
   return items
-    .filter((item) => item.auction_ends_at)
+    .filter((item) => item.auction_ends_at || item.auction_starts_at)
     .map((item) => ({
       id: 0,
       productId: item.product_id,
       startPrice: 0,
       minBidPrice: 0,
       buyNowPrice: item.buy_now_price,
-      currentBid: {
-        amount: item.current_highest_bid || 0,
-      },
+      currentBid: item.current_highest_bid ? {
+        amount: item.current_highest_bid,
+      } : undefined,
       depositAmount: 0,
-      startsAt: new Date(),
-      endsAt: new Date(item.auction_ends_at),
-      status: 'running' as const,
+      startsAt: item.auction_starts_at ? new Date(item.auction_starts_at) : new Date(),
+      endsAt: item.auction_ends_at ? new Date(item.auction_ends_at) : new Date(),
+      status: item.auction_status === 'SCHEDULED' ? 'scheduled' as const : 
+              item.auction_status === 'ENDED' ? 'ended' as const : 
+              'running' as const,
       createdAt: new Date(),
       updatedAt: new Date(),
     }))

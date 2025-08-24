@@ -8,7 +8,9 @@ export interface ProductListItem {
   current_highest_bid?: number
   buy_now_price?: number
   representative_image?: string
-  auction_ends_at?: string // ISO8601
+  auction_status?: 'ENDED' | 'RUNNING' | 'SCHEDULED' // 경매 상태
+  auction_starts_at?: string // ISO8601 - 경매 시작 시간
+  auction_ends_at?: string // ISO8601 - 경매 종료 시간
   labels: string[] // 상품 라벨 목록 (예: "신규상품", "베스트")
 }
 

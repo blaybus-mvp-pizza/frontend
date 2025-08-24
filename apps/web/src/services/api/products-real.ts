@@ -153,6 +153,8 @@ const convertApiProductToProduct = (apiProduct: ProductListItem, index: number =
     },
     currentHighestBid: apiProduct.current_highest_bid,
     buyNowPrice: apiProduct.buy_now_price,
+    auctionStatus: apiProduct.auction_status,
+    auctionStartsAt: apiProduct.auction_starts_at,
     auctionEndsAt: apiProduct.auction_ends_at,
     // Legacy fields for compatibility
     price: apiProduct.buy_now_price || apiProduct.current_highest_bid || 0,
