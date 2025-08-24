@@ -99,10 +99,10 @@ export function ProductCard({
               {/* 현재 입찰가 */}
 
               <div className="flex items-center gap-x-1">
-                <p className="text-sm text-text-secondary leading-[140%] tracking-[-2.5%]">
+                <p className="max-md:text-xs text-sm text-text-secondary leading-[140%] tracking-[-2.5%]">
                   현재 입찰가 :
                 </p>
-                <p className="text-text-primary font-bold leading-[140%]">
+                <p className="text-text-primary max-md:text-sm font-bold leading-[140%]">
                   {auction.currentBid
                     ? `${auction.currentBid.amount.toLocaleString()}원`
                     : `${auction.startPrice.toLocaleString()}원`}
