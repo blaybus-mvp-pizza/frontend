@@ -150,14 +150,14 @@ export default function PopupStoreContent() {
 
   return (
     <div className="min-h-screen">
-      <div className="relative w-full overflow-hidden bg-[#F8F8FA] py-4">
+      <div className="relative mt-8 w-[100vw] overflow-hidden bg-[#F8F8FA] py-10">
         <div className="max-w-container mx-auto w-full space-y-6 px-4">
           <div className="flex w-full justify-between">
-            <p className="text-lg font-bold md:text-2xl">팝업스토어</p>
-            <div className="flex items-center gap-3">
+            <p className="text-2xl font-semibold md:text-2xl">팝업스토어</p>
+            <div className="flex items-center gap-2">
               <button
                 onClick={handleCarouselPrev}
-                className="p-1 text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-30"
+                className="text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-30"
                 disabled={currentStoreIndex === 0}
               >
                 <ChevronLeft size={20} />
@@ -168,7 +168,7 @@ export default function PopupStoreContent() {
               </span>
               <button
                 onClick={handleCarouselNext}
-                className="p-1 text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-30"
+                className="text-gray-600 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-30"
                 disabled={currentStoreIndex === stores.length - 1}
               >
                 <ChevronRight size={20} />
