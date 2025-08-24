@@ -18,7 +18,8 @@ export default function StoryContent({ id }: { id: string }) {
 
   if (!story || isLoading) return <StoryContentSkeleton />
 
-  const mainImage = story.images?.[0] || '/placeholder.png'
+  // const mainImage = story.images?.[0] || '/placeholder.png'
+  const mainImage = '/images/STORY_BANNER.png'
   const popupStore = story.product
 
   const handleGoBack = () => {
@@ -27,14 +28,14 @@ export default function StoryContent({ id }: { id: string }) {
 
   return (
     <div className="mb-30">
-      <div className="bg-muted relative h-[360px] w-[100vw] overflow-hidden">
+      <div className="bg-muted mb-18 relative h-[360px] w-full overflow-hidden">
         <img
           src={mainImage}
           alt={story.title}
           className="h-full w-full object-cover transition-transform group-hover:scale-105"
         />
       </div>
-      <div className="mx-auto max-w-[880px] px-4">
+      <div className="mx-auto max-w-[880px] px-8">
         <div className="px-4 sm:px-0">
           <div className="mb-4 mt-4 flex flex-col gap-4">
             <div className="text-text-tertiary text-sm font-medium leading-[160%] tracking-[-0.025em]">
