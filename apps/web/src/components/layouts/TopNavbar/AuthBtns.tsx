@@ -37,11 +37,6 @@ export function AuthBtns() {
       {isAuthenticated && token ? (
         <>
           <div className="flex items-center gap-2">
-            {user && (
-              <span className="hidden text-sm text-gray-600 md:inline">
-                {user.nickname || user.email}
-              </span>
-            )}
             <MyButton onClick={() => router.push('/my')} text="마이페이지" />
             <MyButton onClick={handleLogout} text="로그아웃" />
           </div>
