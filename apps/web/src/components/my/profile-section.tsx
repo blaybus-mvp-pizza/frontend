@@ -64,9 +64,9 @@ export default function ProfileSection() {
           />
         </div>
         {/* TODO: 이미지 수정 버튼 동작 */}
-        <Button className="cursor-pointer rounded-none border border-gray-200 bg-white px-3 text-[12px] font-semibold text-black shadow-none hover:bg-gray-100">
+        <button className="h-[30px] cursor-pointer rounded border border-[#E5E5EC] bg-white px-[8px] py-[6px] text-[12px] font-semibold text-black shadow-none hover:bg-gray-100">
           이미지 수정
-        </Button>
+        </button>
         <p className="text-center text-xs font-medium leading-[160%] tracking-[-0.025em] text-gray-400">
           프로필 이미지는 250 x 250 픽셀에 최적화되어 있으며, <br />
           5MB 이하의 JPG, GIF, PNG 파일을 지원합니다.
