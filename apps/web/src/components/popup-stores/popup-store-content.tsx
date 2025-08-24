@@ -200,6 +200,7 @@ export default function PopupStoreContent() {
           </div>
         </div>
       </div>
+
       <div className="max-w-container mx-auto mt-6 space-y-10 max-md:px-4 md:mt-20">
         <div>
           <div className="space-y-4 text-center">
@@ -214,7 +215,7 @@ export default function PopupStoreContent() {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="max-w-container mx-auto ml-5 w-full space-y-6 px-4">
           {currentStore.products.length > 0 ? (
             <>
               {/* 상품 그리드 - 일반 상품 리스트와 동일한 레이아웃 */}
