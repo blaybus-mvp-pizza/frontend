@@ -509,7 +509,7 @@ export default function ProductDetailPage() {
                 <div className="relative flex items-center gap-1 whitespace-nowrap rounded bg-[#222222] px-3 py-1.5">
                   <div className="absolute -left-1.5 top-1/2 h-0 w-0 -translate-y-1/2 border-b-[6px] border-r-[8px] border-t-[6px] border-b-transparent border-r-[#222222] border-t-transparent"></div>
                   <span className="text-sm font-medium text-white">이 상품이 주인을 찾으면</span>
-                  <span className="flex items-center gap-x-1 text-xs font-medium text-[#94D8D4]">
+                  <span className="flex items-center gap-x-1 text-sm font-medium text-[#94D8D4]">
                     <span className="relative inline-block h-2.5 w-2.5 shrink-0">
                       <Image src="/icons/RECYCLE.svg" alt="Recycle Icon" fill sizes="12px" />
                     </span>
