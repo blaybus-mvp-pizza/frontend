@@ -330,7 +330,7 @@ export default function ProductDetailPage() {
                     </Typography>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Typography variant={'sub'} className="text-text-tertiaryiary">
+                    <Typography variant={'sub'} className="text-text-tertiary">
                       경매 종료일
                     </Typography>
                     <Typography variant={'sub'} className="text-text-primary">
@@ -338,7 +338,7 @@ export default function ProductDetailPage() {
                     </Typography>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Typography variant={'sub'} className="text-text-tertiaryiary">
+                    <Typography variant={'sub'} className="text-text-tertiary">
                       시작가
                     </Typography>
                     <Typography variant={'sub'} className="text-text-primary">
@@ -366,7 +366,7 @@ export default function ProductDetailPage() {
                       return (
                         <div
                           key={bid.user.id + '_' + bid.bid_at}
-                          className={`flex w-full transform flex-col sm:flex-row sm:items-center gap-2 sm:gap-[5px] rounded-sm px-3 py-3 sm:py-2 transition-all duration-500 ${
+                          className={`flex w-full transform flex-col gap-2 rounded-sm px-3 py-3 transition-all duration-500 sm:flex-row sm:items-center sm:gap-[5px] sm:py-2 ${
                             isHighestBidder
                               ? 'border border-[#A3DDD4] bg-[#F8FEFD] shadow-lg'
                               : 'bg-[#EEEEEE]'
@@ -379,13 +379,13 @@ export default function ProductDetailPage() {
                           }}
                         >
                           {/* Mobile: Top Row with User Info */}
-                          <div className="flex items-center gap-2 w-full sm:flex-1">
+                          <div className="flex w-full items-center gap-2 sm:flex-1">
                             <div
-                              className={`h-2 w-2 rounded-full shrink-0 ${
+                              className={`h-2 w-2 shrink-0 rounded-full ${
                                 isHighestBidder ? 'bg-[#A3DDD4]' : 'bg-[#BBBBBB]'
                               }`}
                             />
-                            <div className="relative h-8 w-8 overflow-hidden rounded-full shrink-0">
+                            <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full">
                               <Image
                                 src={bid.user.profile_image || '/placeholder.png'}
                                 alt="profileImg"
@@ -394,7 +394,7 @@ export default function ProductDetailPage() {
                                 className="object-cover"
                               />
                             </div>
-                            <div className="flex flex-col gap-y-0.5 flex-1 min-w-0">
+                            <div className="flex min-w-0 flex-1 flex-col gap-y-0.5">
                               <Typography
                                 variant="sub"
                                 className={`truncate ${
@@ -414,18 +414,18 @@ export default function ProductDetailPage() {
                               </Typography>
                             </div>
                           </div>
-                          
+
                           {/* Mobile: Bottom Row / Desktop: Right Side with Price and Status */}
-                          <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto pl-11 sm:pl-0">
-                            <Typography 
-                              variant={'second'} 
-                              weight={'semibold'} 
+                          <div className="flex w-full items-center justify-between gap-2 pl-11 sm:w-auto sm:justify-end sm:pl-0">
+                            <Typography
+                              variant={'second'}
+                              weight={'semibold'}
                               className="text-sm sm:text-base"
                             >
                               {bid.bid_amount.toLocaleString()}원
                             </Typography>
                             <button
-                              className={`rounded-sm px-2 py-[3px] text-xs font-semibold whitespace-nowrap ${
+                              className={`whitespace-nowrap rounded-sm px-2 py-[3px] text-xs font-semibold ${
                                 isWinning
                                   ? 'text-brand-mint bg-[#111111]'
                                   : 'bg-[#999999] text-white'
