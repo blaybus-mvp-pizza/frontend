@@ -27,7 +27,7 @@ export default function PopupStoreContent() {
         const response = await productsService.getRecentStores({
           page: 1,
           stores: 8,
-          size: 4,
+          size: 16,
         })
         setStores(response.items)
       } catch (err) {
