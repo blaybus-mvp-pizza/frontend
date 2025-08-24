@@ -238,17 +238,16 @@ export default function ProductDetailPage() {
                       <span className="text-lg font-bold text-yellow-400">경매 준비중</span>
                     </>
                   ) : auction && auction.status === 'RUNNING' ? (
-                    <>
-                      남은시간:
+                    <div className="flex items-center gap-2">
+                      남은시간
                       <span className="text-brand-mint text-lg font-bold">
                         {calculateRemainingTime(auction.ends_at)}
                       </span>
-                    </>
+                    </div>
                   ) : (
-                    <>
-                      남은시간:
-                      <span className="text-lg font-bold text-gray-400">경매 종료</span>
-                    </>
+                    <div className="flex items-center gap-2">
+                      남은시간 <span className="text-brand-mint text-lg font-bold">00:00:00</span>
+                    </div>
                   )}
                 </span>
               </div>
@@ -279,7 +278,7 @@ export default function ProductDetailPage() {
                         ? '경매 시작 예정'
                         : auction?.status === 'RUNNING'
                           ? '실시간 경매 LIVE'
-                          : '경매 종료'}
+                          : '실시간 경매 종료'}
                     </Typography>
                   </div>
                   <div className="flex items-center gap-2">
