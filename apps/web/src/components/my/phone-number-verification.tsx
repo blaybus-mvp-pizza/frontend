@@ -10,11 +10,18 @@ import { ProfileInput } from './profile-section'
 import { useRouter } from 'next/navigation'
 
 interface PhoneNumberVerificationProps {
-  userPhoneNumber: string
-  isPhoneVerified: boolean
+  userPhoneNumber?: string
+  isPhoneVerified?: boolean
+  onVerificationComplete?: () => void
+  isStandalonePage?: boolean
 }
 
-export default function PhoneNumberVerification({ userPhoneNumber, isPhoneVerified }: PhoneNumberVerificationProps) {
+export default function PhoneNumberVerification({ 
+  userPhoneNumber = '', 
+  isPhoneVerified = false,
+  onVerificationComplete,
+  isStandalonePage = false
+}: PhoneNumberVerificationProps) {
   const [phoneNumber, setPhoneNumber] = useState(userPhoneNumber)
   const [authCode, setAuthCode] = useState('')
   const [timeLeft, setTimeLeft] = useState(180)
@@ -66,6 +73,12 @@ export default function PhoneNumberVerification({ userPhoneNumber, isPhoneVerifi
     verifyPhone.mutate({
       phone_number: rawPhoneNumber,
       code6: authCode,
+    }, {
+      onSuccess: () => {
+        if (onVerificationComplete) {
+          onVerificationComplete()
+        }
+      }
     })
   }
 

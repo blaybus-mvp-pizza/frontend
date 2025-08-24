@@ -9,7 +9,6 @@ import { motion } from 'framer-motion'
 import { CheckCircle, Clock, ShoppingBag, X } from 'lucide-react'
 
 import { useBuyNow } from '@/api/hooks/mutations/useAuctionActions'
-import PhoneVerificationModal from '@/components/modals/PhoneVerificationModal'
 
 interface BuyNowModalProps {
   auctionId: number
@@ -33,8 +32,6 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
   const {
     mutate: buyNow,
     isPending,
-    showPhoneVerificationModal,
-    setShowPhoneVerificationModal,
   } = useBuyNow()
 
   const handleBuyNow = () => {
@@ -175,12 +172,6 @@ const BuyNowModal: React.FC<BuyNowModalProps> = ({
           </div>
         </motion.div>
       </motion.div>
-
-      {/* Phone Verification Modal */}
-      <PhoneVerificationModal
-        isOpen={showPhoneVerificationModal}
-        onClose={() => setShowPhoneVerificationModal(false)}
-      />
     </>
   )
 }

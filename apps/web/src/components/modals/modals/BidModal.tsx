@@ -6,7 +6,6 @@ import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
 
 import { usePlaceBid } from '@/api/hooks/mutations/useAuctionActions'
-import PhoneVerificationModal from '@/components/modals/PhoneVerificationModal'
 
 interface BidModalProps {
   auctionId: number
@@ -39,8 +38,6 @@ export const BidModal: React.FC<BidModalProps> = ({
   const {
     mutate: placeBid,
     isPending,
-    showPhoneVerificationModal,
-    setShowPhoneVerificationModal,
   } = usePlaceBid()
 
   // 개별 체크박스 토글
@@ -280,12 +277,6 @@ export const BidModal: React.FC<BidModalProps> = ({
           </div>
         </motion.div>
       </motion.div>
-      {showPhoneVerificationModal && (
-        <PhoneVerificationModal
-          onClose={() => setShowPhoneVerificationModal(false)}
-          isOpen={showPhoneVerificationModal}
-        />
-      )}
     </>
   )
 }

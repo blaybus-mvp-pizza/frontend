@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { auctionActionsApi } from '@/api/endpoints/auction-actions.api'
 import { PlaceBidResult, BuyNowActionResult } from '@/api/types/auction-action.types'
 import { useUIStore } from '@/store/ui.store'
@@ -10,6 +10,8 @@ import { useState } from 'react'
 // Place bid
 export const usePlaceBid = () => {
   const queryClient = useQueryClient()
+  const router = useRouter()
+  const pathname = usePathname()
   const { showSuccess, showError } = useUIStore()
   const { isAuthenticated } = useAuthStore()
   const { data: user } = useUserProfile()
@@ -40,7 +42,8 @@ export const usePlaceBid = () => {
         // Redirect to login
         window.location.href = '/auth/login'
       } else if (error.message === 'PHONE_VERIFICATION_REQUIRED') {
-        setShowPhoneVerificationModal(true)
+        // Redirect to phone verification page with current path as redirect
+        router.push(`/my/phone-update?redirect=${encodeURIComponent(pathname)}`)
       } else if (error.response?.data?.code === 'BID_ALREADY_EXISTS') {
         showError(error.response?.data?.message || '이미 참여한 경매입니다.')
       } else if (error.response?.data?.code === 'AUCTION_ENDED') {
@@ -64,6 +67,7 @@ export const usePlaceBid = () => {
 export const useBuyNow = () => {
   const queryClient = useQueryClient()
   const router = useRouter()
+  const pathname = usePathname()
   const { showSuccess, showError } = useUIStore()
   const { isAuthenticated } = useAuthStore()
   const { data: user } = useUserProfile()
@@ -101,7 +105,8 @@ export const useBuyNow = () => {
         // Redirect to login
         window.location.href = '/auth/login'
       } else if (error.message === 'PHONE_VERIFICATION_REQUIRED') {
-        setShowPhoneVerificationModal(true)
+        // Redirect to phone verification page with current path as redirect
+        router.push(`/my/phone-update?redirect=${encodeURIComponent(pathname)}`)
       } else {
         showError('즉시구매에 실패했습니다.')
       }
