@@ -215,7 +215,7 @@ export default function PopupStoreContent() {
           </div>
         </div>
 
-        <div className="max-w-container mx-auto ml-5 w-full space-y-6 px-4">
+        <div className="max-w-container mx-auto w-full space-y-6 px-6">
           {currentStore.products.length > 0 ? (
             <>
               {/* 상품 그리드 - 일반 상품 리스트와 동일한 레이아웃 */}
