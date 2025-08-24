@@ -46,17 +46,17 @@ export default function StoreSection({
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-x-2">
         <span className="text-brand-mint inline-flex w-fit shrink-0 items-center gap-x-1.5 bg-black px-2 py-1 sm:gap-x-2">
           <MapIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-          <Typography className="text-brand-mint text-sm font-semibold sm:text-base md:text-xl">
+          <Typography className="text-brand-mint text-sm font-semibold sm:text-base md:text-2xl">
             {storeData.name}
           </Typography>
         </span>
-        <Typography variant="h6" className="text-sm font-semibold sm:text-base md:text-xl">
-          {storeData.sales_description || '팝업스토어에서 판매중인 아이템'}
+        <Typography className="text-2xl font-semibold sm:text-base md:text-xl">
+          팝업스토어에서 판매중인 아이템
         </Typography>
       </div>
 
       <div className="flex flex-col gap-4 lg:flex-row lg:gap-x-8">
-        <div className="relative aspect-square w-full overflow-hidden rounded-lg lg:h-[400px] lg:max-w-[442px] lg:shrink-0">
+        <div className="relative aspect-square w-full overflow-hidden rounded-none lg:h-[400px] lg:max-w-[442px] lg:shrink-0">
           {storeData.image_url && (
             <Image
               src={storeData.image_url}
@@ -68,16 +68,16 @@ export default function StoreSection({
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 442px"
             />
           )}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-4 sm:p-6">
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent px-6 py-10">
+            <Typography className="mb-1 !text-2xl font-semibold text-white sm:mb-2 sm:text-xl lg:text-2xl">
+              팝업스토어 ′{storeData.name}′
+            </Typography>
             <Typography
-              variant="h5"
-              className="mb-1 text-lg font-bold text-white sm:mb-2 sm:text-xl lg:text-2xl"
-            >
-              {storeData.name}
-            </Typography>
-            <Typography variant="body1" className="line-clamp-2 text-sm text-white/90 sm:text-base">
-              {storeData.description}
-            </Typography>
+              className="line-clamp-2 !text-base font-normal text-white/90 sm:text-base"
+              dangerouslySetInnerHTML={{
+                __html: storeData.sales_description?.replace('에디션과', '에디션과<br>') || '',
+              }}
+            />
           </div>
         </div>
         <div className="flex h-fit gap-3 sm:gap-4 lg:flex lg:gap-4">
