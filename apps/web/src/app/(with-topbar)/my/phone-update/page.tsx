@@ -7,8 +7,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Typography } from '@workspace/ui/components/typography'
 import { ArrowLeft } from 'lucide-react'
 
-import PhoneNumberVerification from '@/components/my/phone-number-verification'
 import { useCurrentUser } from '@/api/hooks/queries/useUser'
+import PhoneNumberVerification from '@/components/my/phone-number-verification'
 
 function PhoneUpdateContent() {
   const router = useRouter()
@@ -59,13 +59,11 @@ function PhoneUpdateContent() {
       <div className="mb-8 flex items-center">
         <button
           onClick={handleBack}
-          className="mr-4 flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+          className="mr-4 flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-gray-100"
         >
           <ArrowLeft size={20} />
         </button>
-        <Typography variant="h2" weight="bold">
-          전화번호 인증
-        </Typography>
+        <p className="text-lg font-semibold md:text-xl">전화번호 인증</p>
       </div>
 
       {/* Info Message */}
@@ -77,7 +75,7 @@ function PhoneUpdateContent() {
 
       {/* Phone Verification Component */}
       <div className="rounded-lg bg-white p-6 shadow-sm">
-        <PhoneNumberVerification 
+        <PhoneNumberVerification
           userPhoneNumber={user?.phone_number}
           isPhoneVerified={user?.is_phone_verified}
           onVerificationComplete={handleVerificationComplete}
@@ -87,12 +85,10 @@ function PhoneUpdateContent() {
 
       {/* Help Text */}
       <div className="mt-6 text-center">
-        <Typography variant="caption" className="text-gray-500">
-          인증번호가 오지 않나요?
-        </Typography>
-        <Typography variant="caption" className="mt-1 block text-gray-500">
+        <p className="text-sm text-gray-500">인증번호가 오지 않나요?</p>
+        <p className="mt-1 block text-sm text-gray-500">
           스팸 문자함을 확인하거나 번호를 다시 확인해주세요.
-        </Typography>
+        </p>
       </div>
     </div>
   )
@@ -100,15 +96,15 @@ function PhoneUpdateContent() {
 
 export default function PhoneUpdatePage() {
   return (
-    <Suspense fallback={
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="text-center">
-          <Typography variant="body1" className="text-gray-500">
-            로딩중...
-          </Typography>
+    <Suspense
+      fallback={
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <div className="text-center">
+            <p className="text-gray-500">로딩중...</p>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <PhoneUpdateContent />
     </Suspense>
   )
